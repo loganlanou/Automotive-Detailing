@@ -8,11 +8,21 @@ import (
 
 	"detailingpass/internal/server"
 
+	_ "embed"
+
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	_ "github.com/mattn/go-sqlite3"
 )
+
+//go:embed schema.sql
+var schema string
+
+func runMigrations(db *sql.DB) error {
+	_, err := db.Exec(schema)
+	return err
+}
 
 func main() {
 	// Load .env file
@@ -32,6 +42,11 @@ func main() {
 		dbPath = "./data/detailing.db"
 	}
 
+	// Ensure data directory exists
+	if err := os.MkdirAll("./data", 0755); err != nil {
+		log.Fatalf("Failed to create data directory: %v", err)
+	}
+
 	db, err := sql.Open("sqlite3", dbPath)
 	if err != nil {
 		log.Fatalf("Failed to open database: %v", err)
@@ -40,6 +55,11 @@ func main() {
 
 	if err := db.Ping(); err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
+	}
+
+	// Run migrations
+	if err := runMigrations(db); err != nil {
+		log.Printf("Warning: Failed to run migrations: %v", err)
 	}
 
 	// Echo setup
