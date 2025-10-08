@@ -1,0 +1,32 @@
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./web/templates/**/*.templ",
+    "./web/static/**/*.js",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        'brand-primary': '#003DA5',
+        'brand-secondary': '#111827',
+        'brand-accent': '#60A5FA',
+        'brand-bg': '#0B0F13',
+        'brand-fg': '#F3F4F6',
+        'muted': '#9CA3AF',
+        'border': '#1F2937',
+      },
+      fontFamily: {
+        heading: ['Poppins', 'sans-serif'],
+        body: ['Inter', 'sans-serif'],
+      },
+      borderRadius: {
+        DEFAULT: '1rem',
+      },
+      boxShadow: {
+        'sm': '0 1px 2px rgba(0,0,0,.05)',
+        'md': '0 4px 12px rgba(0,0,0,.08)',
+      },
+    },
+  },
+  plugins: [],
+}

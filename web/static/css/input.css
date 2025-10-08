@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --brand-primary: #003DA5;
+    --brand-secondary: #111827;
+    --brand-accent: #60A5FA;
+    --bg: #0B0F13;
+    --fg: #F3F4F6;
+    --muted: #9CA3AF;
+    --border: #1F2937;
+    --radius: 1rem;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,.08);
+  }
+
+  * {
+    border-color: var(--border);
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+  }
+}
+
+@layer components {
+  /* Skip link for accessibility */
+  .skip-link {
+    @apply absolute -top-full left-0 bg-brand-primary text-white px-4 py-2 z-50;
+    @apply focus:top-0 transition-all;
+  }
+
+  /* Navigation links */
+  .nav-link {
+    @apply text-brand-fg hover:text-brand-accent transition-colors;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent rounded px-2 py-1;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    @apply bg-brand-primary hover:bg-brand-primary/90 text-white font-semibold;
+    @apply px-6 py-3 rounded-lg transition-all;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2 focus-visible:ring-offset-brand-bg;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-white hover:bg-gray-100 text-brand-secondary font-semibold;
+    @apply px-6 py-3 rounded-lg transition-all;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2 focus-visible:ring-offset-brand-bg;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* Form elements */
+  .input {
+    @apply w-full bg-brand-secondary border border-border rounded-lg px-4 py-2.5;
+    @apply text-brand-fg placeholder:text-muted;
+    @apply focus:outline-none focus:ring-2 focus:ring-brand-accent focus:border-transparent;
+    @apply transition-all;
+  }
+
+  /* Cards */
+  .card {
+    @apply bg-brand-secondary border border-border rounded-lg p-6;
+    @apply transition-all;
+  }
+
+  /* Prose (for blog content) */
+  .prose {
+    @apply text-brand-fg;
+  }
+
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4,
+  .prose h5,
+  .prose h6 {
+    @apply font-heading font-bold text-brand-fg;
+  }
+
+  .prose a {
+    @apply text-brand-accent hover:underline;
+  }
+
+  .prose strong {
+    @apply text-brand-fg font-semibold;
+  }
+
+  .prose code {
+    @apply bg-brand-secondary px-2 py-1 rounded text-sm;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

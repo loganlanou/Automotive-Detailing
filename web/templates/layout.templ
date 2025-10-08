@@ -1,0 +1,26 @@
+package templates
+
+templ Layout(title string) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>{ title } | Detailing Pass</title>
+			<meta name="description" content="Premium automotive detailing services - showcasing our work and driving excellence"/>
+			<link rel="stylesheet" href="/static/css/output.css"/>
+			<link rel="preconnect" href="https://fonts.googleapis.com"/>
+			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+			<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+		</head>
+		<body class="bg-brand-bg text-brand-fg font-body antialiased">
+			<a href="#main" class="skip-link">Skip to main content</a>
+			@Header()
+			<main id="main">
+				{ children... }
+			</main>
+			@Footer()
+			<script src="/static/js/main.js"></script>
+		</body>
+	</html>
+}

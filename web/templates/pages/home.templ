@@ -1,0 +1,89 @@
+package pages
+
+import "detailingpass/web/templates"
+
+templ Home() {
+	@templates.Layout("Home") {
+		@templates.Hero(
+			"Premium Detailing That Drives Results",
+			"Showcasing freshly detailed vehicles for our partner dealership and external clients. Every detail matters.",
+			"View Our Work",
+			"/work",
+		)
+
+		<!-- Value Props -->
+		<section class="container mx-auto px-4 py-16">
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+				<div class="text-center">
+					<div class="w-16 h-16 bg-brand-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+						<svg class="w-8 h-8 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+						</svg>
+					</div>
+					<h3 class="text-xl font-heading font-semibold mb-2">Professional Quality</h3>
+					<p class="text-muted">Certified technicians with years of experience delivering showroom-ready results.</p>
+				</div>
+
+				<div class="text-center">
+					<div class="w-16 h-16 bg-brand-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+						<svg class="w-8 h-8 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+						</svg>
+					</div>
+					<h3 class="text-xl font-heading font-semibold mb-2">Fast Turnaround</h3>
+					<p class="text-muted">Most packages completed same-day or within 24 hours.</p>
+				</div>
+
+				<div class="text-center">
+					<div class="w-16 h-16 bg-brand-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+						<svg class="w-8 h-8 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+						</svg>
+					</div>
+					<h3 class="text-xl font-heading font-semibold mb-2">Satisfaction Guaranteed</h3>
+					<p class="text-muted">We stand behind our work with a 100% satisfaction guarantee.</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Featured Work -->
+		<section class="bg-brand-secondary py-16">
+			<div class="container mx-auto px-4">
+				<div class="text-center mb-12">
+					<h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">Featured Work</h2>
+					<p class="text-muted">See the transformation we deliver on every vehicle</p>
+				</div>
+
+				<!-- Placeholder for featured jobs -->
+				<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+					for i := 0; i < 3; i++ {
+						<div class="card group cursor-pointer">
+							<div class="aspect-video bg-border rounded-lg mb-4 overflow-hidden">
+								<div class="w-full h-full flex items-center justify-center text-muted">
+									[Featured Image]
+								</div>
+							</div>
+							<h3 class="text-xl font-heading font-semibold mb-2 group-hover:text-brand-accent transition">
+								2024 Ford Mustang GT
+							</h3>
+							<p class="text-muted text-sm">Full Detail Package • 4 hours</p>
+						</div>
+					}
+				</div>
+
+				<div class="text-center mt-12">
+					<a href="/work" class="btn-secondary">View All Work</a>
+				</div>
+			</div>
+		</section>
+
+		<!-- CTA Section -->
+		<section class="container mx-auto px-4 py-16">
+			<div class="bg-gradient-to-r from-brand-primary to-brand-accent rounded-2xl p-8 md:p-12 text-center">
+				<h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">Ready to Transform Your Vehicle?</h2>
+				<p class="text-lg mb-8 opacity-90">Book your detailing appointment today and experience the difference.</p>
+				<a href="/contact" class="btn-secondary">Get Started</a>
+			</div>
+		</section>
+	}
+}

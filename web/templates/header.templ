@@ -1,0 +1,47 @@
+package templates
+
+templ Header() {
+	<header class="bg-brand-secondary border-b border-border sticky top-0 z-50">
+		<nav class="container mx-auto px-4 py-4" aria-label="Main navigation">
+			<div class="flex items-center justify-between">
+				<a href="/" class="text-2xl font-heading font-bold text-brand-accent">
+					Detailing Pass
+				</a>
+
+				<!-- Desktop Navigation -->
+				<div class="hidden md:flex items-center gap-8">
+					<a href="/services" class="nav-link">Services</a>
+					<a href="/work" class="nav-link">Our Work</a>
+					<a href="/reviews" class="nav-link">Reviews</a>
+					<a href="/about" class="nav-link">About</a>
+					<a href="/blog" class="nav-link">Blog</a>
+					<a href="/contact" class="btn-primary">Book Now</a>
+				</div>
+
+				<!-- Mobile Menu Button -->
+				<button
+					id="mobile-menu-btn"
+					class="md:hidden text-brand-fg focus:outline-none focus:ring-2 focus:ring-brand-accent rounded"
+					aria-label="Toggle menu"
+					aria-expanded="false"
+				>
+					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+					</svg>
+				</button>
+			</div>
+
+			<!-- Mobile Navigation -->
+			<div id="mobile-menu" class="hidden md:hidden mt-4 pb-4 border-t border-border pt-4">
+				<div class="flex flex-col gap-4">
+					<a href="/services" class="nav-link">Services</a>
+					<a href="/work" class="nav-link">Our Work</a>
+					<a href="/reviews" class="nav-link">Reviews</a>
+					<a href="/about" class="nav-link">About</a>
+					<a href="/blog" class="nav-link">Blog</a>
+					<a href="/contact" class="btn-primary inline-block text-center">Book Now</a>
+				</div>
+			</div>
+		</nav>
+	</header>
+}

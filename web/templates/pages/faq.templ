@@ -1,0 +1,30 @@
+package pages
+
+import "detailingpass/web/templates"
+
+templ FAQ() {
+	@templates.Layout("FAQ") {
+		<div class="container mx-auto px-4 py-16 max-w-3xl">
+			<h1 class="text-4xl font-heading font-bold mb-8">Frequently Asked Questions</h1>
+
+			<div class="space-y-4">
+				@FAQItem("How long does a full detail take?", "A full detail typically takes 4-6 hours depending on the vehicle's size and condition.")
+				@FAQItem("Do I need to schedule in advance?", "We recommend booking at least 2-3 days in advance, though same-day appointments may be available.")
+				@FAQItem("What products do you use?", "We use only premium, professional-grade products that are safe for all vehicle finishes.")
+				@FAQItem("Do you offer mobile detailing?", "Currently, all services are performed at our facility for quality control.")
+			</div>
+		</div>
+	}
+}
+
+templ FAQItem(question, answer string) {
+	<details class="bg-brand-secondary p-6 rounded-lg group">
+		<summary class="font-heading font-semibold text-lg cursor-pointer list-none flex justify-between items-center">
+			{ question }
+			<svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+			</svg>
+		</summary>
+		<p class="mt-4 text-muted">{ answer }</p>
+	</details>
+}

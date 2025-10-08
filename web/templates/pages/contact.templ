@@ -1,0 +1,90 @@
+package pages
+
+import "detailingpass/web/templates"
+
+templ Contact() {
+	@templates.Layout("Contact Us") {
+		<div class="container mx-auto px-4 py-16">
+			<div class="max-w-4xl mx-auto">
+				<h1 class="text-4xl font-heading font-bold mb-8 text-center">Get in Touch</h1>
+
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+					<!-- Contact Form -->
+					<div>
+						<form id="contact-form" class="space-y-6">
+							<div>
+								<label for="name" class="block text-sm font-medium mb-2">Name *</label>
+								<input type="text" id="name" name="name" required class="input"/>
+							</div>
+
+							<div>
+								<label for="email" class="block text-sm font-medium mb-2">Email *</label>
+								<input type="email" id="email" name="email" required class="input"/>
+							</div>
+
+							<div>
+								<label for="phone" class="block text-sm font-medium mb-2">Phone</label>
+								<input type="tel" id="phone" name="phone" class="input"/>
+							</div>
+
+							<div>
+								<label for="service" class="block text-sm font-medium mb-2">Service Interested In</label>
+								<select id="service" name="service" class="input">
+									<option value="">Select a package</option>
+									<option value="exterior">Exterior Detail</option>
+									<option value="interior">Interior Detail</option>
+									<option value="full">Full Detail</option>
+									<option value="other">Other</option>
+								</select>
+							</div>
+
+							<div>
+								<label for="message" class="block text-sm font-medium mb-2">Message *</label>
+								<textarea id="message" name="message" rows="4" required class="input"></textarea>
+							</div>
+
+							<!-- Honeypot spam trap -->
+							<input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off"/>
+
+							<button type="submit" class="btn-primary w-full">Send Message</button>
+						</form>
+					</div>
+
+					<!-- Contact Info & Booking -->
+					<div>
+						<div class="bg-brand-secondary p-8 rounded-lg mb-6">
+							<h3 class="text-xl font-heading font-semibold mb-4">Contact Information</h3>
+							<div class="space-y-4">
+								<div>
+									<p class="text-sm text-muted mb-1">Phone</p>
+									<p class="font-semibold">(555) 123-4567</p>
+								</div>
+								<div>
+									<p class="text-sm text-muted mb-1">Email</p>
+									<p class="font-semibold">info@detailingpass.com</p>
+								</div>
+								<div>
+									<p class="text-sm text-muted mb-1">Address</p>
+									<p class="font-semibold">123 Main St, City, ST 12345</p>
+								</div>
+								<div>
+									<p class="text-sm text-muted mb-1">Hours</p>
+									<p class="font-semibold">Mon-Fri: 8am-6pm</p>
+									<p class="font-semibold">Sat: 9am-4pm</p>
+									<p class="font-semibold">Sun: Closed</p>
+								</div>
+							</div>
+						</div>
+
+						<div class="bg-gradient-to-r from-brand-primary to-brand-accent p-8 rounded-lg text-center">
+							<h3 class="text-xl font-heading font-semibold mb-2">Book Online</h3>
+							<p class="mb-4 opacity-90 text-sm">Schedule your appointment instantly</p>
+							<button class="btn-secondary">Open Booking Calendar</button>
+							<!-- TODO: Add Cal.com embed -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}

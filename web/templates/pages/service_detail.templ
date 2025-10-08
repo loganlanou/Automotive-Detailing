@@ -1,0 +1,36 @@
+package pages
+
+import "detailingpass/web/templates"
+
+templ ServiceDetail(slug string) {
+	@templates.Layout("Service Detail") {
+		<div class="container mx-auto px-4 py-16">
+			<h1 class="text-4xl font-heading font-bold mb-6">{ slug }</h1>
+			<p class="text-muted mb-8">Comprehensive package description goes here</p>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+				<div>
+					<h2 class="text-2xl font-heading font-bold mb-4">What's Included</h2>
+					<ul class="space-y-3">
+						<li class="flex items-start gap-3">
+							<svg class="w-6 h-6 text-brand-accent flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+							</svg>
+							<span>Service item description</span>
+						</li>
+					</ul>
+				</div>
+
+				<div class="bg-brand-secondary p-8 rounded-lg">
+					<h3 class="text-2xl font-heading font-bold mb-4">Book This Package</h3>
+					<div class="mb-6">
+						<p class="text-3xl font-bold text-brand-accent mb-2">$XXX - $XXX</p>
+						<p class="text-muted">Estimated duration: X-X hours</p>
+					</div>
+					<a href="/contact" class="btn-primary block text-center mb-4">Book Now</a>
+					<a href="/contact" class="btn-secondary block text-center">Request Quote</a>
+				</div>
+			</div>
+		</div>
+	}
+}

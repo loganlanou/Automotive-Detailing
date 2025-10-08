@@ -1,0 +1,73 @@
+package pages
+
+import "detailingpass/web/templates"
+
+templ WorkDetail(slug string) {
+	@templates.Layout("Work Detail") {
+		<div class="container mx-auto px-4 py-16">
+			<div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+				<!-- Before/After Gallery -->
+				<div>
+					<h1 class="text-4xl font-heading font-bold mb-6">2024 Ford F-150</h1>
+
+					<div class="mb-8">
+						<div class="aspect-video bg-border rounded-lg mb-4 overflow-hidden">
+							<div class="w-full h-full flex items-center justify-center text-muted">
+								[Before/After Slider]
+							</div>
+						</div>
+
+						<!-- Image Grid -->
+						<div class="grid grid-cols-4 gap-2">
+							for i := 0; i < 4; i++ {
+								<div class="aspect-square bg-border rounded cursor-pointer hover:opacity-75 transition"></div>
+							}
+						</div>
+					</div>
+				</div>
+
+				<!-- Vehicle Details -->
+				<div>
+					<div class="bg-brand-secondary p-8 rounded-lg mb-6">
+						<h2 class="text-2xl font-heading font-bold mb-6">Vehicle Details</h2>
+						<dl class="space-y-4">
+							<div class="flex justify-between border-b border-border pb-3">
+								<dt class="text-muted">Year</dt>
+								<dd class="font-semibold">2024</dd>
+							</div>
+							<div class="flex justify-between border-b border-border pb-3">
+								<dt class="text-muted">Make</dt>
+								<dd class="font-semibold">Ford</dd>
+							</div>
+							<div class="flex justify-between border-b border-border pb-3">
+								<dt class="text-muted">Model</dt>
+								<dd class="font-semibold">F-150</dd>
+							</div>
+							<div class="flex justify-between border-b border-border pb-3">
+								<dt class="text-muted">Trim</dt>
+								<dd class="font-semibold">XLT SuperCrew</dd>
+							</div>
+							<div class="flex justify-between border-b border-border pb-3">
+								<dt class="text-muted">Package</dt>
+								<dd class="font-semibold">Full Detail</dd>
+							</div>
+							<div class="flex justify-between">
+								<dt class="text-muted">Completed</dt>
+								<dd class="font-semibold">January 15, 2025</dd>
+							</div>
+						</dl>
+					</div>
+
+					<!-- Dealer CTA -->
+					<div class="bg-gradient-to-r from-brand-primary to-brand-accent p-8 rounded-lg text-center">
+						<h3 class="text-2xl font-heading font-bold mb-2">Available at Dealership</h3>
+						<p class="mb-6 opacity-90">This vehicle is available for purchase</p>
+						<a href="https://dealer.example.com/vehicle/123" target="_blank" rel="noopener" class="btn-secondary inline-block">
+							View Dealer Listing
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}

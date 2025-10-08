@@ -1,0 +1,22 @@
+package templates
+
+templ Hero(title, subtitle, ctaText, ctaLink string) {
+	<section class="relative bg-brand-secondary py-20 md:py-32 overflow-hidden">
+		<div class="absolute inset-0 bg-gradient-to-br from-brand-primary/20 to-transparent"></div>
+		<div class="container mx-auto px-4 relative z-10">
+			<div class="max-w-3xl">
+				<h1 class="text-4xl md:text-6xl font-heading font-bold mb-6 leading-tight">
+					{ title }
+				</h1>
+				<p class="text-xl text-muted mb-8">
+					{ subtitle }
+				</p>
+				if ctaText != "" {
+					<a href={ templ.SafeURL(ctaLink) } class="btn-primary inline-block">
+						{ ctaText }
+					</a>
+				}
+			</div>
+		</div>
+	</section>
+}

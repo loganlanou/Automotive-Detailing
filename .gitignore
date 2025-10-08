@@ -1,0 +1,40 @@
+# Environment
+.env
+.env.local
+
+# Build artifacts
+bin/
+tmp/
+dist/
+
+# Database
+data/
+*.db
+*.db-shm
+*.db-wal
+
+# Dependencies
+node_modules/
+vendor/
+
+# Generated files
+web/static/css/output.css
+web/templates/**/*_templ.go
+
+# Logs
+*.log
+build-errors.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Uploads
+web/static/uploads/*
+!web/static/uploads/.gitkeep

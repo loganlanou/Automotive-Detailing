@@ -1,0 +1,84 @@
+package pages
+
+import "detailingpass/web/templates"
+
+templ Work() {
+	@templates.Layout("Our Work") {
+		<div class="container mx-auto px-4 py-16">
+			<h1 class="text-4xl font-heading font-bold mb-8">Our Work</h1>
+
+			<!-- Filter Bar -->
+			<div class="bg-brand-secondary p-6 rounded-lg mb-8">
+				<form method="GET" action="/work" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+					<div>
+						<label for="make" class="block text-sm font-medium mb-2">Make</label>
+						<select id="make" name="make" class="input">
+							<option value="">All Makes</option>
+							<option value="ford">Ford</option>
+							<option value="chevrolet">Chevrolet</option>
+							<option value="toyota">Toyota</option>
+						</select>
+					</div>
+
+					<div>
+						<label for="model" class="block text-sm font-medium mb-2">Model</label>
+						<select id="model" name="model" class="input">
+							<option value="">All Models</option>
+						</select>
+					</div>
+
+					<div>
+						<label for="year" class="block text-sm font-medium mb-2">Year</label>
+						<select id="year" name="year" class="input">
+							<option value="">All Years</option>
+							for year := 2025; year >= 2015; year-- {
+								<option value={ string(rune(year)) }>{ string(rune(year)) }</option>
+							}
+						</select>
+					</div>
+
+					<div>
+						<label for="package" class="block text-sm font-medium mb-2">Package</label>
+						<select id="package" name="package" class="input">
+							<option value="">All Packages</option>
+						</select>
+					</div>
+
+					<div class="md:col-span-4">
+						<button type="submit" class="btn-primary">Apply Filters</button>
+						<a href="/work" class="btn-secondary ml-4">Clear</a>
+					</div>
+				</form>
+			</div>
+
+			<!-- Gallery Grid -->
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+				for i := 0; i < 9; i++ {
+					<a href="/work/example-vehicle" class="card group cursor-pointer">
+						<div class="aspect-video bg-border rounded-lg mb-4 overflow-hidden">
+							<div class="w-full h-full flex items-center justify-center text-muted">
+								[Work Image]
+							</div>
+						</div>
+						<h3 class="text-xl font-heading font-semibold mb-2 group-hover:text-brand-accent transition">
+							2024 Ford F-150
+						</h3>
+						<p class="text-muted text-sm mb-2">Full Detail Package</p>
+						<span class="inline-block px-3 py-1 bg-brand-primary/20 text-brand-accent text-xs rounded-full">
+							Available at Dealer
+						</span>
+					</a>
+				}
+			</div>
+
+			<!-- Pagination Placeholder -->
+			<div class="flex justify-center gap-2 mt-12">
+				<button class="px-4 py-2 bg-brand-secondary rounded hover:bg-brand-primary transition">Previous</button>
+				<button class="px-4 py-2 bg-brand-primary rounded">1</button>
+				<button class="px-4 py-2 bg-brand-secondary rounded hover:bg-brand-primary transition">2</button>
+				<button class="px-4 py-2 bg-brand-secondary rounded hover:bg-brand-primary transition">3</button>
+				<button class="px-4 py-2 bg-brand-secondary rounded hover:bg-brand-primary transition">Next</button>
+			</div>
+		</div>
+	}
+}

@@ -1,0 +1,42 @@
+package pages
+
+import "detailingpass/web/templates"
+
+templ About() {
+	@templates.Layout("About Us") {
+		@templates.Hero(
+			"About Detailing Pass",
+			"Passionate about perfection. Dedicated to detail.",
+			"",
+			"",
+		)
+
+		<section class="container mx-auto px-4 py-16">
+			<div class="max-w-3xl mx-auto prose prose-invert">
+				<h2 class="text-3xl font-heading font-bold mb-4">Our Story</h2>
+				<p class="text-muted mb-6">
+					REPLACE_ME: Add your company story, mission, and values here. Talk about your partnership with the dealership, your commitment to quality, and what sets you apart.
+				</p>
+
+				<h2 class="text-3xl font-heading font-bold mb-4 mt-12">Our Process</h2>
+				<div class="grid grid-cols-1 md:grid-cols-3 gap-8 not-prose">
+					<div>
+						<div class="text-4xl font-bold text-brand-accent mb-2">01</div>
+						<h3 class="text-xl font-heading font-semibold mb-2">Inspection</h3>
+						<p class="text-muted">Thorough assessment of your vehicle's condition and needs.</p>
+					</div>
+					<div>
+						<div class="text-4xl font-bold text-brand-accent mb-2">02</div>
+						<h3 class="text-xl font-heading font-semibold mb-2">Detailing</h3>
+						<p class="text-muted">Professional treatment using premium products and techniques.</p>
+					</div>
+					<div>
+						<div class="text-4xl font-bold text-brand-accent mb-2">03</div>
+						<h3 class="text-xl font-heading font-semibold mb-2">Final Check</h3>
+						<p class="text-muted">Quality inspection ensuring every detail meets our standards.</p>
+					</div>
+				</div>
+			</div>
+		</section>
+	}
+}
