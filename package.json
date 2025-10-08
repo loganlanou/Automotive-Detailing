@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "make dev",
-    "build": "make build"
+    "build": "bash build.sh",
+    "build:css": "npx tailwindcss -i ./web/static/css/input.css -o ./web/static/css/output.css --minify"
   },
   "devDependencies": {
     "tailwindcss": "^3.4.17",
