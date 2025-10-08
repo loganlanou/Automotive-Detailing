@@ -55,7 +55,8 @@ func main() {
 	// Static files
 	e.Static("/static", "web/static")
 	e.Static("/uploads", "web/static/uploads")
-	e.File("/favicon.ico", "public/favicon.ico")
+	e.File("/favicon.png", "public/favicon.png")
+	e.File("/favicon.ico", "public/favicon.png")
 	e.File("/robots.txt", "public/robots.txt")
 	e.File("/sitemap.xml", "public/sitemap.xml")
 
