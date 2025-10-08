@@ -12,16 +12,23 @@ templ WorkDetail(slug string) {
 
 					<div class="mb-8">
 						<div class="aspect-video bg-border rounded-lg mb-4 overflow-hidden">
-							<div class="w-full h-full flex items-center justify-center text-muted">
-								[Before/After Slider]
-							</div>
+							<img src="/static/images/work/placeholder-2.jpg" alt="Ford F-150 Interior After Detail" class="w-full h-full object-cover"/>
 						</div>
 
-						<!-- Image Grid -->
+						<!-- Before/After Thumbnail Grid -->
 						<div class="grid grid-cols-4 gap-2">
-							for i := 0; i < 4; i++ {
-								<div class="aspect-square bg-border rounded cursor-pointer hover:opacity-75 transition"></div>
-							}
+							<div class="aspect-square bg-border rounded overflow-hidden cursor-pointer hover:opacity-75 transition">
+								<img src="/static/images/work/placeholder-1.jpg" alt="Before Detail 1" class="w-full h-full object-cover"/>
+							</div>
+							<div class="aspect-square bg-border rounded overflow-hidden cursor-pointer hover:opacity-75 transition">
+								<img src="/static/images/work/placeholder-2.jpg" alt="After Detail 1" class="w-full h-full object-cover"/>
+							</div>
+							<div class="aspect-square bg-border rounded overflow-hidden cursor-pointer hover:opacity-75 transition">
+								<img src="/static/images/work/placeholder-1.jpg" alt="Before Detail 2" class="w-full h-full object-cover"/>
+							</div>
+							<div class="aspect-square bg-border rounded overflow-hidden cursor-pointer hover:opacity-75 transition">
+								<img src="/static/images/work/placeholder-2.jpg" alt="After Detail 2" class="w-full h-full object-cover"/>
+							</div>
 						</div>
 					</div>
 				</div>
