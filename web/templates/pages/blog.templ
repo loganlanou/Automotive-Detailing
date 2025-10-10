@@ -1,6 +1,9 @@
 package pages
 
-import "detailingpass/web/templates"
+import (
+	"detailingpass/web/templates"
+	"fmt"
+)
 
 templ Blog() {
 	@templates.Layout("Blog") {
@@ -10,7 +13,9 @@ templ Blog() {
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 				for i := 0; i < 6; i++ {
 					<article class="card group cursor-pointer">
-						<div class="aspect-video bg-border rounded-lg mb-4"></div>
+						<div class="aspect-video bg-border rounded-lg mb-4 overflow-hidden">
+							<img src={ "/static/images/work/placeholder-" + fmt.Sprintf("%d", i+1) + ".jpg" } alt={ "Blog post " + fmt.Sprintf("%d", i+1) } class="w-full h-full object-cover"/>
+						</div>
 						<h2 class="text-xl font-heading font-semibold mb-2 group-hover:text-brand-accent transition">
 							Post Title Here
 						</h2>
