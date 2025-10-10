@@ -1,5 +1,9 @@
+[variables]
+NIXPACKS_NO_MUSL = "1"
+
 [phases.setup]
 nixPkgs = ["nodejs", "go"]
+aptPkgs = ["ca-certificates"]
 
 [phases.install]
 cmds = [
@@ -11,9 +15,10 @@ cmds = [
 cmds = [
   "npx tailwindcss -i ./web/static/css/input.css -o ./web/static/css/output.css --minify",
   "go run github.com/a-h/templ/cmd/templ@latest generate",
-  "mkdir -p bin",
-  "go build -o bin/server ./cmd/server"
+  "mkdir -p bin out",
+  "CGO_ENABLED=1 go build -o bin/server ./cmd/server",
+  "cp bin/server out/server"
 ]
 
 [start]
-cmd = "./bin/server"
+cmd = "./out/server"
