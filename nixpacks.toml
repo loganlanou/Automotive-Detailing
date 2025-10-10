@@ -1,0 +1,18 @@
+[phases.setup]
+nixPkgs = ["nodejs", "go_1_22"]
+
+[phases.install]
+cmds = [
+  "npm install"
+]
+
+[phases.build]
+cmds = [
+  "npm run build:css",
+  "go install github.com/a-h/templ/cmd/templ@latest",
+  "templ generate",
+  "go build -o bin/server ./cmd/server"
+]
+
+[start]
+cmd = "./bin/server"
