@@ -84,8 +84,8 @@ func main() {
 	server.SetupRoutes(e, db)
 
 	// Start server
-	addr := fmt.Sprintf(":%s", port)
-	log.Printf("🚀 Server starting on http://localhost%s", addr)
+	addr := fmt.Sprintf("0.0.0.0:%s", port)
+	log.Printf("🚀 Server starting on %s", addr)
 	if err := e.Start(addr); err != nil {
 		log.Fatalf("Server error: %v", err)
 	}
