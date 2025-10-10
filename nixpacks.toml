@@ -3,14 +3,13 @@ nixPkgs = ["nodejs", "go_1_22"]
 
 [phases.install]
 cmds = [
-  "npm install"
+  "npm install",
+  "go install github.com/a-h/templ/cmd/templ@latest"
 ]
 
 [phases.build]
 cmds = [
-  "npm run build:css",
-  "go run github.com/a-h/templ/cmd/templ@latest generate",
-  "go build -o bin/server ./cmd/server"
+  "bash build.sh"
 ]
 
 [start]
