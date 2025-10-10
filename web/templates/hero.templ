@@ -2,19 +2,29 @@ package templates
 
 templ Hero(title, subtitle, ctaText, ctaLink string) {
 	<section class="relative bg-brand-secondary py-20 md:py-32 overflow-hidden">
-		<div class="absolute inset-0 bg-gradient-to-br from-brand-primary/20 to-transparent"></div>
+		<!-- Decorative background elements -->
+		<div class="absolute inset-0">
+			<div class="absolute inset-0 bg-gradient-to-br from-brand-primary/20 via-transparent to-brand-accent/10"></div>
+			<div class="absolute top-20 right-20 w-72 h-72 bg-brand-accent/5 rounded-full blur-3xl"></div>
+			<div class="absolute bottom-20 left-20 w-96 h-96 bg-brand-primary/5 rounded-full blur-3xl"></div>
+		</div>
 		<div class="container mx-auto px-4 relative z-10">
 			<div class="max-w-3xl">
-				<h1 class="text-4xl md:text-6xl font-heading font-bold mb-6 leading-tight">
+				<h1 class="text-4xl md:text-6xl font-heading font-bold mb-6 leading-tight text-balance">
 					{ title }
 				</h1>
-				<p class="text-xl text-muted mb-8">
+				<p class="text-xl text-muted mb-8 leading-relaxed">
 					{ subtitle }
 				</p>
 				if ctaText != "" {
-					<a href={ templ.SafeURL(ctaLink) } class="btn-primary inline-block">
-						{ ctaText }
-					</a>
+					<div class="flex flex-wrap gap-4">
+						<a href={ templ.SafeURL(ctaLink) } class="btn-primary inline-block">
+							{ ctaText }
+						</a>
+						<a href="/contact" class="btn-secondary inline-block">
+							Get in Touch
+						</a>
+					</div>
 				}
 			</div>
 		</div>

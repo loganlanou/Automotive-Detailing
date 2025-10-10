@@ -57,30 +57,35 @@ templ Contact() {
 							<div class="space-y-4">
 								<div>
 									<p class="text-sm text-muted mb-1">Phone</p>
-									<p class="font-semibold">(555) 123-4567</p>
+									<a href="tel:+15551234567" class="font-semibold hover:text-brand-accent transition">(555) 123-4567</a>
 								</div>
 								<div>
 									<p class="text-sm text-muted mb-1">Email</p>
-									<p class="font-semibold">info@detailingpass.com</p>
+									<a href="mailto:info@detailingpass.com" class="font-semibold hover:text-brand-accent transition">info@detailingpass.com</a>
 								</div>
 								<div>
-									<p class="text-sm text-muted mb-1">Address</p>
-									<p class="font-semibold">123 Main St, City, ST 12345</p>
+									<p class="text-sm text-muted mb-1">Location</p>
+									<p class="font-semibold">Serving the Greater Metro Area</p>
+									<p class="text-sm text-muted mt-1">Contact us for exact address</p>
 								</div>
 								<div>
-									<p class="text-sm text-muted mb-1">Hours</p>
-									<p class="font-semibold">Mon-Fri: 8am-6pm</p>
-									<p class="font-semibold">Sat: 9am-4pm</p>
-									<p class="font-semibold">Sun: Closed</p>
+									<p class="text-sm text-muted mb-1">Business Hours</p>
+									<p class="font-semibold">Monday - Friday: 8:00 AM - 6:00 PM</p>
+									<p class="font-semibold">Saturday: 9:00 AM - 4:00 PM</p>
+									<p class="font-semibold">Sunday: Closed</p>
 								</div>
 							</div>
 						</div>
 
 						<div class="bg-gradient-to-r from-brand-primary to-brand-accent p-8 rounded-lg text-center">
-							<h3 class="text-xl font-heading font-semibold mb-2">Book Online</h3>
-							<p class="mb-4 opacity-90 text-sm">Schedule your appointment instantly</p>
-							<button class="btn-secondary">Open Booking Calendar</button>
-							<!-- TODO: Add Cal.com embed -->
+							<h3 class="text-xl font-heading font-semibold mb-2">Quick Response</h3>
+							<p class="mb-4 opacity-90 text-sm">We typically respond within 2-4 hours during business hours</p>
+							<div class="flex items-center justify-center gap-2 text-sm opacity-90">
+								<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+								</svg>
+								<span>Fast & Professional Service</span>
+							</div>
 						</div>
 					</div>
 				</div>

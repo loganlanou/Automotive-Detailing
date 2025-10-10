@@ -12,8 +12,18 @@ import (
 	_ "embed"
 )
 
-//go:embed ../cmd/server/schema.sql
-var schema string
+// Schema is defined inline to avoid embed path issues
+var schema string = `
+CREATE TABLE IF NOT EXISTS contacts (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	name TEXT NOT NULL,
+	email TEXT NOT NULL,
+	phone TEXT,
+	service TEXT,
+	message TEXT NOT NULL,
+	created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+`
 
 func Handler(w http.ResponseWriter, r *http.Request) {
 	// Create Echo instance

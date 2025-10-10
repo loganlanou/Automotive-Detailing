@@ -2,6 +2,30 @@ package pages
 
 import "detailingpass/web/templates"
 
+templ ReviewCard(review, name, source string, stars int) {
+	<div class="card">
+		<div class="flex items-center gap-1 mb-4">
+			for j := 0; j < stars; j++ {
+				<svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+					<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+				</svg>
+			}
+		</div>
+		<p class="text-muted mb-4">
+			"{ review }"
+		</p>
+		<div class="flex items-center gap-3">
+			<div class="w-10 h-10 bg-brand-primary/20 rounded-full flex items-center justify-center text-brand-accent font-semibold text-sm">
+				{ name[0:1] }
+			</div>
+			<div>
+				<p class="font-semibold">{ name }</p>
+				<p class="text-sm text-muted">{ source }</p>
+			</div>
+		</div>
+	</div>
+}
+
 templ Reviews() {
 	@templates.Layout("Reviews") {
 		@templates.Hero(
@@ -13,29 +37,17 @@ templ Reviews() {
 
 		<section class="container mx-auto px-4 py-16">
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-				for i := 0; i < 6; i++ {
-					<div class="card">
-						<div class="flex items-center gap-1 mb-4">
-							for j := 0; j < 5; j++ {
-								<svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-									<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-								</svg>
-							}
-						</div>
-						<p class="text-muted mb-4">
-							"The team did an outstanding job on my vehicle. It looks brand new!"
-						</p>
-						<div class="flex items-center gap-3">
-							<div class="w-10 h-10 bg-brand-primary/20 rounded-full flex items-center justify-center text-brand-accent font-semibold">
-								JD
-							</div>
-							<div>
-								<p class="font-semibold">John Doe</p>
-								<p class="text-sm text-muted">Google Review</p>
-							</div>
-						</div>
-					</div>
-				}
+				@ReviewCard("Absolutely phenomenal work! My truck looks better than when I bought it. The attention to detail is incredible - they even cleaned areas I didn't know were dirty. Highly recommend!", "Michael R.", "Google Review", 5)
+				@ReviewCard("I've been using Detailing Pass for all my dealership's vehicles, and they consistently deliver showroom-quality results. Professional, reliable, and reasonably priced.", "Sarah T.", "Business Client", 5)
+				@ReviewCard("Best detailing service I've ever used. They transformed my 5-year-old SUV and made it look brand new. The interior smells amazing and the exterior shines like glass.", "James K.", "Yelp Review", 5)
+				@ReviewCard("Professional team that really cares about their work. Took their time to do everything right. My leather seats look and feel new again. Worth every penny!", "Lisa M.", "Google Review", 5)
+				@ReviewCard("I was skeptical about the price at first, but after seeing the results I understand why. The quality is outstanding. They've earned a customer for life.", "David P.", "Google Review", 5)
+				@ReviewCard("Excellent service from start to finish. Easy booking, great communication, and the results speak for themselves. My car has never looked this good!", "Jennifer S.", "Facebook Review", 5)
+			</div>
+
+			<div class="text-center mt-12">
+				<p class="text-muted mb-4">Want to leave your own review?</p>
+				<a href="/contact" class="btn-primary">Share Your Experience</a>
 			</div>
 		</section>
 	}

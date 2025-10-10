@@ -26,6 +26,12 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
+      // Show loading state
+      const submitBtn = contactForm.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+
       try {
         const response = await fetch('/contact', {
           method: 'POST',
@@ -36,14 +42,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (response.ok) {
-          alert('Thank you! We will be in touch soon.');
+          // Show success message
+          const successMsg = document.createElement('div');
+          successMsg.className = 'bg-green-500/10 border border-green-500/20 text-green-400 px-4 py-3 rounded-lg mb-4';
+          successMsg.innerHTML = '<p class="font-semibold">Thank you for contacting us!</p><p class="text-sm mt-1">We\'ll get back to you within 2-4 business hours.</p>';
+          contactForm.insertAdjacentElement('beforebegin', successMsg);
           contactForm.reset();
+          setTimeout(() => successMsg.remove(), 5000);
         } else {
-          alert('There was an error submitting your message. Please try again.');
+          throw new Error('Server error');
         }
       } catch (error) {
         console.error('Error:', error);
-        alert('There was an error submitting your message. Please try again.');
+        // Show error message
+        const errorMsg = document.createElement('div');
+        errorMsg.className = 'bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-lg mb-4';
+        errorMsg.innerHTML = '<p class="font-semibold">Oops! Something went wrong.</p><p class="text-sm mt-1">Please try again or call us directly at (555) 123-4567.</p>';
+        contactForm.insertAdjacentElement('beforebegin', errorMsg);
+        setTimeout(() => errorMsg.remove(), 5000);
+      } finally {
+        // Reset button state
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
       }
     });
   }
