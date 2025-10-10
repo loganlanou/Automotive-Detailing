@@ -11,6 +11,11 @@ import (
 func SetupRoutes(e *echo.Echo, db *sql.DB) {
 	h := handlers.New(db)
 
+	// Health check endpoint for Railway
+	e.GET("/health", func(c echo.Context) error {
+		return c.JSON(200, map[string]string{"status": "ok"})
+	})
+
 	// Public pages
 	e.GET("/", h.Home)
 	e.GET("/about", h.About)
