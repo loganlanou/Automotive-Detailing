@@ -19,7 +19,6 @@ vendor/
 
 # Generated files
 web/static/css/output.css
-web/templates/**/*_templ.go
 
 # Logs
 *.log
