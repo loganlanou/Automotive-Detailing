@@ -15,10 +15,9 @@ cmds = [
 cmds = [
   "npx tailwindcss -i ./web/static/css/input.css -o ./web/static/css/output.css --minify",
   "go run github.com/a-h/templ/cmd/templ@latest generate",
-  "mkdir -p bin out",
-  "CGO_ENABLED=1 go build -o bin/server ./cmd/server",
-  "cp bin/server out/server"
+  "mkdir -p bin",
+  "CGO_ENABLED=1 go build -o bin/server ./cmd/server"
 ]
 
 [start]
-cmd = "./out/server"
+cmd = "./bin/server"
