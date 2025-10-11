@@ -8,7 +8,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 	_ "embed"
 )
 
@@ -38,7 +38,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	e.Static("/static", "web/static")
 
 	// Initialize database
-	db, _ := sql.Open("sqlite3", ":memory:")
+	db, _ := sql.Open("sqlite", ":memory:")
 	db.Exec(schema)
 
 	// Setup routes

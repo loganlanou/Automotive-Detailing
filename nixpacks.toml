@@ -8,7 +8,7 @@ cmds = [
 
 [phases.build]
 cmds = [
-  "go build -o bin/server ./cmd/server"
+  "CGO_ENABLED=0 go build -o bin/server ./cmd/server"
 ]
 
 [start]
