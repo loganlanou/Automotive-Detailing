@@ -14,15 +14,32 @@
     --radius: 1rem;
     --shadow-sm: 0 1px 2px rgba(0,0,0,.05);
     --shadow-md: 0 4px 12px rgba(0,0,0,.08);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,.15);
+    --shadow-xl: 0 20px 40px rgba(0,0,0,.25);
   }
 
   * {
     border-color: var(--border);
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     background-color: var(--bg);
     color: var(--fg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
@@ -65,7 +82,12 @@
   /* Cards */
   .card {
     @apply bg-brand-secondary border border-border rounded-lg p-6;
-    @apply transition-all;
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .card:hover {
+    @apply shadow-lg border-brand-accent/30;
+    transform: translateY(-4px);
   }
 
   /* Prose (for blog content) */
@@ -93,10 +115,123 @@
   .prose code {
     @apply bg-brand-secondary px-2 py-1 rounded text-sm;
   }
+
+  /* Before/After Slider */
+  .before-after-slider {
+    @apply relative overflow-hidden rounded-lg;
+    user-select: none;
+  }
+
+  .before-after-slider .before-image,
+  .before-after-slider .after-image {
+    @apply absolute inset-0 w-full h-full object-cover;
+  }
+
+  .before-after-slider .slider-handle {
+    @apply absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .before-after-slider .slider-handle::before {
+    content: '';
+    @apply absolute top-1/2 left-1/2 w-8 h-8 bg-white rounded-full;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+
+  .before-after-slider .slider-handle::after {
+    content: '⟷';
+    @apply absolute top-1/2 left-1/2 text-black font-bold text-sm;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Testimonials Carousel */
+  .testimonials-carousel {
+    @apply relative overflow-hidden;
+  }
+
+  .carousel-track {
+    @apply flex transition-transform duration-500 ease-in-out;
+  }
+
+  .carousel-slide {
+    @apply min-w-full;
+  }
+
+  /* Pricing Calculator */
+  #pricing-calculator .price-display {
+    @apply text-5xl font-heading font-bold text-brand-accent;
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Fade-in animation utilities */
+  .fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+    opacity: 0;
+  }
+
+  .slide-up {
+    animation: slideUp 0.6s ease-out forwards;
+    opacity: 0;
+  }
+
+  .scale-in {
+    animation: scaleIn 0.5s ease-out forwards;
+    opacity: 0;
+  }
+
+  /* Staggered animation delays */
+  .delay-100 { animation-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; }
+  .delay-400 { animation-delay: 400ms; }
+  .delay-500 { animation-delay: 500ms; }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

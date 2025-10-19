@@ -59,3 +59,45 @@ SELECT * FROM posts
 WHERE published_at IS NOT NULL
 ORDER BY published_at DESC
 LIMIT ? OFFSET ?;
+
+-- Admin queries
+
+-- name: CountPackages :one
+SELECT COUNT(*) FROM packages;
+
+-- name: CountVehicles :one
+SELECT COUNT(*) FROM vehicles;
+
+-- name: CountJobs :one
+SELECT COUNT(*) FROM jobs;
+
+-- name: CountMedia :one
+SELECT COUNT(*) FROM media;
+
+-- name: CountReviews :one
+SELECT COUNT(*) FROM reviews;
+
+-- name: CountPosts :one
+SELECT COUNT(*) FROM posts;
+
+-- name: GetAllPackagesAdmin :many
+SELECT * FROM packages
+ORDER BY sort_order, id;
+
+-- name: GetPackageByID :one
+SELECT * FROM packages
+WHERE id = ? LIMIT 1;
+
+-- name: CreatePackage :one
+INSERT INTO packages (slug, name, short_desc, long_desc, price_min, price_max, duration_est, is_active, sort_order)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+RETURNING *;
+
+-- name: UpdatePackage :one
+UPDATE packages
+SET slug = ?, name = ?, short_desc = ?, long_desc = ?, price_min = ?, price_max = ?, duration_est = ?, is_active = ?, sort_order = ?, updated_at = CURRENT_TIMESTAMP
+WHERE id = ?
+RETURNING *;
+
+-- name: DeletePackage :exec
+DELETE FROM packages WHERE id = ?;

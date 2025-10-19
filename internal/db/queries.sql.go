@@ -10,6 +10,131 @@ import (
 	"database/sql"
 )
 
+const countJobs = `-- name: CountJobs :one
+SELECT COUNT(*) FROM jobs
+`
+
+func (q *Queries) CountJobs(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countJobs)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
+const countMedia = `-- name: CountMedia :one
+SELECT COUNT(*) FROM media
+`
+
+func (q *Queries) CountMedia(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countMedia)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
+const countPackages = `-- name: CountPackages :one
+
+SELECT COUNT(*) FROM packages
+`
+
+// Admin queries
+func (q *Queries) CountPackages(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countPackages)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
+const countPosts = `-- name: CountPosts :one
+SELECT COUNT(*) FROM posts
+`
+
+func (q *Queries) CountPosts(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countPosts)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
+const countReviews = `-- name: CountReviews :one
+SELECT COUNT(*) FROM reviews
+`
+
+func (q *Queries) CountReviews(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countReviews)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
+const countVehicles = `-- name: CountVehicles :one
+SELECT COUNT(*) FROM vehicles
+`
+
+func (q *Queries) CountVehicles(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countVehicles)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
+const createPackage = `-- name: CreatePackage :one
+INSERT INTO packages (slug, name, short_desc, long_desc, price_min, price_max, duration_est, is_active, sort_order)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+RETURNING id, slug, name, short_desc, long_desc, price_min, price_max, duration_est, is_active, sort_order, created_at, updated_at
+`
+
+type CreatePackageParams struct {
+	Slug        string         `json:"slug"`
+	Name        string         `json:"name"`
+	ShortDesc   sql.NullString `json:"short_desc"`
+	LongDesc    sql.NullString `json:"long_desc"`
+	PriceMin    sql.NullInt64  `json:"price_min"`
+	PriceMax    sql.NullInt64  `json:"price_max"`
+	DurationEst sql.NullInt64  `json:"duration_est"`
+	IsActive    sql.NullBool   `json:"is_active"`
+	SortOrder   sql.NullInt64  `json:"sort_order"`
+}
+
+func (q *Queries) CreatePackage(ctx context.Context, arg CreatePackageParams) (Package, error) {
+	row := q.db.QueryRowContext(ctx, createPackage,
+		arg.Slug,
+		arg.Name,
+		arg.ShortDesc,
+		arg.LongDesc,
+		arg.PriceMin,
+		arg.PriceMax,
+		arg.DurationEst,
+		arg.IsActive,
+		arg.SortOrder,
+	)
+	var i Package
+	err := row.Scan(
+		&i.ID,
+		&i.Slug,
+		&i.Name,
+		&i.ShortDesc,
+		&i.LongDesc,
+		&i.PriceMin,
+		&i.PriceMax,
+		&i.DurationEst,
+		&i.IsActive,
+		&i.SortOrder,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const deletePackage = `-- name: DeletePackage :exec
+DELETE FROM packages WHERE id = ?
+`
+
+func (q *Queries) DeletePackage(ctx context.Context, id int64) error {
+	_, err := q.db.ExecContext(ctx, deletePackage, id)
+	return err
+}
+
 const getAllPackages = `-- name: GetAllPackages :many
 SELECT id, slug, name, short_desc, long_desc, price_min, price_max, duration_est, is_active, sort_order, created_at, updated_at FROM packages
 WHERE is_active = 1
@@ -18,6 +143,47 @@ ORDER BY sort_order, id
 
 func (q *Queries) GetAllPackages(ctx context.Context) ([]Package, error) {
 	rows, err := q.db.QueryContext(ctx, getAllPackages)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Package
+	for rows.Next() {
+		var i Package
+		if err := rows.Scan(
+			&i.ID,
+			&i.Slug,
+			&i.Name,
+			&i.ShortDesc,
+			&i.LongDesc,
+			&i.PriceMin,
+			&i.PriceMax,
+			&i.DurationEst,
+			&i.IsActive,
+			&i.SortOrder,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getAllPackagesAdmin = `-- name: GetAllPackagesAdmin :many
+SELECT id, slug, name, short_desc, long_desc, price_min, price_max, duration_est, is_active, sort_order, created_at, updated_at FROM packages
+ORDER BY sort_order, id
+`
+
+func (q *Queries) GetAllPackagesAdmin(ctx context.Context) ([]Package, error) {
+	rows, err := q.db.QueryContext(ctx, getAllPackagesAdmin)
 	if err != nil {
 		return nil, err
 	}
@@ -148,6 +314,31 @@ func (q *Queries) GetMediaForVehicle(ctx context.Context, vehicleID sql.NullInt6
 		return nil, err
 	}
 	return items, nil
+}
+
+const getPackageByID = `-- name: GetPackageByID :one
+SELECT id, slug, name, short_desc, long_desc, price_min, price_max, duration_est, is_active, sort_order, created_at, updated_at FROM packages
+WHERE id = ? LIMIT 1
+`
+
+func (q *Queries) GetPackageByID(ctx context.Context, id int64) (Package, error) {
+	row := q.db.QueryRowContext(ctx, getPackageByID, id)
+	var i Package
+	err := row.Scan(
+		&i.ID,
+		&i.Slug,
+		&i.Name,
+		&i.ShortDesc,
+		&i.LongDesc,
+		&i.PriceMin,
+		&i.PriceMax,
+		&i.DurationEst,
+		&i.IsActive,
+		&i.SortOrder,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
 }
 
 const getPackageBySlug = `-- name: GetPackageBySlug :one
@@ -474,4 +665,55 @@ func (q *Queries) ListReviews(ctx context.Context, limit int64) ([]Review, error
 		return nil, err
 	}
 	return items, nil
+}
+
+const updatePackage = `-- name: UpdatePackage :one
+UPDATE packages
+SET slug = ?, name = ?, short_desc = ?, long_desc = ?, price_min = ?, price_max = ?, duration_est = ?, is_active = ?, sort_order = ?, updated_at = CURRENT_TIMESTAMP
+WHERE id = ?
+RETURNING id, slug, name, short_desc, long_desc, price_min, price_max, duration_est, is_active, sort_order, created_at, updated_at
+`
+
+type UpdatePackageParams struct {
+	Slug        string         `json:"slug"`
+	Name        string         `json:"name"`
+	ShortDesc   sql.NullString `json:"short_desc"`
+	LongDesc    sql.NullString `json:"long_desc"`
+	PriceMin    sql.NullInt64  `json:"price_min"`
+	PriceMax    sql.NullInt64  `json:"price_max"`
+	DurationEst sql.NullInt64  `json:"duration_est"`
+	IsActive    sql.NullBool   `json:"is_active"`
+	SortOrder   sql.NullInt64  `json:"sort_order"`
+	ID          int64          `json:"id"`
+}
+
+func (q *Queries) UpdatePackage(ctx context.Context, arg UpdatePackageParams) (Package, error) {
+	row := q.db.QueryRowContext(ctx, updatePackage,
+		arg.Slug,
+		arg.Name,
+		arg.ShortDesc,
+		arg.LongDesc,
+		arg.PriceMin,
+		arg.PriceMax,
+		arg.DurationEst,
+		arg.IsActive,
+		arg.SortOrder,
+		arg.ID,
+	)
+	var i Package
+	err := row.Scan(
+		&i.ID,
+		&i.Slug,
+		&i.Name,
+		&i.ShortDesc,
+		&i.LongDesc,
+		&i.PriceMin,
+		&i.PriceMax,
+		&i.DurationEst,
+		&i.IsActive,
+		&i.SortOrder,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
 }

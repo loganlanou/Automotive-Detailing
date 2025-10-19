@@ -40,6 +40,9 @@ func SetupRoutes(e *echo.Echo, db *sql.DB) {
 	// TODO: Add Clerk auth middleware here
 	admin.GET("", h.AdminDashboard)
 	admin.GET("/packages", h.AdminPackages)
+	admin.POST("/packages", h.CreatePackage)
+	admin.POST("/packages/:id", h.UpdatePackage)
+	admin.POST("/packages/:id/delete", h.DeletePackage)
 	admin.GET("/vehicles", h.AdminVehicles)
 	admin.GET("/jobs", h.AdminJobs)
 	admin.GET("/media", h.AdminMedia)

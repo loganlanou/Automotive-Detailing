@@ -14,7 +14,7 @@ templ Home() {
 		<!-- Value Props -->
 		<section class="container mx-auto px-4 py-16">
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-				<div class="text-center">
+				<div class="text-center slide-up">
 					<div class="w-16 h-16 bg-brand-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
 						<svg class="w-8 h-8 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -24,7 +24,7 @@ templ Home() {
 					<p class="text-muted">Certified technicians with years of experience delivering showroom-ready results.</p>
 				</div>
 
-				<div class="text-center">
+				<div class="text-center slide-up delay-100">
 					<div class="w-16 h-16 bg-brand-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
 						<svg class="w-8 h-8 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -34,7 +34,7 @@ templ Home() {
 					<p class="text-muted">Most packages completed same-day or within 24 hours.</p>
 				</div>
 
-				<div class="text-center">
+				<div class="text-center slide-up delay-200">
 					<div class="w-16 h-16 bg-brand-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
 						<svg class="w-8 h-8 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -49,34 +49,34 @@ templ Home() {
 		<!-- Featured Work -->
 		<section class="bg-brand-secondary py-16">
 			<div class="container mx-auto px-4">
-				<div class="text-center mb-12">
+				<div class="text-center mb-12 fade-in">
 					<h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">Featured Work</h2>
 					<p class="text-muted">See the transformation we deliver on every vehicle</p>
 				</div>
 
 				<!-- Featured work showcase -->
 				<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-					<a href="/work/ford-f150-detail" class="card group cursor-pointer">
+					<a href="/work/ford-f150-detail" class="card group cursor-pointer slide-up">
 						<div class="aspect-video bg-border rounded-lg mb-4 overflow-hidden">
-							<img src="/static/images/work/f150-1.jpg" alt="2024 Ford F-150 from Courtesy Auto" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"/>
+							<img src="/static/images/work/f150-1.jpg" alt="2024 Ford F-150 from Courtesy Auto" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-lightbox="/static/images/work/f150-1.jpg"/>
 						</div>
 						<h3 class="text-xl font-heading font-semibold mb-2 group-hover:text-brand-accent transition">
 							2024 Ford F-150
 						</h3>
 						<p class="text-muted text-sm">Full Detail Package • 4 hours</p>
 					</a>
-					<a href="/work/ford-f150-detail-2" class="card group cursor-pointer">
+					<a href="/work/ford-f150-detail-2" class="card group cursor-pointer slide-up delay-100">
 						<div class="aspect-video bg-border rounded-lg mb-4 overflow-hidden">
-							<img src="/static/images/work/f150-2.jpg" alt="2024 Ford F-150 from Courtesy Auto" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"/>
+							<img src="/static/images/work/f150-2.jpg" alt="2024 Ford F-150 from Courtesy Auto" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-lightbox="/static/images/work/f150-2.jpg"/>
 						</div>
 						<h3 class="text-xl font-heading font-semibold mb-2 group-hover:text-brand-accent transition">
 							2024 Ford F-150 XLT
 						</h3>
 						<p class="text-muted text-sm">Premium Detail Package • 5 hours</p>
 					</a>
-					<a href="/work/ford-f150-detail-3" class="card group cursor-pointer">
+					<a href="/work/ford-f150-detail-3" class="card group cursor-pointer slide-up delay-200">
 						<div class="aspect-video bg-border rounded-lg mb-4 overflow-hidden">
-							<img src="/static/images/work/f150-3.jpg" alt="2024 Ford F-150 from Courtesy Auto" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"/>
+							<img src="/static/images/work/f150-3.jpg" alt="2024 Ford F-150 from Courtesy Auto" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-lightbox="/static/images/work/f150-3.jpg"/>
 						</div>
 						<h3 class="text-xl font-heading font-semibold mb-2 group-hover:text-brand-accent transition">
 							2024 Ford F-150 Lariat
@@ -85,29 +85,29 @@ templ Home() {
 					</a>
 				</div>
 
-				<div class="text-center mt-12">
+				<div class="text-center mt-12 fade-in">
 					<a href="/work" class="btn-secondary">View All Work</a>
 				</div>
 			</div>
 		</section>
 
 		<!-- Trust Indicators -->
-		<section class="container mx-auto px-4 py-16">
+		<section class="container mx-auto px-4 py-16 stats-section">
 			<div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-				<div>
-					<div class="text-4xl md:text-5xl font-heading font-bold text-brand-accent mb-2">500+</div>
+				<div class="scale-in">
+					<div class="text-4xl md:text-5xl font-heading font-bold text-brand-accent mb-2" data-count="500" data-suffix="+">0</div>
 					<p class="text-muted">Vehicles Detailed</p>
 				</div>
-				<div>
-					<div class="text-4xl md:text-5xl font-heading font-bold text-brand-accent mb-2">5.0</div>
+				<div class="scale-in delay-100">
+					<div class="text-4xl md:text-5xl font-heading font-bold text-brand-accent mb-2" data-count="5.0">0</div>
 					<p class="text-muted">Average Rating</p>
 				</div>
-				<div>
-					<div class="text-4xl md:text-5xl font-heading font-bold text-brand-accent mb-2">100%</div>
+				<div class="scale-in delay-200">
+					<div class="text-4xl md:text-5xl font-heading font-bold text-brand-accent mb-2" data-count="100" data-suffix="%">0</div>
 					<p class="text-muted">Satisfaction Rate</p>
 				</div>
-				<div>
-					<div class="text-4xl md:text-5xl font-heading font-bold text-brand-accent mb-2">3+</div>
+				<div class="scale-in delay-300">
+					<div class="text-4xl md:text-5xl font-heading font-bold text-brand-accent mb-2" data-count="3" data-suffix="+">0</div>
 					<p class="text-muted">Years Experience</p>
 				</div>
 			</div>
