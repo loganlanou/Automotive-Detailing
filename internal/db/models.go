@@ -9,16 +9,23 @@ import (
 )
 
 type Job struct {
-	ID           int64          `json:"id"`
-	VehicleID    sql.NullInt64  `json:"vehicle_id"`
-	PackageID    sql.NullInt64  `json:"package_id"`
-	Technician   sql.NullString `json:"technician"`
-	Notes        sql.NullString `json:"notes"`
-	CompletedAt  sql.NullTime   `json:"completed_at"`
-	Featured     sql.NullBool   `json:"featured"`
-	DisplayPrice sql.NullInt64  `json:"display_price"`
-	CreatedAt    sql.NullTime   `json:"created_at"`
-	UpdatedAt    sql.NullTime   `json:"updated_at"`
+	ID                  int64          `json:"id"`
+	Slug                sql.NullString `json:"slug"`
+	VehicleID           sql.NullInt64  `json:"vehicle_id"`
+	PackageID           sql.NullInt64  `json:"package_id"`
+	Technician          sql.NullString `json:"technician"`
+	Notes               sql.NullString `json:"notes"`
+	CompletedAt         sql.NullTime   `json:"completed_at"`
+	DurationActual      sql.NullInt64  `json:"duration_actual"`
+	Featured            sql.NullBool   `json:"featured"`
+	DisplayPrice        sql.NullInt64  `json:"display_price"`
+	HighlightText       sql.NullString `json:"highlight_text"`
+	CustomerTestimonial sql.NullString `json:"customer_testimonial"`
+	CustomerName        sql.NullString `json:"customer_name"`
+	MetaDescription     sql.NullString `json:"meta_description"`
+	MetaKeywords        sql.NullString `json:"meta_keywords"`
+	CreatedAt           sql.NullTime   `json:"created_at"`
+	UpdatedAt           sql.NullTime   `json:"updated_at"`
 }
 
 type Medium struct {
@@ -77,9 +84,13 @@ type Vehicle struct {
 	Make                 string         `json:"make"`
 	Model                string         `json:"model"`
 	Trim                 sql.NullString `json:"trim"`
+	Color                sql.NullString `json:"color"`
 	Price                sql.NullInt64  `json:"price"`
 	StockNumber          sql.NullString `json:"stock_number"`
+	DealershipName       sql.NullString `json:"dealership_name"`
+	DealershipLogoUrl    sql.NullString `json:"dealership_logo_url"`
 	DealershipListingUrl sql.NullString `json:"dealership_listing_url"`
+	DealershipLocation   sql.NullString `json:"dealership_location"`
 	Status               sql.NullString `json:"status"`
 	PostedAt             sql.NullTime   `json:"posted_at"`
 	CreatedAt            sql.NullTime   `json:"created_at"`

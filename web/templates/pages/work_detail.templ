@@ -1,80 +1,316 @@
 package pages
 
-import "detailingpass/web/templates"
+import (
+	"detailingpass/internal/db"
+	"detailingpass/web/templates"
+	"fmt"
+	"database/sql"
+)
 
-templ WorkDetail(slug string) {
-	@templates.Layout("Work Detail") {
-		<div class="container mx-auto px-4 py-16">
-			<div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-				<!-- Before/After Gallery -->
-				<div>
-					<h1 class="text-4xl font-heading font-bold mb-6">2024 Ford F-150 XLT</h1>
+type WorkDetailData struct {
+	Job            db.Job
+	VehicleYear    sql.NullInt64
+	VehicleMake    sql.NullString
+	VehicleModel   sql.NullString
+	VehicleTrim    sql.NullString
+	VehicleColor   sql.NullString
+	DealershipName sql.NullString
+	DealershipLogoURL sql.NullString
+	DealershipListingURL sql.NullString
+	DealershipLocation sql.NullString
+	PackageName    sql.NullString
+	PackageShortDesc sql.NullString
+	PackagePriceMin sql.NullInt64
+	PackagePriceMax sql.NullInt64
+	BeforeImages   []db.Medium
+	AfterImages    []db.Medium
+	GalleryImages  []db.Medium
+	RelatedWork    []WorkListItem
+}
 
-					<div class="mb-8">
-						<div class="aspect-video bg-border rounded-lg mb-4 overflow-hidden">
-							<img src="/static/images/work/f150-1.jpg" alt="2024 Ford F-150 from Courtesy Auto Stanley" class="w-full h-full object-cover"/>
-						</div>
+type WorkListItem struct {
+	ID            int64
+	Slug          sql.NullString
+	Featured      sql.NullBool
+	HighlightText sql.NullString
+	DisplayPrice  sql.NullInt64
+	CompletedAt   sql.NullTime
+	VehicleYear   sql.NullInt64
+	VehicleMake   sql.NullString
+	VehicleModel  sql.NullString
+	VehicleTrim   sql.NullString
+	DealershipName sql.NullString
+	PackageName   sql.NullString
+	PrimaryImageURL string
+}
 
-						<!-- Gallery Thumbnails -->
-						<div class="grid grid-cols-4 gap-2">
-							<div class="aspect-square bg-border rounded overflow-hidden cursor-pointer hover:opacity-75 transition">
-								<img src="/static/images/work/f150-1.jpg" alt="F-150 Detail View 1" class="w-full h-full object-cover"/>
-							</div>
-							<div class="aspect-square bg-border rounded overflow-hidden cursor-pointer hover:opacity-75 transition">
-								<img src="/static/images/work/f150-2.jpg" alt="F-150 Detail View 2" class="w-full h-full object-cover"/>
-							</div>
-							<div class="aspect-square bg-border rounded overflow-hidden cursor-pointer hover:opacity-75 transition">
-								<img src="/static/images/work/f150-3.jpg" alt="F-150 Detail View 3" class="w-full h-full object-cover"/>
-							</div>
-							<div class="aspect-square bg-border rounded overflow-hidden cursor-pointer hover:opacity-75 transition">
-								<img src="/static/images/work/f150-4.jpg" alt="F-150 Detail View 4" class="w-full h-full object-cover"/>
-							</div>
-						</div>
+func formatWorkPrice(cents int64) string {
+	dollars := float64(cents) / 100
+	return fmt.Sprintf("$%.2f", dollars)
+}
+
+func formatWorkPriceRange(minCents, maxCents int64) string {
+	if minCents == maxCents {
+		return formatWorkPrice(minCents)
+	}
+	return fmt.Sprintf("%s - %s", formatWorkPrice(minCents), formatWorkPrice(maxCents))
+}
+
+func vehicleTitle(year sql.NullInt64, make, model, trim sql.NullString) string {
+	title := ""
+	if year.Valid {
+		title = fmt.Sprintf("%d ", year.Int64)
+	}
+	if make.Valid {
+		title += make.String + " "
+	}
+	if model.Valid {
+		title += model.String
+	}
+	if trim.Valid && trim.String != "" {
+		title += " " + trim.String
+	}
+	return title
+}
+
+templ WorkDetail(data WorkDetailData) {
+	@templates.Layout(vehicleTitle(data.VehicleYear, data.VehicleMake, data.VehicleModel, data.VehicleTrim)) {
+		<!-- Hero Section with Before/After Slider -->
+		<div class="relative bg-gradient-to-b from-brand-secondary to-bg py-16">
+			<div class="container mx-auto px-4">
+				<!-- Breadcrumbs -->
+				<nav class="text-sm text-muted mb-6" aria-label="Breadcrumb">
+					<ol class="flex items-center gap-2">
+						<li><a href="/" class="hover:text-brand-accent transition">Home</a></li>
+						<li>/</li>
+						<li><a href="/work" class="hover:text-brand-accent transition">Our Work</a></li>
+						<li>/</li>
+						<li class="text-fg">{ vehicleTitle(data.VehicleYear, data.VehicleMake, data.VehicleModel, data.VehicleTrim) }</li>
+					</ol>
+				</nav>
+
+				<!-- Title & Badges -->
+				<div class="mb-8">
+					<div class="flex flex-wrap items-center gap-3 mb-4">
+						if data.Job.Featured.Valid && data.Job.Featured.Bool {
+							<span class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-yellow-500/20 to-yellow-600/20 border border-yellow-500/50 text-yellow-400 text-sm font-semibold rounded-full">
+								<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+									<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+								</svg>
+								Featured Work
+							</span>
+						}
+						if data.Job.HighlightText.Valid && data.Job.HighlightText.String != "" {
+							<span class="px-4 py-2 bg-brand-primary/20 border border-brand-accent/50 text-brand-accent text-sm font-semibold rounded-full">
+								{ data.Job.HighlightText.String }
+							</span>
+						}
 					</div>
+
+					<h1 class="text-5xl font-heading font-bold mb-4">
+						{ vehicleTitle(data.VehicleYear, data.VehicleMake, data.VehicleModel, data.VehicleTrim) }
+					</h1>
+
+					if data.PackageName.Valid {
+						<p class="text-xl text-brand-accent font-semibold">{ data.PackageName.String }</p>
+					}
 				</div>
 
-				<!-- Vehicle Details -->
-				<div>
-					<div class="bg-brand-secondary p-8 rounded-lg mb-6">
-						<h2 class="text-2xl font-heading font-bold mb-6">Vehicle Details</h2>
-						<dl class="space-y-4">
-							<div class="flex justify-between border-b border-border pb-3">
-								<dt class="text-muted">Year</dt>
-								<dd class="font-semibold">2024</dd>
+				<!-- Before/After Slider -->
+				if len(data.BeforeImages) > 0 && len(data.AfterImages) > 0 {
+					<div class="before-after-container max-w-4xl mx-auto mb-8" data-before-src={ data.BeforeImages[0].Url } data-after-src={ data.AfterImages[0].Url }>
+						<div class="before-after-slider relative rounded-xl overflow-hidden shadow-2xl" style="height: 600px;">
+							<img src={ data.BeforeImages[0].Url } alt="Before detailing" class="absolute inset-0 w-full h-full object-cover" id="before-image"/>
+							<div class="absolute inset-0 overflow-hidden" id="after-container" style="width: 50%;">
+								<img src={ data.AfterImages[0].Url } alt="After detailing" class="absolute inset-0 w-full h-full object-cover" id="after-image" style="width: 200%;"/>
 							</div>
-							<div class="flex justify-between border-b border-border pb-3">
-								<dt class="text-muted">Make</dt>
-								<dd class="font-semibold">Ford</dd>
+							<div class="slider-handle absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize" id="slider-handle" style="left: 50%;">
+								<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center">
+									<svg class="w-6 h-6 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
+									</svg>
+								</div>
 							</div>
-							<div class="flex justify-between border-b border-border pb-3">
-								<dt class="text-muted">Model</dt>
-								<dd class="font-semibold">F-150</dd>
+							<div class="absolute top-4 left-4 px-3 py-1 bg-black/70 text-white text-sm font-semibold rounded">BEFORE</div>
+							<div class="absolute top-4 right-4 px-3 py-1 bg-black/70 text-white text-sm font-semibold rounded">AFTER</div>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+
+		<!-- Main Content -->
+		<div class="container mx-auto px-4 py-16">
+			<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+				<!-- Left Column: Details -->
+				<div class="lg:col-span-2 space-y-8">
+					<!-- Description -->
+					if data.Job.Notes.Valid && data.Job.Notes.String != "" {
+						<section class="card">
+							<h2 class="text-2xl font-heading font-bold mb-4">About This Detail</h2>
+							<div class="prose prose-invert max-w-none">
+								<p class="text-muted leading-relaxed whitespace-pre-line">{ data.Job.Notes.String }</p>
 							</div>
-							<div class="flex justify-between border-b border-border pb-3">
-								<dt class="text-muted">Trim</dt>
-								<dd class="font-semibold">XLT SuperCrew</dd>
+						</section>
+					}
+
+					<!-- Full Image Gallery -->
+					if len(data.GalleryImages) > 0 {
+						<section class="card">
+							<h2 class="text-2xl font-heading font-bold mb-6">Full Gallery</h2>
+							<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+								for _, img := range data.GalleryImages {
+									<div class="aspect-square rounded-lg overflow-hidden cursor-pointer hover:opacity-80 transition group" data-lightbox={ img.Url }>
+										<img src={ img.Url } alt={ img.AltText.String } class="w-full h-full object-cover group-hover:scale-110 transition duration-300"/>
+									</div>
+								}
 							</div>
-							<div class="flex justify-between border-b border-border pb-3">
-								<dt class="text-muted">Package</dt>
-								<dd class="font-semibold">Full Detail</dd>
+						</section>
+					}
+
+					<!-- Customer Testimonial -->
+					if data.Job.CustomerTestimonial.Valid && data.Job.CustomerTestimonial.String != "" {
+						<section class="card bg-gradient-to-br from-brand-primary/10 to-brand-accent/10 border-brand-accent/30">
+							<div class="flex items-start gap-4">
+								<svg class="w-12 h-12 text-brand-accent opacity-50 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+									<path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"></path>
+								</svg>
+								<div>
+									<p class="text-lg italic mb-4">{ data.Job.CustomerTestimonial.String }</p>
+									if data.Job.CustomerName.Valid && data.Job.CustomerName.String != "" {
+										<p class="font-semibold text-brand-accent">— { data.Job.CustomerName.String }</p>
+									}
+								</div>
 							</div>
-							<div class="flex justify-between">
-								<dt class="text-muted">Completed</dt>
-								<dd class="font-semibold">January 15, 2025</dd>
-							</div>
+						</section>
+					}
+				</div>
+
+				<!-- Right Column: Sidebar -->
+				<div class="space-y-6">
+					<!-- Vehicle Specifications -->
+					<div class="card">
+						<h3 class="text-xl font-heading font-bold mb-4">Vehicle Details</h3>
+						<dl class="space-y-3 text-sm">
+							if data.VehicleYear.Valid {
+								<div class="flex justify-between border-b border-border pb-2">
+									<dt class="text-muted">Year</dt>
+									<dd class="font-semibold">{ fmt.Sprintf("%d", data.VehicleYear.Int64) }</dd>
+								</div>
+							}
+							if data.VehicleMake.Valid {
+								<div class="flex justify-between border-b border-border pb-2">
+									<dt class="text-muted">Make</dt>
+									<dd class="font-semibold">{ data.VehicleMake.String }</dd>
+								</div>
+							}
+							if data.VehicleModel.Valid {
+								<div class="flex justify-between border-b border-border pb-2">
+									<dt class="text-muted">Model</dt>
+									<dd class="font-semibold">{ data.VehicleModel.String }</dd>
+								</div>
+							}
+							if data.VehicleTrim.Valid && data.VehicleTrim.String != "" {
+								<div class="flex justify-between border-b border-border pb-2">
+									<dt class="text-muted">Trim</dt>
+									<dd class="font-semibold">{ data.VehicleTrim.String }</dd>
+								</div>
+							}
+							if data.VehicleColor.Valid && data.VehicleColor.String != "" {
+								<div class="flex justify-between border-b border-border pb-2">
+									<dt class="text-muted">Color</dt>
+									<dd class="font-semibold">{ data.VehicleColor.String }</dd>
+								</div>
+							}
 						</dl>
 					</div>
 
-					<!-- Dealer CTA -->
-					<div class="bg-gradient-to-r from-brand-primary to-brand-accent p-8 rounded-lg text-center">
-						<h3 class="text-2xl font-heading font-bold mb-2">Available at Dealership</h3>
-						<p class="mb-6 opacity-90">This vehicle is available for purchase</p>
-						<a href="https://www.courtesyautoandtruck.com/" target="_blank" rel="noopener" class="btn-secondary inline-block">
-							View Dealer Listing
-						</a>
+					<!-- Service Package Info -->
+					if data.PackageName.Valid {
+						<div class="card bg-brand-primary/10 border-brand-accent/30">
+							<h3 class="text-xl font-heading font-bold mb-4">Service Package</h3>
+							<p class="text-lg font-semibold mb-2">{ data.PackageName.String }</p>
+							if data.PackageShortDesc.Valid && data.PackageShortDesc.String != "" {
+								<p class="text-sm text-muted mb-4">{ data.PackageShortDesc.String }</p>
+							}
+							if data.PackagePriceMin.Valid && data.PackagePriceMax.Valid {
+								<p class="text-2xl font-bold text-brand-accent mb-4">
+									{ formatWorkPriceRange(data.PackagePriceMin.Int64, data.PackagePriceMax.Int64) }
+								</p>
+							}
+							<a href="/packages" class="btn-primary w-full text-center inline-block">View Packages</a>
+						</div>
+					}
+
+					<!-- Dealership Info -->
+					if data.DealershipName.Valid && data.DealershipName.String != "" {
+						<div class="card">
+							<h3 class="text-xl font-heading font-bold mb-4">Available At</h3>
+							if data.DealershipLogoURL.Valid && data.DealershipLogoURL.String != "" {
+								<img src={ data.DealershipLogoURL.String } alt={ data.DealershipName.String } class="h-12 mb-4"/>
+							}
+							<p class="font-semibold text-lg mb-2">{ data.DealershipName.String }</p>
+							if data.DealershipLocation.Valid && data.DealershipLocation.String != "" {
+								<p class="text-sm text-muted mb-4">{ data.DealershipLocation.String }</p>
+							}
+							if data.DealershipListingURL.Valid && data.DealershipListingURL.String != "" {
+								<a href={ templ.URL(data.DealershipListingURL.String) } target="_blank" rel="noopener noreferrer" class="btn-secondary w-full text-center inline-block">
+									View at Dealership →
+								</a>
+							}
+						</div>
+					}
+
+					<!-- CTA: Book Similar Service -->
+					<div class="card bg-gradient-to-br from-brand-accent/20 to-brand-primary/20 border-brand-accent/50">
+						<h3 class="text-lg font-heading font-bold mb-3">Love This Look?</h3>
+						<p class="text-sm text-muted mb-4">Get the same premium detail service for your vehicle.</p>
+						<a href="/contact" class="btn-primary w-full text-center inline-block">Book Now</a>
+					</div>
+
+					<!-- Share Buttons -->
+					<div class="card">
+						<h3 class="text-lg font-heading font-bold mb-3">Share This Work</h3>
+						<div class="flex gap-2">
+							<button onclick="shareOnFacebook()" class="flex-1 px-3 py-2 bg-[#1877f2] hover:bg-[#1665d8] text-white rounded transition" aria-label="Share on Facebook">
+								<svg class="w-5 h-5 mx-auto" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+							</button>
+							<button onclick="shareOnTwitter()" class="flex-1 px-3 py-2 bg-[#1da1f2] hover:bg-[#1a91da] text-white rounded transition" aria-label="Share on Twitter">
+								<svg class="w-5 h-5 mx-auto" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+							</button>
+							<button onclick="copyLink()" class="flex-1 px-3 py-2 bg-brand-secondary hover:bg-border text-white rounded transition" aria-label="Copy link">
+								<svg class="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>
+
+			<!-- Related Work -->
+			if len(data.RelatedWork) > 0 {
+				<section class="mt-16">
+					<h2 class="text-3xl font-heading font-bold mb-8">Related Work</h2>
+					<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+						for _, work := range data.RelatedWork {
+							if work.Slug.Valid {
+								<a href={ templ.URL("/work/" + work.Slug.String) } class="card group">
+									if work.PrimaryImageURL != "" {
+										<div class="aspect-video bg-border rounded-lg mb-4 overflow-hidden">
+											<img src={ work.PrimaryImageURL } alt={ vehicleTitle(work.VehicleYear, work.VehicleMake, work.VehicleModel, work.VehicleTrim) } class="w-full h-full object-cover group-hover:scale-105 transition duration-300"/>
+										</div>
+									}
+									<h3 class="text-lg font-heading font-semibold mb-2 group-hover:text-brand-accent transition">
+										{ vehicleTitle(work.VehicleYear, work.VehicleMake, work.VehicleModel, work.VehicleTrim) }
+									</h3>
+									if work.PackageName.Valid {
+										<p class="text-sm text-muted">{ work.PackageName.String }</p>
+									}
+								</a>
+							}
+						}
+					</div>
+				</section>
+			}
 		</div>
 	}
 }

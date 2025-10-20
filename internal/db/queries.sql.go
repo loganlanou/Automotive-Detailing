@@ -218,8 +218,81 @@ func (q *Queries) GetAllPackagesAdmin(ctx context.Context) ([]Package, error) {
 	return items, nil
 }
 
+const getFeaturedWork = `-- name: GetFeaturedWork :many
+SELECT
+    j.id,
+    j.slug,
+    j.featured,
+    j.highlight_text,
+    j.display_price,
+    j.completed_at,
+    v.year as vehicle_year,
+    v.make as vehicle_make,
+    v.model as vehicle_model,
+    v.trim as vehicle_trim,
+    v.dealership_name,
+    p.name as package_name
+FROM jobs j
+LEFT JOIN vehicles v ON j.vehicle_id = v.id
+LEFT JOIN packages p ON j.package_id = p.id
+WHERE j.featured = 1 AND j.completed_at IS NOT NULL
+ORDER BY j.completed_at DESC
+LIMIT ?
+`
+
+type GetFeaturedWorkRow struct {
+	ID             int64          `json:"id"`
+	Slug           sql.NullString `json:"slug"`
+	Featured       sql.NullBool   `json:"featured"`
+	HighlightText  sql.NullString `json:"highlight_text"`
+	DisplayPrice   sql.NullInt64  `json:"display_price"`
+	CompletedAt    sql.NullTime   `json:"completed_at"`
+	VehicleYear    sql.NullInt64  `json:"vehicle_year"`
+	VehicleMake    sql.NullString `json:"vehicle_make"`
+	VehicleModel   sql.NullString `json:"vehicle_model"`
+	VehicleTrim    sql.NullString `json:"vehicle_trim"`
+	DealershipName sql.NullString `json:"dealership_name"`
+	PackageName    sql.NullString `json:"package_name"`
+}
+
+func (q *Queries) GetFeaturedWork(ctx context.Context, limit int64) ([]GetFeaturedWorkRow, error) {
+	rows, err := q.db.QueryContext(ctx, getFeaturedWork, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetFeaturedWorkRow
+	for rows.Next() {
+		var i GetFeaturedWorkRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Slug,
+			&i.Featured,
+			&i.HighlightText,
+			&i.DisplayPrice,
+			&i.CompletedAt,
+			&i.VehicleYear,
+			&i.VehicleMake,
+			&i.VehicleModel,
+			&i.VehicleTrim,
+			&i.DealershipName,
+			&i.PackageName,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getJobByID = `-- name: GetJobByID :one
-SELECT id, vehicle_id, package_id, technician, notes, completed_at, featured, display_price, created_at, updated_at FROM jobs WHERE id = ?
+SELECT id, slug, vehicle_id, package_id, technician, notes, completed_at, duration_actual, featured, display_price, highlight_text, customer_testimonial, customer_name, meta_description, meta_keywords, created_at, updated_at FROM jobs WHERE id = ?
 `
 
 func (q *Queries) GetJobByID(ctx context.Context, id int64) (Job, error) {
@@ -227,13 +300,20 @@ func (q *Queries) GetJobByID(ctx context.Context, id int64) (Job, error) {
 	var i Job
 	err := row.Scan(
 		&i.ID,
+		&i.Slug,
 		&i.VehicleID,
 		&i.PackageID,
 		&i.Technician,
 		&i.Notes,
 		&i.CompletedAt,
+		&i.DurationActual,
 		&i.Featured,
 		&i.DisplayPrice,
+		&i.HighlightText,
+		&i.CustomerTestimonial,
+		&i.CustomerName,
+		&i.MetaDescription,
+		&i.MetaKeywords,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -388,8 +468,80 @@ func (q *Queries) GetPostBySlug(ctx context.Context, slug string) (Post, error) 
 	return i, err
 }
 
+const getRelatedWork = `-- name: GetRelatedWork :many
+SELECT
+    j.id,
+    j.slug,
+    j.featured,
+    j.completed_at,
+    v.year as vehicle_year,
+    v.make as vehicle_make,
+    v.model as vehicle_model,
+    v.dealership_name,
+    p.name as package_name
+FROM jobs j
+LEFT JOIN vehicles v ON j.vehicle_id = v.id
+LEFT JOIN packages p ON j.package_id = p.id
+WHERE j.id != ?
+  AND (v.make = ? OR j.package_id = ?)
+  AND j.completed_at IS NOT NULL
+ORDER BY j.featured DESC, j.completed_at DESC
+LIMIT 3
+`
+
+type GetRelatedWorkParams struct {
+	ID        int64         `json:"id"`
+	Make      string        `json:"make"`
+	PackageID sql.NullInt64 `json:"package_id"`
+}
+
+type GetRelatedWorkRow struct {
+	ID             int64          `json:"id"`
+	Slug           sql.NullString `json:"slug"`
+	Featured       sql.NullBool   `json:"featured"`
+	CompletedAt    sql.NullTime   `json:"completed_at"`
+	VehicleYear    sql.NullInt64  `json:"vehicle_year"`
+	VehicleMake    sql.NullString `json:"vehicle_make"`
+	VehicleModel   sql.NullString `json:"vehicle_model"`
+	DealershipName sql.NullString `json:"dealership_name"`
+	PackageName    sql.NullString `json:"package_name"`
+}
+
+func (q *Queries) GetRelatedWork(ctx context.Context, arg GetRelatedWorkParams) ([]GetRelatedWorkRow, error) {
+	rows, err := q.db.QueryContext(ctx, getRelatedWork, arg.ID, arg.Make, arg.PackageID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetRelatedWorkRow
+	for rows.Next() {
+		var i GetRelatedWorkRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Slug,
+			&i.Featured,
+			&i.CompletedAt,
+			&i.VehicleYear,
+			&i.VehicleMake,
+			&i.VehicleModel,
+			&i.DealershipName,
+			&i.PackageName,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getVehicleBySlug = `-- name: GetVehicleBySlug :one
-SELECT id, slug, vin, year, make, model, trim, price, stock_number, dealership_listing_url, status, posted_at, created_at, updated_at FROM vehicles
+SELECT id, slug, vin, year, make, model, trim, color, price, stock_number, dealership_name, dealership_logo_url, dealership_listing_url, dealership_location, status, posted_at, created_at, updated_at FROM vehicles
 WHERE slug = ? LIMIT 1
 `
 
@@ -404,9 +556,13 @@ func (q *Queries) GetVehicleBySlug(ctx context.Context, slug string) (Vehicle, e
 		&i.Make,
 		&i.Model,
 		&i.Trim,
+		&i.Color,
 		&i.Price,
 		&i.StockNumber,
+		&i.DealershipName,
+		&i.DealershipLogoUrl,
 		&i.DealershipListingUrl,
+		&i.DealershipLocation,
 		&i.Status,
 		&i.PostedAt,
 		&i.CreatedAt,
@@ -415,8 +571,184 @@ func (q *Queries) GetVehicleBySlug(ctx context.Context, slug string) (Vehicle, e
 	return i, err
 }
 
+const getWorkBySlug = `-- name: GetWorkBySlug :one
+
+SELECT
+    j.id, j.slug, j.vehicle_id, j.package_id, j.technician, j.notes, j.completed_at, j.duration_actual, j.featured, j.display_price, j.highlight_text, j.customer_testimonial, j.customer_name, j.meta_description, j.meta_keywords, j.created_at, j.updated_at,
+    v.slug as vehicle_slug,
+    v.year as vehicle_year,
+    v.make as vehicle_make,
+    v.model as vehicle_model,
+    v.trim as vehicle_trim,
+    v.color as vehicle_color,
+    v.dealership_name,
+    v.dealership_logo_url,
+    v.dealership_listing_url,
+    v.dealership_location,
+    p.name as package_name,
+    p.short_desc as package_short_desc,
+    p.price_min as package_price_min,
+    p.price_max as package_price_max
+FROM jobs j
+LEFT JOIN vehicles v ON j.vehicle_id = v.id
+LEFT JOIN packages p ON j.package_id = p.id
+WHERE j.slug = ? LIMIT 1
+`
+
+type GetWorkBySlugRow struct {
+	ID                   int64          `json:"id"`
+	Slug                 sql.NullString `json:"slug"`
+	VehicleID            sql.NullInt64  `json:"vehicle_id"`
+	PackageID            sql.NullInt64  `json:"package_id"`
+	Technician           sql.NullString `json:"technician"`
+	Notes                sql.NullString `json:"notes"`
+	CompletedAt          sql.NullTime   `json:"completed_at"`
+	DurationActual       sql.NullInt64  `json:"duration_actual"`
+	Featured             sql.NullBool   `json:"featured"`
+	DisplayPrice         sql.NullInt64  `json:"display_price"`
+	HighlightText        sql.NullString `json:"highlight_text"`
+	CustomerTestimonial  sql.NullString `json:"customer_testimonial"`
+	CustomerName         sql.NullString `json:"customer_name"`
+	MetaDescription      sql.NullString `json:"meta_description"`
+	MetaKeywords         sql.NullString `json:"meta_keywords"`
+	CreatedAt            sql.NullTime   `json:"created_at"`
+	UpdatedAt            sql.NullTime   `json:"updated_at"`
+	VehicleSlug          sql.NullString `json:"vehicle_slug"`
+	VehicleYear          sql.NullInt64  `json:"vehicle_year"`
+	VehicleMake          sql.NullString `json:"vehicle_make"`
+	VehicleModel         sql.NullString `json:"vehicle_model"`
+	VehicleTrim          sql.NullString `json:"vehicle_trim"`
+	VehicleColor         sql.NullString `json:"vehicle_color"`
+	DealershipName       sql.NullString `json:"dealership_name"`
+	DealershipLogoUrl    sql.NullString `json:"dealership_logo_url"`
+	DealershipListingUrl sql.NullString `json:"dealership_listing_url"`
+	DealershipLocation   sql.NullString `json:"dealership_location"`
+	PackageName          sql.NullString `json:"package_name"`
+	PackageShortDesc     sql.NullString `json:"package_short_desc"`
+	PackagePriceMin      sql.NullInt64  `json:"package_price_min"`
+	PackagePriceMax      sql.NullInt64  `json:"package_price_max"`
+}
+
+// Work/Portfolio queries
+func (q *Queries) GetWorkBySlug(ctx context.Context, slug sql.NullString) (GetWorkBySlugRow, error) {
+	row := q.db.QueryRowContext(ctx, getWorkBySlug, slug)
+	var i GetWorkBySlugRow
+	err := row.Scan(
+		&i.ID,
+		&i.Slug,
+		&i.VehicleID,
+		&i.PackageID,
+		&i.Technician,
+		&i.Notes,
+		&i.CompletedAt,
+		&i.DurationActual,
+		&i.Featured,
+		&i.DisplayPrice,
+		&i.HighlightText,
+		&i.CustomerTestimonial,
+		&i.CustomerName,
+		&i.MetaDescription,
+		&i.MetaKeywords,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.VehicleSlug,
+		&i.VehicleYear,
+		&i.VehicleMake,
+		&i.VehicleModel,
+		&i.VehicleTrim,
+		&i.VehicleColor,
+		&i.DealershipName,
+		&i.DealershipLogoUrl,
+		&i.DealershipListingUrl,
+		&i.DealershipLocation,
+		&i.PackageName,
+		&i.PackageShortDesc,
+		&i.PackagePriceMin,
+		&i.PackagePriceMax,
+	)
+	return i, err
+}
+
+const listAllWork = `-- name: ListAllWork :many
+SELECT
+    j.id,
+    j.slug,
+    j.featured,
+    j.highlight_text,
+    j.display_price,
+    j.completed_at,
+    v.year as vehicle_year,
+    v.make as vehicle_make,
+    v.model as vehicle_model,
+    v.trim as vehicle_trim,
+    v.dealership_name,
+    p.name as package_name
+FROM jobs j
+LEFT JOIN vehicles v ON j.vehicle_id = v.id
+LEFT JOIN packages p ON j.package_id = p.id
+WHERE j.completed_at IS NOT NULL
+ORDER BY j.completed_at DESC
+LIMIT ? OFFSET ?
+`
+
+type ListAllWorkParams struct {
+	Limit  int64 `json:"limit"`
+	Offset int64 `json:"offset"`
+}
+
+type ListAllWorkRow struct {
+	ID             int64          `json:"id"`
+	Slug           sql.NullString `json:"slug"`
+	Featured       sql.NullBool   `json:"featured"`
+	HighlightText  sql.NullString `json:"highlight_text"`
+	DisplayPrice   sql.NullInt64  `json:"display_price"`
+	CompletedAt    sql.NullTime   `json:"completed_at"`
+	VehicleYear    sql.NullInt64  `json:"vehicle_year"`
+	VehicleMake    sql.NullString `json:"vehicle_make"`
+	VehicleModel   sql.NullString `json:"vehicle_model"`
+	VehicleTrim    sql.NullString `json:"vehicle_trim"`
+	DealershipName sql.NullString `json:"dealership_name"`
+	PackageName    sql.NullString `json:"package_name"`
+}
+
+func (q *Queries) ListAllWork(ctx context.Context, arg ListAllWorkParams) ([]ListAllWorkRow, error) {
+	rows, err := q.db.QueryContext(ctx, listAllWork, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ListAllWorkRow
+	for rows.Next() {
+		var i ListAllWorkRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Slug,
+			&i.Featured,
+			&i.HighlightText,
+			&i.DisplayPrice,
+			&i.CompletedAt,
+			&i.VehicleYear,
+			&i.VehicleMake,
+			&i.VehicleModel,
+			&i.VehicleTrim,
+			&i.DealershipName,
+			&i.PackageName,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listFeaturedJobs = `-- name: ListFeaturedJobs :many
-SELECT j.id, j.vehicle_id, j.package_id, j.technician, j.notes, j.completed_at, j.featured, j.display_price, j.created_at, j.updated_at, v.make, v.model, v.year, v.slug as vehicle_slug
+SELECT j.id, j.slug, j.vehicle_id, j.package_id, j.technician, j.notes, j.completed_at, j.duration_actual, j.featured, j.display_price, j.highlight_text, j.customer_testimonial, j.customer_name, j.meta_description, j.meta_keywords, j.created_at, j.updated_at, v.make, v.model, v.year, v.slug as vehicle_slug
 FROM jobs j
 LEFT JOIN vehicles v ON j.vehicle_id = v.id
 WHERE j.featured = 1
@@ -425,20 +757,27 @@ LIMIT ?
 `
 
 type ListFeaturedJobsRow struct {
-	ID           int64          `json:"id"`
-	VehicleID    sql.NullInt64  `json:"vehicle_id"`
-	PackageID    sql.NullInt64  `json:"package_id"`
-	Technician   sql.NullString `json:"technician"`
-	Notes        sql.NullString `json:"notes"`
-	CompletedAt  sql.NullTime   `json:"completed_at"`
-	Featured     sql.NullBool   `json:"featured"`
-	DisplayPrice sql.NullInt64  `json:"display_price"`
-	CreatedAt    sql.NullTime   `json:"created_at"`
-	UpdatedAt    sql.NullTime   `json:"updated_at"`
-	Make         sql.NullString `json:"make"`
-	Model        sql.NullString `json:"model"`
-	Year         sql.NullInt64  `json:"year"`
-	VehicleSlug  sql.NullString `json:"vehicle_slug"`
+	ID                  int64          `json:"id"`
+	Slug                sql.NullString `json:"slug"`
+	VehicleID           sql.NullInt64  `json:"vehicle_id"`
+	PackageID           sql.NullInt64  `json:"package_id"`
+	Technician          sql.NullString `json:"technician"`
+	Notes               sql.NullString `json:"notes"`
+	CompletedAt         sql.NullTime   `json:"completed_at"`
+	DurationActual      sql.NullInt64  `json:"duration_actual"`
+	Featured            sql.NullBool   `json:"featured"`
+	DisplayPrice        sql.NullInt64  `json:"display_price"`
+	HighlightText       sql.NullString `json:"highlight_text"`
+	CustomerTestimonial sql.NullString `json:"customer_testimonial"`
+	CustomerName        sql.NullString `json:"customer_name"`
+	MetaDescription     sql.NullString `json:"meta_description"`
+	MetaKeywords        sql.NullString `json:"meta_keywords"`
+	CreatedAt           sql.NullTime   `json:"created_at"`
+	UpdatedAt           sql.NullTime   `json:"updated_at"`
+	Make                sql.NullString `json:"make"`
+	Model               sql.NullString `json:"model"`
+	Year                sql.NullInt64  `json:"year"`
+	VehicleSlug         sql.NullString `json:"vehicle_slug"`
 }
 
 func (q *Queries) ListFeaturedJobs(ctx context.Context, limit int64) ([]ListFeaturedJobsRow, error) {
@@ -452,13 +791,20 @@ func (q *Queries) ListFeaturedJobs(ctx context.Context, limit int64) ([]ListFeat
 		var i ListFeaturedJobsRow
 		if err := rows.Scan(
 			&i.ID,
+			&i.Slug,
 			&i.VehicleID,
 			&i.PackageID,
 			&i.Technician,
 			&i.Notes,
 			&i.CompletedAt,
+			&i.DurationActual,
 			&i.Featured,
 			&i.DisplayPrice,
+			&i.HighlightText,
+			&i.CustomerTestimonial,
+			&i.CustomerName,
+			&i.MetaDescription,
+			&i.MetaKeywords,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 			&i.Make,
@@ -518,7 +864,7 @@ func (q *Queries) ListFeaturedReviews(ctx context.Context, limit int64) ([]Revie
 }
 
 const listJobs = `-- name: ListJobs :many
-SELECT j.id, j.vehicle_id, j.package_id, j.technician, j.notes, j.completed_at, j.featured, j.display_price, j.created_at, j.updated_at, v.make, v.model, v.year, v.slug as vehicle_slug
+SELECT j.id, j.slug, j.vehicle_id, j.package_id, j.technician, j.notes, j.completed_at, j.duration_actual, j.featured, j.display_price, j.highlight_text, j.customer_testimonial, j.customer_name, j.meta_description, j.meta_keywords, j.created_at, j.updated_at, v.make, v.model, v.year, v.slug as vehicle_slug
 FROM jobs j
 LEFT JOIN vehicles v ON j.vehicle_id = v.id
 ORDER BY j.completed_at DESC
@@ -531,20 +877,27 @@ type ListJobsParams struct {
 }
 
 type ListJobsRow struct {
-	ID           int64          `json:"id"`
-	VehicleID    sql.NullInt64  `json:"vehicle_id"`
-	PackageID    sql.NullInt64  `json:"package_id"`
-	Technician   sql.NullString `json:"technician"`
-	Notes        sql.NullString `json:"notes"`
-	CompletedAt  sql.NullTime   `json:"completed_at"`
-	Featured     sql.NullBool   `json:"featured"`
-	DisplayPrice sql.NullInt64  `json:"display_price"`
-	CreatedAt    sql.NullTime   `json:"created_at"`
-	UpdatedAt    sql.NullTime   `json:"updated_at"`
-	Make         sql.NullString `json:"make"`
-	Model        sql.NullString `json:"model"`
-	Year         sql.NullInt64  `json:"year"`
-	VehicleSlug  sql.NullString `json:"vehicle_slug"`
+	ID                  int64          `json:"id"`
+	Slug                sql.NullString `json:"slug"`
+	VehicleID           sql.NullInt64  `json:"vehicle_id"`
+	PackageID           sql.NullInt64  `json:"package_id"`
+	Technician          sql.NullString `json:"technician"`
+	Notes               sql.NullString `json:"notes"`
+	CompletedAt         sql.NullTime   `json:"completed_at"`
+	DurationActual      sql.NullInt64  `json:"duration_actual"`
+	Featured            sql.NullBool   `json:"featured"`
+	DisplayPrice        sql.NullInt64  `json:"display_price"`
+	HighlightText       sql.NullString `json:"highlight_text"`
+	CustomerTestimonial sql.NullString `json:"customer_testimonial"`
+	CustomerName        sql.NullString `json:"customer_name"`
+	MetaDescription     sql.NullString `json:"meta_description"`
+	MetaKeywords        sql.NullString `json:"meta_keywords"`
+	CreatedAt           sql.NullTime   `json:"created_at"`
+	UpdatedAt           sql.NullTime   `json:"updated_at"`
+	Make                sql.NullString `json:"make"`
+	Model               sql.NullString `json:"model"`
+	Year                sql.NullInt64  `json:"year"`
+	VehicleSlug         sql.NullString `json:"vehicle_slug"`
 }
 
 func (q *Queries) ListJobs(ctx context.Context, arg ListJobsParams) ([]ListJobsRow, error) {
@@ -558,13 +911,20 @@ func (q *Queries) ListJobs(ctx context.Context, arg ListJobsParams) ([]ListJobsR
 		var i ListJobsRow
 		if err := rows.Scan(
 			&i.ID,
+			&i.Slug,
 			&i.VehicleID,
 			&i.PackageID,
 			&i.Technician,
 			&i.Notes,
 			&i.CompletedAt,
+			&i.DurationActual,
 			&i.Featured,
 			&i.DisplayPrice,
+			&i.HighlightText,
+			&i.CustomerTestimonial,
+			&i.CustomerName,
+			&i.MetaDescription,
+			&i.MetaKeywords,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 			&i.Make,

@@ -267,42 +267,128 @@ function initBeforeAfterSliders() {
   const sliders = document.querySelectorAll('.before-after-slider');
 
   sliders.forEach(slider => {
-    const beforeImg = slider.querySelector('.before-image');
-    const afterImg = slider.querySelector('.after-image');
-    const handle = slider.querySelector('.slider-handle');
+    const afterContainer = slider.querySelector('#after-container');
+    const afterImg = slider.querySelector('#after-image');
+    const handle = slider.querySelector('#slider-handle');
 
-    if (!beforeImg || !afterImg || !handle) return;
+    if (!afterContainer || !afterImg || !handle) return;
 
     let isDragging = false;
 
-    function updateSlider(percentage) {
-      percentage = Math.max(0, Math.min(100, percentage));
-      afterImg.style.clipPath = `inset(0 ${100 - percentage}% 0 0)`;
-      handle.style.left = `${percentage}%`;
+    function updateSlider(clientX) {
+      const rect = slider.getBoundingClientRect();
+      const x = clientX - rect.left;
+      const percentage = (x / rect.width) * 100;
+      const boundedPercentage = Math.max(0, Math.min(100, percentage));
+
+      // Update the width of the after container
+      afterContainer.style.width = `${boundedPercentage}%`;
+      // Adjust the after image to maintain full width
+      afterImg.style.width = `${rect.width}px`;
+      // Position the handle
+      handle.style.left = `${boundedPercentage}%`;
     }
 
     function handleMove(e) {
       if (!isDragging) return;
+      e.preventDefault();
 
-      const rect = slider.getBoundingClientRect();
-      const x = (e.type.includes('touch') ? e.touches[0].clientX : e.clientX) - rect.left;
-      const percentage = (x / rect.width) * 100;
-
-      updateSlider(percentage);
+      const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+      updateSlider(clientX);
     }
 
-    handle.addEventListener('mousedown', () => isDragging = true);
-    handle.addEventListener('touchstart', () => isDragging = true);
+    function startDrag(e) {
+      isDragging = true;
+      e.preventDefault();
+    }
 
-    document.addEventListener('mouseup', () => isDragging = false);
-    document.addEventListener('touchend', () => isDragging = false);
+    function stopDrag() {
+      isDragging = false;
+    }
 
+    // Mouse events
+    handle.addEventListener('mousedown', startDrag);
+    slider.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      updateSlider(e.clientX);
+    });
     document.addEventListener('mousemove', handleMove);
-    document.addEventListener('touchmove', handleMove);
+    document.addEventListener('mouseup', stopDrag);
+
+    // Touch events
+    handle.addEventListener('touchstart', startDrag);
+    slider.addEventListener('touchstart', (e) => {
+      isDragging = true;
+      updateSlider(e.touches[0].clientX);
+    });
+    document.addEventListener('touchmove', handleMove, { passive: false });
+    document.addEventListener('touchend', stopDrag);
 
     // Initialize at 50%
-    updateSlider(50);
+    window.addEventListener('load', () => {
+      const rect = slider.getBoundingClientRect();
+      updateSlider(rect.left + rect.width / 2);
+    });
   });
+}
+
+// ========================================
+// Social Sharing Functions
+// ========================================
+function shareOnFacebook() {
+  const url = encodeURIComponent(window.location.href);
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=600,height=400');
+}
+
+function shareOnTwitter() {
+  const url = encodeURIComponent(window.location.href);
+  const title = encodeURIComponent(document.title);
+  window.open(`https://twitter.com/intent/tweet?url=${url}&text=${title}`, '_blank', 'width=600,height=400');
+}
+
+function copyLink() {
+  const url = window.location.href;
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(url).then(() => {
+      showToast('Link copied to clipboard!');
+    }).catch(() => {
+      fallbackCopyLink(url);
+    });
+  } else {
+    fallbackCopyLink(url);
+  }
+}
+
+function fallbackCopyLink(text) {
+  const textArea = document.createElement('textarea');
+  textArea.value = text;
+  textArea.style.position = 'fixed';
+  textArea.style.left = '-999999px';
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+
+  try {
+    document.execCommand('copy');
+    showToast('Link copied to clipboard!');
+  } catch (err) {
+    showToast('Failed to copy link');
+  }
+
+  document.body.removeChild(textArea);
+}
+
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.className = 'fixed bottom-4 right-4 bg-brand-accent text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-in fade-in slide-up';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add('opacity-0', 'transition-opacity');
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
 }
 
 // ========================================

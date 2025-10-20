@@ -8,10 +8,13 @@ package pages
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "detailingpass/web/templates"
-import "strconv"
+import (
+	"detailingpass/web/templates"
+	"fmt"
+	"strconv"
+)
 
-func Work() templ.Component {
+func Work(workItems []WorkListItem) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -56,7 +59,7 @@ func Work() templ.Component {
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(year))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/work.templ`, Line: 36, Col: 42}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/work.templ`, Line: 39, Col: 42}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -69,7 +72,7 @@ func Work() templ.Component {
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(year))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/work.templ`, Line: 36, Col: 65}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/work.templ`, Line: 39, Col: 65}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -80,7 +83,182 @@ func Work() templ.Component {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</select></div><div><label for=\"package\" class=\"block text-sm font-medium mb-2\">Package</label> <select id=\"package\" name=\"package\" class=\"input\"><option value=\"\">All Packages</option></select></div><div class=\"md:col-span-4\"><button type=\"submit\" class=\"btn-primary\">Apply Filters</button> <a href=\"/work\" class=\"btn-secondary ml-4\">Clear</a></div></form></div><!-- Gallery Grid --><div class=\"grid grid-cols-1 md:grid-cols-3 gap-8\"><div class=\"card group cursor-pointer slide-up\"><div class=\"aspect-video bg-border rounded-lg mb-4 overflow-hidden\"><img src=\"/static/images/work/f150-1.jpg\" alt=\"2024 Ford F-150 from Courtesy Auto Stanley\" class=\"w-full h-full object-cover group-hover:scale-105 transition-transform duration-300\" data-lightbox=\"/static/images/work/f150-1.jpg\"></div><h3 class=\"text-xl font-heading font-semibold mb-2 group-hover:text-brand-accent transition\">2024 Ford F-150 XLT</h3><p class=\"text-muted text-sm mb-2\">Full Detail Package</p><span class=\"inline-block px-3 py-1 bg-brand-primary/20 text-brand-accent text-xs rounded-full\">Available at Courtesy Auto</span></div><div class=\"card group cursor-pointer slide-up delay-100\"><div class=\"aspect-video bg-border rounded-lg mb-4 overflow-hidden\"><img src=\"/static/images/work/f150-2.jpg\" alt=\"2024 Ford F-150 from Courtesy Auto Stanley\" class=\"w-full h-full object-cover group-hover:scale-105 transition-transform duration-300\" data-lightbox=\"/static/images/work/f150-2.jpg\"></div><h3 class=\"text-xl font-heading font-semibold mb-2 group-hover:text-brand-accent transition\">2024 Ford F-150 Lariat</h3><p class=\"text-muted text-sm mb-2\">Premium Detail Package</p><span class=\"inline-block px-3 py-1 bg-brand-primary/20 text-brand-accent text-xs rounded-full\">Available at Courtesy Auto</span></div><div class=\"card group cursor-pointer slide-up delay-200\"><div class=\"aspect-video bg-border rounded-lg mb-4 overflow-hidden\"><img src=\"/static/images/work/f150-3.jpg\" alt=\"2025 Ford F-150 from Courtesy Auto Stanley\" class=\"w-full h-full object-cover group-hover:scale-105 transition-transform duration-300\" data-lightbox=\"/static/images/work/f150-3.jpg\"></div><h3 class=\"text-xl font-heading font-semibold mb-2 group-hover:text-brand-accent transition\">2025 Ford F-150 XLT</h3><p class=\"text-muted text-sm mb-2\">Full Detail Package</p><span class=\"inline-block px-3 py-1 bg-brand-primary/20 text-brand-accent text-xs rounded-full\">Available at Courtesy Auto</span></div><div class=\"card group cursor-pointer slide-up delay-300\"><div class=\"aspect-video bg-border rounded-lg mb-4 overflow-hidden\"><img src=\"/static/images/work/f150-4.jpg\" alt=\"2024 Ford F-150 from Courtesy Auto Stanley\" class=\"w-full h-full object-cover group-hover:scale-105 transition-transform duration-300\" data-lightbox=\"/static/images/work/f150-4.jpg\"></div><h3 class=\"text-xl font-heading font-semibold mb-2 group-hover:text-brand-accent transition\">2024 Ford F-150 STX</h3><p class=\"text-muted text-sm mb-2\">Exterior Detail</p><span class=\"inline-block px-3 py-1 bg-brand-primary/20 text-brand-accent text-xs rounded-full\">Available at Courtesy Auto</span></div><div class=\"card group cursor-pointer slide-up delay-400\"><div class=\"aspect-video bg-border rounded-lg mb-4 overflow-hidden\"><img src=\"/static/images/work/f150-5.jpg\" alt=\"2025 Ford F-150 from Courtesy Auto Stanley\" class=\"w-full h-full object-cover group-hover:scale-105 transition-transform duration-300\" data-lightbox=\"/static/images/work/f150-5.jpg\"></div><h3 class=\"text-xl font-heading font-semibold mb-2 group-hover:text-brand-accent transition\">2025 Ford F-150 Lariat</h3><p class=\"text-muted text-sm mb-2\">Interior Detail</p><span class=\"inline-block px-3 py-1 bg-brand-primary/20 text-brand-accent text-xs rounded-full\">Available at Courtesy Auto</span></div><div class=\"card group cursor-pointer slide-up delay-500\"><div class=\"aspect-video bg-border rounded-lg mb-4 overflow-hidden\"><img src=\"/static/images/work/f150-6.jpg\" alt=\"2024 Ford F-150 from Courtesy Auto Stanley\" class=\"w-full h-full object-cover group-hover:scale-105 transition-transform duration-300\" data-lightbox=\"/static/images/work/f150-6.jpg\"></div><h3 class=\"text-xl font-heading font-semibold mb-2 group-hover:text-brand-accent transition\">2024 Ford F-150 King Ranch</h3><p class=\"text-muted text-sm mb-2\">Full Detail Package</p><span class=\"inline-block px-3 py-1 bg-brand-primary/20 text-brand-accent text-xs rounded-full\">Available at Courtesy Auto</span></div></div><!-- Pagination Placeholder --><div class=\"flex justify-center gap-2 mt-12\"><button class=\"px-4 py-2 bg-brand-secondary rounded hover:bg-brand-primary transition\">Previous</button> <button class=\"px-4 py-2 bg-brand-primary rounded\">1</button> <button class=\"px-4 py-2 bg-brand-secondary rounded hover:bg-brand-primary transition\">2</button> <button class=\"px-4 py-2 bg-brand-secondary rounded hover:bg-brand-primary transition\">3</button> <button class=\"px-4 py-2 bg-brand-secondary rounded hover:bg-brand-primary transition\">Next</button></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</select></div><div><label for=\"package\" class=\"block text-sm font-medium mb-2\">Package</label> <select id=\"package\" name=\"package\" class=\"input\"><option value=\"\">All Packages</option></select></div><div class=\"md:col-span-4\"><button type=\"submit\" class=\"btn-primary\">Apply Filters</button> <a href=\"/work\" class=\"btn-secondary ml-4\">Clear</a></div></form></div><!-- Gallery Grid --><div class=\"grid grid-cols-1 md:grid-cols-3 gap-8\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if len(workItems) > 0 {
+				for i, work := range workItems {
+					if work.Slug.Valid {
+						var templ_7745c5c3_Var5 = []any{fmt.Sprintf("card group slide-up delay-%d00", i%6)}
+						templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var5...)
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<a href=\"")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						var templ_7745c5c3_Var6 templ.SafeURL
+						templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/work/" + work.Slug.String))
+						if templ_7745c5c3_Err != nil {
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/work.templ`, Line: 63, Col: 55}
+						}
+						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" class=\"")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						var templ_7745c5c3_Var7 string
+						templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var5).String())
+						if templ_7745c5c3_Err != nil {
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/work.templ`, Line: 1, Col: 0}
+						}
+						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\">")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						if work.PrimaryImageURL != "" {
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"aspect-video bg-border rounded-lg mb-4 overflow-hidden relative\"><img src=\"")
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+							var templ_7745c5c3_Var8 string
+							templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(work.PrimaryImageURL)
+							if templ_7745c5c3_Err != nil {
+								return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/work.templ`, Line: 67, Col: 37}
+							}
+							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\" alt=\"")
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+							var templ_7745c5c3_Var9 string
+							templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(vehicleTitle(work.VehicleYear, work.VehicleMake, work.VehicleModel, work.VehicleTrim))
+							if templ_7745c5c3_Err != nil {
+								return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/work.templ`, Line: 68, Col: 102}
+							}
+							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" class=\"w-full h-full object-cover group-hover:scale-105 transition-transform duration-300\"> ")
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+							if work.Featured.Valid && work.Featured.Bool {
+								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<div class=\"absolute top-2 right-2 px-2 py-1 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white text-xs font-bold rounded-full flex items-center gap-1\"><svg class=\"w-3 h-3\" fill=\"currentColor\" viewBox=\"0 0 20 20\"><path d=\"M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z\"></path></svg> Featured</div>")
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+							}
+							if work.HighlightText.Valid && work.HighlightText.String != "" {
+								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<div class=\"absolute bottom-2 left-2 px-2 py-1 bg-brand-accent/90 text-white text-xs font-semibold rounded\">")
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+								var templ_7745c5c3_Var10 string
+								templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(work.HighlightText.String)
+								if templ_7745c5c3_Err != nil {
+									return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/work.templ`, Line: 81, Col: 39}
+								}
+								_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</div>")
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+							}
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</div>")
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+						} else {
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<div class=\"aspect-video bg-border rounded-lg mb-4 flex items-center justify-center\"><svg class=\"w-16 h-16 text-muted/30\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z\"></path></svg></div>")
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<h3 class=\"text-xl font-heading font-semibold mb-2 group-hover:text-brand-accent transition\">")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						var templ_7745c5c3_Var11 string
+						templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(vehicleTitle(work.VehicleYear, work.VehicleMake, work.VehicleModel, work.VehicleTrim))
+						if templ_7745c5c3_Err != nil {
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/work.templ`, Line: 94, Col: 96}
+						}
+						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</h3>")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						if work.PackageName.Valid {
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<p class=\"text-muted text-sm mb-2\">")
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+							var templ_7745c5c3_Var12 string
+							templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(work.PackageName.String)
+							if templ_7745c5c3_Err != nil {
+								return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/work.templ`, Line: 98, Col: 69}
+							}
+							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</p>")
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+						}
+						if work.DealershipName.Valid && work.DealershipName.String != "" {
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<span class=\"inline-block px-3 py-1 bg-brand-primary/20 text-brand-accent text-xs rounded-full\">Available at ")
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+							var templ_7745c5c3_Var13 string
+							templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(work.DealershipName.String)
+							if templ_7745c5c3_Err != nil {
+								return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/work.templ`, Line: 103, Col: 51}
+							}
+							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</span>")
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</a>")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+					}
+				}
+			} else {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "<div class=\"col-span-3 text-center py-16\"><svg class=\"w-24 h-24 mx-auto text-muted/30 mb-4\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10\"></path></svg><p class=\"text-xl text-muted\">No work to display yet.</p><p class=\"text-sm text-muted mt-2\">Check back soon for our latest detailing projects!</p></div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</div><!-- Pagination Placeholder --><div class=\"flex justify-center gap-2 mt-12\"><button class=\"px-4 py-2 bg-brand-secondary rounded hover:bg-brand-primary transition\">Previous</button> <button class=\"px-4 py-2 bg-brand-primary rounded\">1</button> <button class=\"px-4 py-2 bg-brand-secondary rounded hover:bg-brand-primary transition\">2</button> <button class=\"px-4 py-2 bg-brand-secondary rounded hover:bg-brand-primary transition\">3</button> <button class=\"px-4 py-2 bg-brand-secondary rounded hover:bg-brand-primary transition\">Next</button></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

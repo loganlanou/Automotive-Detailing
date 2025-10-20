@@ -26,9 +26,13 @@ CREATE TABLE IF NOT EXISTS vehicles (
     make TEXT NOT NULL,
     model TEXT NOT NULL,
     trim TEXT,
+    color TEXT, -- exterior color
     price INTEGER, -- vehicle price in cents (for dealer listings)
     stock_number TEXT,
+    dealership_name TEXT, -- e.g., "Courtesy Auto Stanley"
+    dealership_logo_url TEXT,
     dealership_listing_url TEXT,
+    dealership_location TEXT, -- e.g., "Stanley, NC"
     status TEXT DEFAULT 'available', -- available|sold|archived
     posted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -38,13 +42,20 @@ CREATE TABLE IF NOT EXISTS vehicles (
 -- Completed detailing jobs
 CREATE TABLE IF NOT EXISTS jobs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    slug TEXT UNIQUE, -- SEO-friendly URL slug (auto-generated from vehicle+date)
     vehicle_id INTEGER,
     package_id INTEGER,
     technician TEXT,
-    notes TEXT,
+    notes TEXT, -- detailed description/story of the work
     completed_at DATETIME,
+    duration_actual INTEGER, -- actual time spent in minutes
     featured BOOLEAN DEFAULT 0,
     display_price INTEGER, -- optional price to show for this job
+    highlight_text TEXT, -- promotional highlight (e.g., "Award Winning Detail")
+    customer_testimonial TEXT, -- optional testimonial from customer
+    customer_name TEXT, -- name for testimonial attribution
+    meta_description TEXT, -- SEO meta description
+    meta_keywords TEXT, -- SEO keywords
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (vehicle_id) REFERENCES vehicles(id) ON DELETE SET NULL,
