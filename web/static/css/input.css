@@ -220,27 +220,25 @@
     @apply transition-all duration-300 ease-out;
     @apply hover:shadow-[0_20px_60px_rgba(96,165,250,0.4)];
     @apply focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-accent/50;
-    @apply relative overflow-hidden;
-    transform: translateY(150px);
     opacity: 0;
+    transform: scale(0.9);
+    pointer-events: none;
+    animation: pulseGlow 3s ease-in-out infinite;
   }
 
   .floating-cta.visible {
-    transform: translateY(0);
     opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
   }
 
-  .floating-cta::before {
-    content: '';
-    @apply absolute inset-0 rounded;
-    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
-    animation: shimmer 3s infinite;
-    pointer-events: none;
-  }
-
-  @keyframes shimmer {
-    0% { transform: translateX(-100%) rotate(45deg); }
-    100% { transform: translateX(100%) rotate(45deg); }
+  @keyframes pulseGlow {
+    0%, 100% {
+      box-shadow: 0 10px 30px rgba(96, 165, 250, 0.25);
+    }
+    50% {
+      box-shadow: 0 20px 45px rgba(96, 165, 250, 0.45);
+    }
   }
 }
 
