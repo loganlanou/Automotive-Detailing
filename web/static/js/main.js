@@ -75,7 +75,7 @@ function initStatsCounter() {
   observer.observe(statsSection);
 }
 
-// Mobile menu toggle
+// Mobile menu toggle with smooth animation
 document.addEventListener('DOMContentLoaded', () => {
   const mobileMenuBtn = document.getElementById('mobile-menu-btn');
   const mobileMenu = document.getElementById('mobile-menu');
@@ -84,9 +84,33 @@ document.addEventListener('DOMContentLoaded', () => {
     mobileMenuBtn.addEventListener('click', () => {
       const isExpanded = mobileMenuBtn.getAttribute('aria-expanded') === 'true';
       mobileMenuBtn.setAttribute('aria-expanded', !isExpanded);
-      mobileMenu.classList.toggle('hidden');
+      mobileMenu.classList.toggle('show');
+
+      // Animate hamburger icon
+      const svg = mobileMenuBtn.querySelector('svg');
+      if (isExpanded) {
+        svg.style.transform = 'rotate(0deg)';
+      } else {
+        svg.style.transform = 'rotate(90deg)';
+      }
     });
   }
+
+  // Header scroll effect
+  const header = document.getElementById('main-header');
+  let lastScroll = 0;
+
+  window.addEventListener('scroll', () => {
+    const currentScroll = window.scrollY;
+
+    if (currentScroll > 50) {
+      header.classList.add('header-scrolled');
+    } else {
+      header.classList.remove('header-scrolled');
+    }
+
+    lastScroll = currentScroll;
+  }, { passive: true });
 
   // Initialize scroll animations
   initScrollAnimations();
@@ -169,7 +193,44 @@ document.addEventListener('DOMContentLoaded', () => {
     // Could add instant filter updates via JS here
     // For now, relies on form submission (no-JS fallback)
   }
+
+  // Initialize floating CTA
+  initFloatingCTA();
 });
+
+// ========================================
+// Floating CTA Button (appears on scroll)
+// ========================================
+function initFloatingCTA() {
+  const floatingCTA = document.querySelector('.floating-cta');
+  if (!floatingCTA) return;
+
+  let ticking = false;
+
+  function updateCTA() {
+    const scrollY = window.scrollY;
+
+    // Show CTA after scrolling down 300px or past hero section
+    if (scrollY > 300) {
+      floatingCTA.classList.add('visible');
+    } else {
+      floatingCTA.classList.remove('visible');
+    }
+    ticking = false;
+  }
+
+  function requestTick() {
+    if (!ticking) {
+      window.requestAnimationFrame(updateCTA);
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', requestTick, { passive: true });
+
+  // Initial check
+  updateCTA();
+}
 
 // ========================================
 // Image Lightbox
