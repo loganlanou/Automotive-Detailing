@@ -223,22 +223,12 @@
     opacity: 0;
     transform: scale(0.9);
     pointer-events: none;
-    animation: pulseGlow 3s ease-in-out infinite;
   }
 
   .floating-cta.visible {
     opacity: 1;
     transform: scale(1);
     pointer-events: auto;
-  }
-
-  @keyframes pulseGlow {
-    0%, 100% {
-      box-shadow: 0 10px 30px rgba(96, 165, 250, 0.25);
-    }
-    50% {
-      box-shadow: 0 20px 45px rgba(96, 165, 250, 0.45);
-    }
   }
 }
 
