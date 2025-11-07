@@ -143,7 +143,7 @@ func Reviews() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, " <section class=\"container mx-auto px-4 py-16\"><div class=\"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, " <section class=\"container mx-auto px-4 py-16\"><!-- Google Review CTA --><div class=\"bg-gradient-to-r from-brand-primary/20 to-brand-accent/20 border-2 border-brand-accent rounded p-8 mb-12 text-center\"><h2 class=\"text-2xl md:text-3xl font-heading font-bold mb-4\">Love Our Work?</h2><p class=\"text-muted mb-6 max-w-xl mx-auto font-medium\">Your feedback helps us serve you better and helps others discover state-of-the-art detailing.</p><a href=\"https://g.page/r/placeholder/review\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"btn-primary inline-flex items-center gap-2 text-lg px-8 py-4\"><svg class=\"w-6 h-6\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z\"></path></svg> Leave a Google Review</a></div><!-- Review Grid --><div class=\"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -171,7 +171,7 @@ func Reviews() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div><div class=\"text-center mt-12\"><p class=\"text-muted mb-4\">Want to leave your own review?</p><a href=\"/contact\" class=\"btn-primary\">Share Your Experience</a></div></section>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div></section>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

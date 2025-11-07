@@ -5,42 +5,212 @@ import "detailingpass/web/templates"
 templ Services() {
 	@templates.Layout("Services") {
 		@templates.Hero(
-			"Detailing Packages",
-			"Choose the perfect package for your vehicle. All services use premium products and professional techniques.",
+			"Detailing Services",
+			"State-of-the-art quality in every option. All services use premium products and professional techniques.",
 			"",
 			"",
 		)
 
 		<section class="container mx-auto px-4 py-16">
+			<!-- Three Service Cards -->
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-				@PackageCard("Exterior Detail", "Hand wash, clay bar treatment, paint correction, premium wax or sealant, wheel and tire detail, trim restoration, and window cleaning", "$200 - $400", "2-3 hours", "/services/exterior-detail", []string{"Hand Wash & Dry", "Clay Bar Treatment", "Paint Polish", "Premium Wax/Sealant", "Wheel & Tire Detail", "Trim Restoration"})
-				@PackageCard("Interior Detail", "Complete vacuum, steam cleaning, leather conditioning, fabric protection, carpet shampoo, dashboard detail, and odor elimination", "$200 - $400", "2-3 hours", "/services/interior-detail", []string{"Deep Vacuum", "Steam Cleaning", "Leather Conditioning", "Carpet Shampoo", "Dashboard Detail", "Odor Elimination"})
-				@PackageCard("Full Detail", "Everything in Exterior and Interior packages plus door jambs, engine bay detail, headlight restoration, and final inspection for showroom perfection", "$400 - $800", "4-6 hours", "/services/full-detail", []string{"Complete Exterior", "Complete Interior", "Door Jambs", "Engine Bay Detail", "Headlight Restoration", "Final Inspection"})
+				<!-- Interior Detail -->
+				<div class="card">
+					<div class="border-l-4 border-brand-accent pl-4 mb-6">
+						<h3 class="text-2xl font-heading font-bold mb-2">Interior Detail</h3>
+						<p class="text-brand-accent-bright font-bold text-lg">Starting at $150</p>
+						<p class="text-muted text-sm mt-1">2-3 hours</p>
+					</div>
+					<ul class="text-muted mb-6 space-y-3 text-sm">
+						<li class="flex items-start gap-2">
+							<span class="text-brand-accent font-bold mt-0.5">▪</span>
+							<span>Deep vacuum of all surfaces</span>
+						</li>
+						<li class="flex items-start gap-2">
+							<span class="text-brand-accent font-bold mt-0.5">▪</span>
+							<span>Steam cleaning & sanitization</span>
+						</li>
+						<li class="flex items-start gap-2">
+							<span class="text-brand-accent font-bold mt-0.5">▪</span>
+							<span>Leather conditioning & fabric protection</span>
+						</li>
+						<li class="flex items-start gap-2">
+							<span class="text-brand-accent font-bold mt-0.5">▪</span>
+							<span>Carpet shampoo</span>
+						</li>
+						<li class="flex items-start gap-2">
+							<span class="text-brand-accent font-bold mt-0.5">▪</span>
+							<span>Dashboard & console detail</span>
+						</li>
+						<li class="flex items-start gap-2">
+							<span class="text-brand-accent font-bold mt-0.5">▪</span>
+							<span>Odor elimination</span>
+						</li>
+					</ul>
+					<a href="/contact" class="btn-primary w-full text-center block">Request Booking</a>
+				</div>
+
+				<!-- Exterior Detail -->
+				<div class="card">
+					<div class="border-l-4 border-brand-accent pl-4 mb-6">
+						<h3 class="text-2xl font-heading font-bold mb-2">Exterior Detail</h3>
+						<p class="text-brand-accent-bright font-bold text-lg">Priced by appointment</p>
+						<p class="text-muted text-sm mt-1">2-4 hours</p>
+					</div>
+					<ul class="text-muted mb-6 space-y-3 text-sm">
+						<li class="flex items-start gap-2">
+							<span class="text-brand-accent font-bold mt-0.5">▪</span>
+							<span>Hand wash & dry</span>
+						</li>
+						<li class="flex items-start gap-2">
+							<span class="text-brand-accent font-bold mt-0.5">▪</span>
+							<span>Clay bar treatment</span>
+						</li>
+						<li class="flex items-start gap-2">
+							<span class="text-brand-accent font-bold mt-0.5">▪</span>
+							<span>Paint correction & polish</span>
+						</li>
+						<li class="flex items-start gap-2">
+							<span class="text-brand-accent font-bold mt-0.5">▪</span>
+							<span>Premium wax or sealant</span>
+						</li>
+						<li class="flex items-start gap-2">
+							<span class="text-brand-accent font-bold mt-0.5">▪</span>
+							<span>Wheel & tire detail</span>
+						</li>
+						<li class="flex items-start gap-2">
+							<span class="text-brand-accent font-bold mt-0.5">▪</span>
+							<span>Trim restoration & window cleaning</span>
+						</li>
+					</ul>
+					<a href="/contact" class="btn-primary w-full text-center block">Request Booking</a>
+				</div>
+
+				<!-- Full Detail -->
+				<div class="card border-brand-accent">
+					<div class="border-l-4 border-brand-green pl-4 mb-6">
+						<h3 class="text-2xl font-heading font-bold mb-2">Full Detail</h3>
+						<p class="text-brand-green font-bold text-lg">Starting at $300</p>
+						<p class="text-muted text-sm mt-1">4-6 hours</p>
+					</div>
+					<ul class="text-muted mb-6 space-y-3 text-sm">
+						<li class="flex items-start gap-2">
+							<span class="text-brand-green font-bold mt-0.5">▪</span>
+							<span>Complete interior service</span>
+						</li>
+						<li class="flex items-start gap-2">
+							<span class="text-brand-green font-bold mt-0.5">▪</span>
+							<span>Complete exterior service</span>
+						</li>
+						<li class="flex items-start gap-2">
+							<span class="text-brand-green font-bold mt-0.5">▪</span>
+							<span>Door jambs cleaning</span>
+						</li>
+						<li class="flex items-start gap-2">
+							<span class="text-brand-green font-bold mt-0.5">▪</span>
+							<span>Engine bay detail</span>
+						</li>
+						<li class="flex items-start gap-2">
+							<span class="text-brand-green font-bold mt-0.5">▪</span>
+							<span>Headlight restoration</span>
+						</li>
+						<li class="flex items-start gap-2">
+							<span class="text-brand-green font-bold mt-0.5">▪</span>
+							<span>Final inspection for showroom finish</span>
+						</li>
+					</ul>
+					<a href="/contact" class="btn-green w-full text-center block">Request Booking</a>
+				</div>
 			</div>
 
-			<!-- Additional Services -->
-			<div class="bg-brand-secondary rounded-2xl p-8 md:p-12">
-				<h2 class="text-3xl font-heading font-bold mb-8 text-center">Add-On Services</h2>
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-					<div class="border-l-4 border-brand-accent pl-4">
-						<h3 class="font-heading font-semibold mb-1">Ceramic Coating</h3>
-						<p class="text-sm text-muted">Long-lasting protection with hydrophobic properties</p>
-					</div>
-					<div class="border-l-4 border-brand-accent pl-4">
-						<h3 class="font-heading font-semibold mb-1">Paint Correction</h3>
-						<p class="text-sm text-muted">Remove swirls, scratches, and oxidation</p>
-					</div>
-					<div class="border-l-4 border-brand-accent pl-4">
-						<h3 class="font-heading font-semibold mb-1">Engine Bay Detailing</h3>
-						<p class="text-sm text-muted">Thorough cleaning and protection of engine compartment</p>
-					</div>
-					<div class="border-l-4 border-brand-accent pl-4">
-						<h3 class="font-heading font-semibold mb-1">Headlight Restoration</h3>
-						<p class="text-sm text-muted">Restore clarity and brightness to oxidized headlights</p>
-					</div>
+			<!-- Add-Ons Section with Accordion -->
+			<div class="bg-brand-secondary border-2 border-border rounded p-8 md:p-12">
+				<h2 class="text-3xl font-heading font-bold mb-2 border-b-4 border-brand-accent inline-block pb-2">Optional Add-Ons</h2>
+				<p class="text-muted mb-8 mt-4">Enhance any service with these optional upgrades. Not included in base packages.</p>
+
+				<div class="space-y-4">
+					<!-- Accordion Item 1 -->
+					<details class="group border-2 border-border rounded overflow-hidden">
+						<summary class="cursor-pointer p-4 font-heading font-bold text-lg hover:bg-brand-bg transition flex items-center justify-between">
+							<span>Seat Shampooing</span>
+							<svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+							</svg>
+						</summary>
+						<div class="p-4 pt-0 border-t-2 border-border text-muted">
+							Deep cleaning and extraction for fabric seats. Removes stains, odors, and embedded dirt.
+						</div>
+					</details>
+
+					<!-- Accordion Item 2 -->
+					<details class="group border-2 border-border rounded overflow-hidden">
+						<summary class="cursor-pointer p-4 font-heading font-bold text-lg hover:bg-brand-bg transition flex items-center justify-between">
+							<span>Pet Hair Removal</span>
+							<svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+							</svg>
+						</summary>
+						<div class="p-4 pt-0 border-t-2 border-border text-muted">
+							Specialized tools and techniques to remove stubborn pet hair from all surfaces.
+						</div>
+					</details>
+
+					<!-- Accordion Item 3 -->
+					<details class="group border-2 border-border rounded overflow-hidden">
+						<summary class="cursor-pointer p-4 font-heading font-bold text-lg hover:bg-brand-bg transition flex items-center justify-between">
+							<span>Ceramic Coating</span>
+							<svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+							</svg>
+						</summary>
+						<div class="p-4 pt-0 border-t-2 border-border text-muted">
+							Long-lasting protection with hydrophobic properties. Provides superior shine and protection against the elements.
+						</div>
+					</details>
+
+					<!-- Accordion Item 4 -->
+					<details class="group border-2 border-border rounded overflow-hidden">
+						<summary class="cursor-pointer p-4 font-heading font-bold text-lg hover:bg-brand-bg transition flex items-center justify-between">
+							<span>Paint Correction</span>
+							<svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+							</svg>
+						</summary>
+						<div class="p-4 pt-0 border-t-2 border-border text-muted">
+							Multi-stage polishing to remove swirls, scratches, and oxidation. Restores paint to like-new condition.
+						</div>
+					</details>
+
+					<!-- Accordion Item 5 -->
+					<details class="group border-2 border-border rounded overflow-hidden">
+						<summary class="cursor-pointer p-4 font-heading font-bold text-lg hover:bg-brand-bg transition flex items-center justify-between">
+							<span>Engine Bay Detailing</span>
+							<svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+							</svg>
+						</summary>
+						<div class="p-4 pt-0 border-t-2 border-border text-muted">
+							Thorough cleaning and dressing of engine compartment. Improves appearance and helps identify leaks.
+						</div>
+					</details>
+
+					<!-- Accordion Item 6 -->
+					<details class="group border-2 border-border rounded overflow-hidden">
+						<summary class="cursor-pointer p-4 font-heading font-bold text-lg hover:bg-brand-bg transition flex items-center justify-between">
+							<span>Headlight Restoration</span>
+							<svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+							</svg>
+						</summary>
+						<div class="p-4 pt-0 border-t-2 border-border text-muted">
+							Restore clarity and brightness to oxidized or yellowed headlights. Improves appearance and safety.
+						</div>
+					</details>
 				</div>
-				<div class="text-center mt-8">
-					<a href="/contact" class="btn-primary">Request Custom Quote</a>
+
+				<div class="text-center mt-10 pt-8 border-t-2 border-border">
+					<p class="text-muted mb-4 font-semibold">Need a custom quote with add-ons?</p>
+					<a href="/contact" class="btn-primary inline-block">Request Custom Quote</a>
 				</div>
 			</div>
 		</section>

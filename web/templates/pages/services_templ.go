@@ -44,31 +44,15 @@ func Services() templ.Component {
 			}
 			ctx = templ.InitializeContext(ctx)
 			templ_7745c5c3_Err = templates.Hero(
-				"Detailing Packages",
-				"Choose the perfect package for your vehicle. All services use premium products and professional techniques.",
+				"Detailing Services",
+				"State-of-the-art quality in every option. All services use premium products and professional techniques.",
 				"",
 				"",
 			).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, " <section class=\"container mx-auto px-4 py-16\"><div class=\"grid grid-cols-1 md:grid-cols-3 gap-8 mb-16\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = PackageCard("Exterior Detail", "Hand wash, clay bar treatment, paint correction, premium wax or sealant, wheel and tire detail, trim restoration, and window cleaning", "$200 - $400", "2-3 hours", "/services/exterior-detail", []string{"Hand Wash & Dry", "Clay Bar Treatment", "Paint Polish", "Premium Wax/Sealant", "Wheel & Tire Detail", "Trim Restoration"}).Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = PackageCard("Interior Detail", "Complete vacuum, steam cleaning, leather conditioning, fabric protection, carpet shampoo, dashboard detail, and odor elimination", "$200 - $400", "2-3 hours", "/services/interior-detail", []string{"Deep Vacuum", "Steam Cleaning", "Leather Conditioning", "Carpet Shampoo", "Dashboard Detail", "Odor Elimination"}).Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = PackageCard("Full Detail", "Everything in Exterior and Interior packages plus door jambs, engine bay detail, headlight restoration, and final inspection for showroom perfection", "$400 - $800", "4-6 hours", "/services/full-detail", []string{"Complete Exterior", "Complete Interior", "Door Jambs", "Engine Bay Detail", "Headlight Restoration", "Final Inspection"}).Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div><!-- Additional Services --><div class=\"bg-brand-secondary rounded-2xl p-8 md:p-12\"><h2 class=\"text-3xl font-heading font-bold mb-8 text-center\">Add-On Services</h2><div class=\"grid grid-cols-1 md:grid-cols-2 gap-6\"><div class=\"border-l-4 border-brand-accent pl-4\"><h3 class=\"font-heading font-semibold mb-1\">Ceramic Coating</h3><p class=\"text-sm text-muted\">Long-lasting protection with hydrophobic properties</p></div><div class=\"border-l-4 border-brand-accent pl-4\"><h3 class=\"font-heading font-semibold mb-1\">Paint Correction</h3><p class=\"text-sm text-muted\">Remove swirls, scratches, and oxidation</p></div><div class=\"border-l-4 border-brand-accent pl-4\"><h3 class=\"font-heading font-semibold mb-1\">Engine Bay Detailing</h3><p class=\"text-sm text-muted\">Thorough cleaning and protection of engine compartment</p></div><div class=\"border-l-4 border-brand-accent pl-4\"><h3 class=\"font-heading font-semibold mb-1\">Headlight Restoration</h3><p class=\"text-sm text-muted\">Restore clarity and brightness to oxidized headlights</p></div></div><div class=\"text-center mt-8\"><a href=\"/contact\" class=\"btn-primary\">Request Custom Quote</a></div></div></section>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, " <section class=\"container mx-auto px-4 py-16\"><!-- Three Service Cards --><div class=\"grid grid-cols-1 md:grid-cols-3 gap-8 mb-16\"><!-- Interior Detail --><div class=\"card\"><div class=\"border-l-4 border-brand-accent pl-4 mb-6\"><h3 class=\"text-2xl font-heading font-bold mb-2\">Interior Detail</h3><p class=\"text-brand-accent-bright font-bold text-lg\">Starting at $150</p><p class=\"text-muted text-sm mt-1\">2-3 hours</p></div><ul class=\"text-muted mb-6 space-y-3 text-sm\"><li class=\"flex items-start gap-2\"><span class=\"text-brand-accent font-bold mt-0.5\">▪</span> <span>Deep vacuum of all surfaces</span></li><li class=\"flex items-start gap-2\"><span class=\"text-brand-accent font-bold mt-0.5\">▪</span> <span>Steam cleaning & sanitization</span></li><li class=\"flex items-start gap-2\"><span class=\"text-brand-accent font-bold mt-0.5\">▪</span> <span>Leather conditioning & fabric protection</span></li><li class=\"flex items-start gap-2\"><span class=\"text-brand-accent font-bold mt-0.5\">▪</span> <span>Carpet shampoo</span></li><li class=\"flex items-start gap-2\"><span class=\"text-brand-accent font-bold mt-0.5\">▪</span> <span>Dashboard & console detail</span></li><li class=\"flex items-start gap-2\"><span class=\"text-brand-accent font-bold mt-0.5\">▪</span> <span>Odor elimination</span></li></ul><a href=\"/contact\" class=\"btn-primary w-full text-center block\">Request Booking</a></div><!-- Exterior Detail --><div class=\"card\"><div class=\"border-l-4 border-brand-accent pl-4 mb-6\"><h3 class=\"text-2xl font-heading font-bold mb-2\">Exterior Detail</h3><p class=\"text-brand-accent-bright font-bold text-lg\">Priced by appointment</p><p class=\"text-muted text-sm mt-1\">2-4 hours</p></div><ul class=\"text-muted mb-6 space-y-3 text-sm\"><li class=\"flex items-start gap-2\"><span class=\"text-brand-accent font-bold mt-0.5\">▪</span> <span>Hand wash & dry</span></li><li class=\"flex items-start gap-2\"><span class=\"text-brand-accent font-bold mt-0.5\">▪</span> <span>Clay bar treatment</span></li><li class=\"flex items-start gap-2\"><span class=\"text-brand-accent font-bold mt-0.5\">▪</span> <span>Paint correction & polish</span></li><li class=\"flex items-start gap-2\"><span class=\"text-brand-accent font-bold mt-0.5\">▪</span> <span>Premium wax or sealant</span></li><li class=\"flex items-start gap-2\"><span class=\"text-brand-accent font-bold mt-0.5\">▪</span> <span>Wheel & tire detail</span></li><li class=\"flex items-start gap-2\"><span class=\"text-brand-accent font-bold mt-0.5\">▪</span> <span>Trim restoration & window cleaning</span></li></ul><a href=\"/contact\" class=\"btn-primary w-full text-center block\">Request Booking</a></div><!-- Full Detail --><div class=\"card border-brand-accent\"><div class=\"border-l-4 border-brand-green pl-4 mb-6\"><h3 class=\"text-2xl font-heading font-bold mb-2\">Full Detail</h3><p class=\"text-brand-green font-bold text-lg\">Starting at $300</p><p class=\"text-muted text-sm mt-1\">4-6 hours</p></div><ul class=\"text-muted mb-6 space-y-3 text-sm\"><li class=\"flex items-start gap-2\"><span class=\"text-brand-green font-bold mt-0.5\">▪</span> <span>Complete interior service</span></li><li class=\"flex items-start gap-2\"><span class=\"text-brand-green font-bold mt-0.5\">▪</span> <span>Complete exterior service</span></li><li class=\"flex items-start gap-2\"><span class=\"text-brand-green font-bold mt-0.5\">▪</span> <span>Door jambs cleaning</span></li><li class=\"flex items-start gap-2\"><span class=\"text-brand-green font-bold mt-0.5\">▪</span> <span>Engine bay detail</span></li><li class=\"flex items-start gap-2\"><span class=\"text-brand-green font-bold mt-0.5\">▪</span> <span>Headlight restoration</span></li><li class=\"flex items-start gap-2\"><span class=\"text-brand-green font-bold mt-0.5\">▪</span> <span>Final inspection for showroom finish</span></li></ul><a href=\"/contact\" class=\"btn-green w-full text-center block\">Request Booking</a></div></div><!-- Add-Ons Section with Accordion --><div class=\"bg-brand-secondary border-2 border-border rounded p-8 md:p-12\"><h2 class=\"text-3xl font-heading font-bold mb-2 border-b-4 border-brand-accent inline-block pb-2\">Optional Add-Ons</h2><p class=\"text-muted mb-8 mt-4\">Enhance any service with these optional upgrades. Not included in base packages.</p><div class=\"space-y-4\"><!-- Accordion Item 1 --><details class=\"group border-2 border-border rounded overflow-hidden\"><summary class=\"cursor-pointer p-4 font-heading font-bold text-lg hover:bg-brand-bg transition flex items-center justify-between\"><span>Seat Shampooing</span> <svg class=\"w-5 h-5 transition-transform group-open:rotate-180\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M19 9l-7 7-7-7\"></path></svg></summary><div class=\"p-4 pt-0 border-t-2 border-border text-muted\">Deep cleaning and extraction for fabric seats. Removes stains, odors, and embedded dirt.</div></details><!-- Accordion Item 2 --><details class=\"group border-2 border-border rounded overflow-hidden\"><summary class=\"cursor-pointer p-4 font-heading font-bold text-lg hover:bg-brand-bg transition flex items-center justify-between\"><span>Pet Hair Removal</span> <svg class=\"w-5 h-5 transition-transform group-open:rotate-180\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M19 9l-7 7-7-7\"></path></svg></summary><div class=\"p-4 pt-0 border-t-2 border-border text-muted\">Specialized tools and techniques to remove stubborn pet hair from all surfaces.</div></details><!-- Accordion Item 3 --><details class=\"group border-2 border-border rounded overflow-hidden\"><summary class=\"cursor-pointer p-4 font-heading font-bold text-lg hover:bg-brand-bg transition flex items-center justify-between\"><span>Ceramic Coating</span> <svg class=\"w-5 h-5 transition-transform group-open:rotate-180\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M19 9l-7 7-7-7\"></path></svg></summary><div class=\"p-4 pt-0 border-t-2 border-border text-muted\">Long-lasting protection with hydrophobic properties. Provides superior shine and protection against the elements.</div></details><!-- Accordion Item 4 --><details class=\"group border-2 border-border rounded overflow-hidden\"><summary class=\"cursor-pointer p-4 font-heading font-bold text-lg hover:bg-brand-bg transition flex items-center justify-between\"><span>Paint Correction</span> <svg class=\"w-5 h-5 transition-transform group-open:rotate-180\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M19 9l-7 7-7-7\"></path></svg></summary><div class=\"p-4 pt-0 border-t-2 border-border text-muted\">Multi-stage polishing to remove swirls, scratches, and oxidation. Restores paint to like-new condition.</div></details><!-- Accordion Item 5 --><details class=\"group border-2 border-border rounded overflow-hidden\"><summary class=\"cursor-pointer p-4 font-heading font-bold text-lg hover:bg-brand-bg transition flex items-center justify-between\"><span>Engine Bay Detailing</span> <svg class=\"w-5 h-5 transition-transform group-open:rotate-180\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M19 9l-7 7-7-7\"></path></svg></summary><div class=\"p-4 pt-0 border-t-2 border-border text-muted\">Thorough cleaning and dressing of engine compartment. Improves appearance and helps identify leaks.</div></details><!-- Accordion Item 6 --><details class=\"group border-2 border-border rounded overflow-hidden\"><summary class=\"cursor-pointer p-4 font-heading font-bold text-lg hover:bg-brand-bg transition flex items-center justify-between\"><span>Headlight Restoration</span> <svg class=\"w-5 h-5 transition-transform group-open:rotate-180\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M19 9l-7 7-7-7\"></path></svg></summary><div class=\"p-4 pt-0 border-t-2 border-border text-muted\">Restore clarity and brightness to oxidized or yellowed headlights. Improves appearance and safety.</div></details></div><div class=\"text-center mt-10 pt-8 border-t-2 border-border\"><p class=\"text-muted mb-4 font-semibold\">Need a custom quote with add-ons?</p><a href=\"/contact\" class=\"btn-primary inline-block\">Request Custom Quote</a></div></div></section>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -103,105 +87,105 @@ func PackageCard(name, description, price, duration, link string, features []str
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"card hover:border-brand-accent transition flex flex-col h-full\"><h3 class=\"text-2xl font-heading font-bold mb-3\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"card hover:border-brand-accent transition flex flex-col h-full\"><h3 class=\"text-2xl font-heading font-bold mb-3\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/services.templ`, Line: 52, Col: 57}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/services.templ`, Line: 222, Col: 57}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</h3><p class=\"text-muted mb-6\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</h3><p class=\"text-muted mb-6\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(description)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/services.templ`, Line: 53, Col: 42}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/services.templ`, Line: 223, Col: 42}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</p><div class=\"flex items-baseline gap-2 mb-2\"><span class=\"text-3xl font-bold text-brand-accent\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</p><div class=\"flex items-baseline gap-2 mb-2\"><span class=\"text-3xl font-bold text-brand-accent\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(price)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/services.templ`, Line: 55, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/services.templ`, Line: 225, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</span></div><p class=\"text-sm text-muted mb-6\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</span></div><p class=\"text-sm text-muted mb-6\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(duration)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/services.templ`, Line: 57, Col: 47}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/services.templ`, Line: 227, Col: 47}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if len(features) > 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"mb-6 flex-grow\"><p class=\"text-sm font-semibold mb-3\">Includes:</p><ul class=\"space-y-2\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"mb-6 flex-grow\"><p class=\"text-sm font-semibold mb-3\">Includes:</p><ul class=\"space-y-2\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			for _, feature := range features {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<li class=\"text-sm text-muted flex items-start gap-2\"><span class=\"text-brand-accent\">•</span> <span>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<li class=\"text-sm text-muted flex items-start gap-2\"><span class=\"text-brand-accent\">•</span> <span>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var8 string
 				templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(feature)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/services.templ`, Line: 65, Col: 22}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/services.templ`, Line: 235, Col: 22}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</span></li>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</span></li>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</ul></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</ul></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<a href=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<a href=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var9 templ.SafeURL
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(link))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/services.templ`, Line: 71, Col: 31}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/services.templ`, Line: 241, Col: 31}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\" class=\"btn-primary block text-center mt-auto\">Learn More</a></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" class=\"btn-primary block text-center mt-auto\">Learn More</a></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

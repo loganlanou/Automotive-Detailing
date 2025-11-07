@@ -114,7 +114,7 @@ func WorkDetail(data WorkDetailData) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!-- Hero Section with Before/After Slider --> <div class=\"relative bg-gradient-to-b from-brand-secondary to-bg py-16\"><div class=\"container mx-auto px-4\"><!-- Breadcrumbs --><nav class=\"text-sm text-muted mb-6\" aria-label=\"Breadcrumb\"><ol class=\"flex items-center gap-2\"><li><a href=\"/\" class=\"hover:text-brand-accent transition\">Home</a></li><li>/</li><li><a href=\"/work\" class=\"hover:text-brand-accent transition\">Our Work</a></li><li>/</li><li class=\"text-fg\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!-- Hero Section with Before/After Slider --> <div class=\"relative bg-gradient-to-b from-brand-secondary to-bg py-16\"><div class=\"container mx-auto px-4\"><!-- Breadcrumbs --><nav class=\"text-sm text-muted mb-6\" aria-label=\"Breadcrumb\"><ol class=\"flex items-center gap-2 font-semibold\"><li><a href=\"/\" class=\"hover:text-brand-accent transition\">Home</a></li><li>/</li><li><a href=\"/work\" class=\"hover:text-brand-accent transition\">Gallery</a></li><li>/</li><li class=\"text-fg\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -629,15 +629,15 @@ func WorkDetail(data WorkDetailData) templ.Component {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var29 templ.SafeURL
-					templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(data.DealershipListingURL.String))
+					templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(data.DealershipListingURL.String + "?utm_source=detailingpass&utm_medium=referral&utm_campaign=vehicle_detail"))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/work_detail.templ`, Line: 257, Col: 61}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/work_detail.templ`, Line: 257, Col: 139}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"btn-secondary w-full text-center inline-block\">View at Dealership →</a>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"btn-secondary w-full text-center inline-block font-bold\">View on Dealership Site</a>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}

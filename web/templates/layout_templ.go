@@ -42,7 +42,7 @@ func Layout(title string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, " | Detailing Pass</title><meta name=\"description\" content=\"Premium automotive detailing services - showcasing our work and driving excellence\"><link rel=\"icon\" type=\"image/png\" href=\"/favicon.png\"><link rel=\"stylesheet\" href=\"/static/css/output.css\"><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap\" rel=\"stylesheet\"></head><body class=\"bg-brand-bg text-brand-fg font-body antialiased\"><a href=\"#main\" class=\"skip-link\">Skip to main content</a>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, " | Detailing Pass</title><meta name=\"description\" content=\"Premium automotive detailing services - showcasing our work and driving excellence\"><link rel=\"icon\" type=\"image/png\" href=\"/favicon.png\"><link rel=\"stylesheet\" href=\"/static/css/output.css\"><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&family=Dancing+Script:wght@400;500;600;700&display=swap\" rel=\"stylesheet\"></head><body class=\"bg-brand-bg text-brand-fg font-body antialiased\"><a href=\"#main\" class=\"skip-link\">Skip to main content</a>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -66,7 +66,7 @@ func Layout(title string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<script src=\"/static/js/main.js\"></script></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<!-- Floating CTA Button --><a href=\"/contact\" class=\"floating-cta\" aria-label=\"Book your detailing service\"><span class=\"relative z-10\">Book Now</span></a><script src=\"/static/js/main.js\"></script></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

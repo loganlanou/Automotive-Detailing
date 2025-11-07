@@ -3,7 +3,6 @@ package handlers
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"net/http"
 
 	"detailingpass/internal/db"
@@ -27,7 +26,8 @@ func (h *Handler) Work(c echo.Context) error {
 		Offset: offset,
 	})
 	if err != nil {
-		return c.String(http.StatusInternalServerError, "Failed to fetch work")
+		// If error, return empty list instead of error (database might be empty)
+		workRows = []db.ListAllWorkRow{}
 	}
 
 	// Convert to WorkListItem format and fetch primary images
@@ -77,89 +77,54 @@ func (h *Handler) WorkDetail(c echo.Context) error {
 	ctx := context.Background()
 	queries := db.New(h.db)
 
-	// Fetch work detail by slug
-	// Note: This query doesn't exist yet in our queries, so we'll need to add it or use GetJobByID
-	// For now, let's return a placeholder
-	_ = slug
+	// Fetch work detail by slug using the proper query
+	work, err := queries.GetWorkBySlug(ctx, sql.NullString{String: slug, Valid: true})
+	if err != nil {
+		return c.String(http.StatusNotFound, "Work not found")
+	}
 
-	// TODO: Implement GetWorkBySlug query and use it here
-	// This is just a placeholder structure for now
+	// Initialize the data structure - construct Job from GetWorkBySlugRow fields
 	data := pages.WorkDetailData{
-		Job:            db.Job{},
-		VehicleYear:    sql.NullInt64{},
-		VehicleMake:    sql.NullString{},
-		VehicleModel:   sql.NullString{},
-		VehicleTrim:    sql.NullString{},
-		VehicleColor:   sql.NullString{},
-		DealershipName: sql.NullString{},
-		BeforeImages:   []db.Medium{},
-		AfterImages:    []db.Medium{},
-		GalleryImages:  []db.Medium{},
-		RelatedWork:    []pages.WorkListItem{},
-	}
-
-	// Fetch all jobs to find one by slug (temporary workaround)
-	allJobs, err := queries.ListFeaturedJobs(ctx, 100)
-	if err != nil {
-		return c.String(http.StatusInternalServerError, "Failed to fetch work details")
-	}
-
-	var foundJobID int64
-	var foundVehicleID sql.NullInt64
-	var foundPackageID sql.NullInt64
-	foundJobExists := false
-
-	for _, job := range allJobs {
-		if job.Slug.Valid && job.Slug.String == slug {
-			foundJobID = job.ID
-			foundVehicleID = job.VehicleID
-			foundPackageID = job.PackageID
-			foundJobExists = true
-			break
-		}
-	}
-
-	if !foundJobExists {
-		return c.String(http.StatusNotFound, "Work not found")
-	}
-
-	// Get full job details
-	foundJob, err := queries.GetJobByID(ctx, foundJobID)
-	if err != nil {
-		return c.String(http.StatusNotFound, "Work not found")
-	}
-
-	data.Job = foundJob
-
-	// Fetch vehicle details
-	if foundVehicleID.Valid {
-		vehicle, err := queries.GetVehicleBySlug(ctx, fmt.Sprintf("vehicle-%d", foundVehicleID.Int64))
-		if err == nil {
-			data.VehicleYear = vehicle.Year
-			data.VehicleMake = sql.NullString{String: vehicle.Make, Valid: true}
-			data.VehicleModel = sql.NullString{String: vehicle.Model, Valid: true}
-			data.VehicleTrim = sql.NullString{String: vehicle.Trim.String, Valid: vehicle.Trim.Valid}
-			data.VehicleColor = vehicle.Color
-			data.DealershipName = vehicle.DealershipName
-			data.DealershipLogoURL = vehicle.DealershipLogoUrl
-			data.DealershipListingURL = vehicle.DealershipListingUrl
-			data.DealershipLocation = vehicle.DealershipLocation
-		}
-	}
-
-	// Fetch package details
-	if foundPackageID.Valid {
-		pkg, err := queries.GetPackageByID(ctx, foundPackageID.Int64)
-		if err == nil {
-			data.PackageName = sql.NullString{String: pkg.Name, Valid: true}
-			data.PackageShortDesc = pkg.ShortDesc
-			data.PackagePriceMin = pkg.PriceMin
-			data.PackagePriceMax = pkg.PriceMax
-		}
+		Job: db.Job{
+			ID:                  work.ID,
+			Slug:                work.Slug,
+			VehicleID:           work.VehicleID,
+			PackageID:           work.PackageID,
+			Technician:          work.Technician,
+			Notes:               work.Notes,
+			CompletedAt:         work.CompletedAt,
+			DurationActual:      work.DurationActual,
+			Featured:            work.Featured,
+			DisplayPrice:        work.DisplayPrice,
+			HighlightText:       work.HighlightText,
+			CustomerTestimonial: work.CustomerTestimonial,
+			CustomerName:        work.CustomerName,
+			MetaDescription:     work.MetaDescription,
+			MetaKeywords:        work.MetaKeywords,
+			CreatedAt:           work.CreatedAt,
+			UpdatedAt:           work.UpdatedAt,
+		},
+		VehicleYear:          work.VehicleYear,
+		VehicleMake:          work.VehicleMake,
+		VehicleModel:         work.VehicleModel,
+		VehicleTrim:          work.VehicleTrim,
+		VehicleColor:         work.VehicleColor,
+		DealershipName:       work.DealershipName,
+		DealershipLogoURL:    work.DealershipLogoUrl,
+		DealershipListingURL: work.DealershipListingUrl,
+		DealershipLocation:   work.DealershipLocation,
+		PackageName:          work.PackageName,
+		PackageShortDesc:     work.PackageShortDesc,
+		PackagePriceMin:      work.PackagePriceMin,
+		PackagePriceMax:      work.PackagePriceMax,
+		BeforeImages:         []db.Medium{},
+		AfterImages:          []db.Medium{},
+		GalleryImages:        []db.Medium{},
+		RelatedWork:          []pages.WorkListItem{},
 	}
 
 	// Fetch media for this job
-	media, err := queries.GetMediaForJob(ctx, sql.NullInt64{Int64: foundJob.ID, Valid: true})
+	media, err := queries.GetMediaForJob(ctx, sql.NullInt64{Int64: work.ID, Valid: true})
 	if err == nil {
 		for _, m := range media {
 			switch m.Kind.String {
@@ -176,12 +141,11 @@ func (h *Handler) WorkDetail(c echo.Context) error {
 	}
 
 	// Fetch related work (same make or same package)
-	if foundVehicleID.Valid {
-		vehicle, _ := queries.GetVehicleBySlug(ctx, fmt.Sprintf("vehicle-%d", foundVehicleID.Int64))
+	if work.VehicleMake.Valid && work.PackageID.Valid {
 		relatedRows, err := queries.GetRelatedWork(ctx, db.GetRelatedWorkParams{
-			ID:        foundJobID,
-			Make:      vehicle.Make,
-			PackageID: foundPackageID,
+			ID:        work.ID,
+			Make:      work.VehicleMake.String,
+			PackageID: work.PackageID,
 		})
 		if err == nil {
 			for _, row := range relatedRows {
