@@ -5,13 +5,13 @@ import "detailingpass/web/templates"
 templ Home() {
 	@templates.Layout("Home") {
 		<!-- Hero Section with Full-Bleed Montage -->
-		<section class="relative h-[600px] md:h-[700px] overflow-hidden">
+		<section class="relative min-h-[520px] md:h-[700px] pt-16 pb-12 sm:pt-20 sm:pb-16 overflow-hidden">
 			<!-- Background Montage -->
-			<div class="absolute inset-0 grid grid-cols-2 md:grid-cols-3 gap-1">
-				<div class="relative overflow-hidden">
+			<div class="absolute inset-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1">
+				<div class="relative overflow-hidden h-48 sm:h-full">
 					<img src="/static/images/work/f150-1.jpg" alt="Detailing work" class="w-full h-full object-cover opacity-40"/>
 				</div>
-				<div class="relative overflow-hidden">
+				<div class="relative overflow-hidden h-48 sm:h-full">
 					<img src="/static/images/work/f150-2.jpg" alt="Detailing work" class="w-full h-full object-cover opacity-40"/>
 				</div>
 				<div class="relative overflow-hidden hidden md:block">
@@ -24,37 +24,43 @@ templ Home() {
 
 			<!-- Hero Content -->
 			<div class="container mx-auto px-4 h-full relative z-10">
-				<div class="h-full flex flex-col justify-center max-w-4xl">
-					<h1 class="text-5xl md:text-7xl font-heading font-bold mb-6 leading-tight">
+				<div class="h-full flex flex-col justify-center max-w-3xl text-center md:text-left">
+					<p class="text-xs uppercase tracking-[0.3em] text-brand-accent mb-4">Stanley, Wisconsin</p>
+					<h1 class="text-4xl sm:text-5xl md:text-7xl font-heading font-bold mb-5 sm:mb-6 leading-tight">
 						State-of-the-Art Detailing
 					</h1>
-					<p class="text-xl md:text-2xl text-muted mb-10 max-w-2xl font-medium">
+					<p class="text-base sm:text-xl md:text-2xl text-muted mb-8 sm:mb-10 mx-auto md:mx-0 font-medium">
 						Professional detailing services in Stanley, WI with meticulous care for every vehicle.
 					</p>
 
 					<!-- Dual CTAs -->
-					<div class="flex flex-col sm:flex-row gap-4 mb-8">
-						<a href="/work" class="btn-primary text-lg px-10 py-4 text-center">
+					<div class="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8">
+						<a href="/work" class="btn-primary text-base sm:text-lg px-8 sm:px-10 py-4 text-center">
 							Browse Vehicles
 						</a>
-						<a href="/contact" class="btn-secondary text-lg px-10 py-4 text-center">
+						<a href="/contact" class="btn-secondary text-base sm:text-lg px-8 sm:px-10 py-4 text-center">
 							Book a Detail
 						</a>
 					</div>
+					<p class="text-sm text-muted flex flex-col sm:flex-row gap-2 items-center justify-center md:justify-start">
+						<span>Need help fast?</span>
+						<a href="tel:+15551234567" class="text-brand-accent font-semibold">Call or text (555) 123-4567</a>
+					</p>
 				</div>
 			</div>
 		</section>
 
 		<!-- Services Preview Section -->
-		<section class="container mx-auto px-4 py-20 border-t-2 border-border">
-			<div class="text-center mb-12">
+		<section class="container mx-auto px-4 py-16 md:py-20 border-t-2 border-border">
+			<div class="text-center mb-8 md:mb-12">
 				<h2 class="text-3xl md:text-5xl font-heading font-bold mb-4 border-b-4 border-brand-accent inline-block pb-2">Detailing Services</h2>
-				<p class="text-muted text-lg max-w-2xl mx-auto mt-6">State-of-the-art quality in every option. Choose the service that fits your needs.</p>
+				<p class="text-muted text-base md:text-lg max-w-2xl mx-auto mt-4 md:mt-6">State-of-the-art quality in every option. Choose the service that fits your needs.</p>
+				<p class="text-xs uppercase tracking-[0.3em] text-muted md:hidden mt-6">Swipe to explore packages</p>
 			</div>
 
-			<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+			<div class="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 md:grid md:grid-cols-3 md:gap-8 md:overflow-visible md:pb-0 mb-10 md:mb-12">
 				<!-- Interior Detail -->
-				<div class="card group hover:border-brand-accent-bright">
+				<div class="card group hover:border-brand-accent-bright min-w-[260px] flex-shrink-0 snap-center md:min-w-0">
 					<div class="border-l-4 border-brand-accent pl-4 mb-6">
 						<h3 class="text-2xl font-heading font-bold mb-2">Interior Detail</h3>
 						<p class="text-brand-accent-bright font-bold text-lg">Starting at $150</p>
@@ -81,7 +87,7 @@ templ Home() {
 				</div>
 
 				<!-- Exterior Detail -->
-				<div class="card group hover:border-brand-accent-bright">
+				<div class="card group hover:border-brand-accent-bright min-w-[260px] flex-shrink-0 snap-center md:min-w-0">
 					<div class="border-l-4 border-brand-accent pl-4 mb-6">
 						<h3 class="text-2xl font-heading font-bold mb-2">Exterior Detail</h3>
 						<p class="text-brand-accent-bright font-bold text-lg">Priced by appointment</p>
@@ -108,7 +114,7 @@ templ Home() {
 				</div>
 
 				<!-- Full Detail -->
-				<div class="card group hover:border-brand-accent-bright border-brand-accent">
+				<div class="card group hover:border-brand-accent-bright border-brand-accent min-w-[260px] flex-shrink-0 snap-center md:min-w-0">
 					<div class="border-l-4 border-brand-green pl-4 mb-6">
 						<h3 class="text-2xl font-heading font-bold mb-2">Full Detail</h3>
 						<p class="text-brand-green font-bold text-lg">Starting at $300</p>
@@ -181,16 +187,17 @@ templ Home() {
 		</section>
 
 		<!-- Featured Work -->
-		<section class="bg-brand-secondary py-16">
+		<section class="bg-brand-secondary py-14 md:py-20">
 			<div class="container mx-auto px-4">
-				<div class="text-center mb-12 fade-in">
-					<h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">Featured Work</h2>
-					<p class="text-muted">See the transformation we deliver on every vehicle</p>
+				<div class="text-center mb-8 md:mb-12 fade-in">
+					<h2 class="text-3xl md:text-4xl font-heading font-bold mb-3 md:mb-4">Featured Work</h2>
+					<p class="text-muted text-base md:text-lg">See the transformation we deliver on every vehicle</p>
+					<p class="text-xs uppercase tracking-[0.3em] text-muted md:hidden mt-6">Swipe to view cars</p>
 				</div>
 
 				<!-- Featured work showcase -->
-				<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-					<a href="/work/ford-f150-detail" class="card group cursor-pointer slide-up">
+				<div class="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 md:grid md:grid-cols-3 md:gap-8 md:overflow-visible md:pb-0">
+					<a href="/work/ford-f150-detail" class="card group cursor-pointer slide-up min-w-[280px] flex-shrink-0 snap-center md:min-w-0">
 						<div class="aspect-video bg-border rounded-lg mb-4 overflow-hidden">
 							<img src="/static/images/work/f150-1.jpg" alt="2024 Ford F-150 from Courtesy Auto" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-lightbox="/static/images/work/f150-1.jpg"/>
 						</div>
@@ -199,7 +206,7 @@ templ Home() {
 						</h3>
 						<p class="text-muted text-sm">Full Detail Package • 4 hours</p>
 					</a>
-					<a href="/work/ford-f150-detail-2" class="card group cursor-pointer slide-up delay-100">
+					<a href="/work/ford-f150-detail-2" class="card group cursor-pointer slide-up delay-100 min-w-[280px] flex-shrink-0 snap-center md:min-w-0">
 						<div class="aspect-video bg-border rounded-lg mb-4 overflow-hidden">
 							<img src="/static/images/work/f150-2.jpg" alt="2024 Ford F-150 from Courtesy Auto" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-lightbox="/static/images/work/f150-2.jpg"/>
 						</div>
@@ -208,7 +215,7 @@ templ Home() {
 						</h3>
 						<p class="text-muted text-sm">Premium Detail Package • 5 hours</p>
 					</a>
-					<a href="/work/ford-f150-detail-3" class="card group cursor-pointer slide-up delay-200">
+					<a href="/work/ford-f150-detail-3" class="card group cursor-pointer slide-up delay-200 min-w-[280px] flex-shrink-0 snap-center md:min-w-0">
 						<div class="aspect-video bg-border rounded-lg mb-4 overflow-hidden">
 							<img src="/static/images/work/f150-3.jpg" alt="2024 Ford F-150 from Courtesy Auto" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-lightbox="/static/images/work/f150-3.jpg"/>
 						</div>
@@ -226,22 +233,22 @@ templ Home() {
 		</section>
 
 		<!-- CTA Section (Client Funnel Stage 4: Conversion) -->
-		<section class="container mx-auto px-4 py-20">
-			<div class="relative bg-gradient-to-br from-brand-primary via-brand-accent to-brand-accent-bright rounded-3xl p-12 md:p-16 text-center overflow-hidden">
+		<section class="container mx-auto px-4 py-16 md:py-24">
+			<div class="relative bg-gradient-to-br from-brand-primary via-brand-accent to-brand-accent-bright rounded-3xl p-8 md:p-16 text-center overflow-hidden">
 				<!-- Decorative elements -->
 				<div class="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
 				<div class="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full translate-x-1/3 translate-y-1/3"></div>
 
 				<div class="relative z-10">
-					<p class="text-white/90 font-script text-3xl mb-2">Ready to Experience the Difference?</p>
-					<h2 class="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 text-white">Book Your Detail Today</h2>
-					<p class="text-xl mb-10 text-white/90 max-w-2xl mx-auto">Transform your vehicle with our professional detailing services. Same-day appointments available.</p>
+					<p class="text-white/90 font-script text-2xl sm:text-3xl mb-2">Ready to Experience the Difference?</p>
+					<h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-5 sm:mb-6 text-white">Book Your Detail Today</h2>
+					<p class="text-base sm:text-xl mb-8 sm:mb-10 text-white/90 max-w-2xl mx-auto">Transform your vehicle with our professional detailing services. Same-day appointments available.</p>
 
-					<div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-						<a href="/contact" class="btn-secondary text-lg px-10 py-4 hover:scale-105 transition-transform">
+					<div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
+						<a href="/contact" class="btn-secondary text-base sm:text-lg px-8 sm:px-10 py-4 hover:scale-105 transition-transform">
 							Book Now
 						</a>
-						<a href="tel:+15551234567" class="inline-flex items-center gap-2 text-white hover:text-white/80 font-semibold text-lg transition">
+						<a href="tel:+15551234567" class="inline-flex items-center gap-2 text-white hover:text-white/80 font-semibold text-base sm:text-lg transition">
 							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
 							</svg>
