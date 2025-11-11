@@ -1,21 +1,18 @@
 # Deployment Guide
 
-This guide will help you deploy Detailing Pass to Railway.app for free.
+This guide explains how to deploy Detailing Pass to [Vercel](https://vercel.com) using the included `vercel.json` configuration and the serverless handler in `api/index.go`.
 
-## Why Railway?
+## Why Vercel?
 
-Railway is perfect for Go applications:
-- ✅ Free tier available (500 hours/month)
-- ✅ Automatic builds from Git
-- ✅ Instant public URL
-- ✅ Built-in database support
-- ✅ Zero configuration needed
+- ✅ Free tier with automatic HTTPS and global CDN
+- ✅ Git-powered deployments with preview environments
+- ✅ Native Go Serverless Functions (used by `api/index.go`)
+- ✅ Automatic Tailwind/Templ build via `build.sh`
+- ✅ Instant rollbacks and shareable preview URLs
 
 ## Step-by-Step Deployment
 
 ### 1. Push to GitHub
-
-First, make sure your code is pushed to GitHub:
 
 ```bash
 git add -A
@@ -23,95 +20,78 @@ git commit -m "Prepare for deployment"
 git push origin main
 ```
 
-### 2. Sign Up for Railway
+Vercel will pull straight from GitHub, so make sure `main` (or your chosen branch) is up-to-date.
 
-1. Go to [railway.app](https://railway.app)
-2. Click "Login" in the top right
-3. Sign up with your GitHub account
-4. Authorize Railway to access your repositories
+### 2. Create a Vercel Project
 
-### 3. Deploy Your Project
+1. Sign in at [vercel.com](https://vercel.com) with GitHub
+2. Click **Add New… → Project**
+3. Import the `Automotive-Detailing` repository
+4. Leave the root directory as `/`
+5. When prompted for the framework, choose **Other**
 
-1. Click "New Project" on your Railway dashboard
-2. Select "Deploy from GitHub repo"
-3. Choose your `Automotive-Detailing` repository
-4. Railway will automatically detect it's a Go project and start building
+The project will automatically pick up the checked-in `vercel.json`, so you do not need to edit build settings in the UI.
 
-### 4. Configure Environment Variables (Optional)
+### 3. Build & Install Commands
 
-Railway will use sensible defaults, but you can customize:
+`vercel.json` already specifies:
 
-1. Click on your deployed service
-2. Go to "Variables" tab
-3. Add any custom variables:
-   - `PORT` - Auto-set by Railway
-   - `DATABASE_PATH` - Defaults to `./data/detailing.db`
+- `installCommand`: `npm install` (installs Tailwind/PostCSS)
+- `buildCommand`: `bash build.sh`
+- `framework`: `null` (disables opinionated defaults)
 
-### 5. Get Your Public URL
+`build.sh` performs the following:
 
-1. Go to "Settings" tab
-2. Click "Generate Domain" under "Networking"
-3. Your site will be available at: `https://your-project-name.up.railway.app`
+1. Installs `templ`
+2. Generates Templ output (`templ generate`)
+3. Compiles Tailwind to `web/static/css/output.css`
+4. Builds the binary (useful for local/docker deploys)
 
-### 6. Share with Your Friend!
+The Vercel deployment itself relies on `api/index.go`, so the built binary is optional but harmless.
 
-Copy the URL and send it to anyone. The site will be:
-- ✅ Live 24/7
-- ✅ Publicly accessible
-- ✅ Using the free tier
-- ✅ Auto-deploying on git push
+### 4. Environment Variables
 
-## What's Included
+For the serverless build, the in-memory SQLite database defined in `api/index.go` is used, so no variables are required. If you later wire the project to an external database or need API keys (Clerk, SMTP, etc.), add them under **Settings → Environment Variables** in the Vercel dashboard and redeploy.
 
-The deployment includes:
-- ✅ Automatic database creation
-- ✅ All static assets (CSS, JS, images)
-- ✅ Ford F-150 inventory images from Courtesy Auto
-- ✅ Responsive design that works on mobile
+### 5. Domains & URLs
 
-## Troubleshooting
+1. After the first deploy, click **Visit** to open the preview URL
+2. Promote to production with **Deploy to Production**
+3. Add a custom domain under **Settings → Domains** if desired
 
-### Build Fails
-- Check the build logs in Railway dashboard
-- Ensure all dependencies are in `go.mod`
-- Verify `nixpacks.toml` is in project root
+### 6. Logs & Monitoring
 
-### Site Not Loading
-- Check if service is "Active" in Railway dashboard
-- Verify domain is generated in Settings
-- Check deployment logs for errors
+- Build logs live under the **Deployments** tab
+- Runtime logs for `api/index.go` are visible via **Functions → Logs**
+- `/health` route returns `{ "status": "ok" }` for uptime checks
 
-### Database Issues
-- Railway automatically creates the database on first run
-- Schema is embedded in the binary
-- Data persists across deployments
+### 7. Troubleshooting
+
+**Build fails**
+- Ensure Node 18+ features are not required (Vercel uses Node 18 by default)
+- Confirm `templ` is reachable (Vercel builders have Go preinstalled)
+- Run `bash build.sh` locally to catch syntax or Tailwind errors
+
+**Runtime errors**
+- Check the **Functions** tab for stack traces
+- Verify that `web/static/css/output.css` exists in git (it is generated during build and should be committed if you prefer deterministic builds)
+
+**Styling missing**
+- Make sure Tailwind input/output paths in `build.sh` line up with your CSS entrypoint
 
 ## Alternative Deployment Options
 
-If you prefer other platforms:
+Prefer a traditional VM/container workflow? Use one of these instead:
 
 ### Render.com
 1. Sign up at [render.com](https://render.com)
-2. Create new "Web Service"
-3. Connect your GitHub repo
-4. Use build command: `make build`
-5. Use start command: `./bin/server`
+2. Create a new Web Service
+3. Build command: `make build`
+4. Start command: `./bin/server`
 
 ### Fly.io
 1. Install flyctl: `curl -L https://fly.io/install.sh | sh`
-2. Sign up: `flyctl auth signup`
-3. Deploy: `flyctl launch`
-4. Follow the prompts
+2. Run `flyctl launch`
+3. Configure the generated `fly.toml` and deploy
 
-## Cost
-
-Railway free tier includes:
-- 500 hours per month (enough for 24/7 operation)
-- $5 credit per month
-- After free tier: ~$5/month for this app
-
-## Support
-
-If you run into issues:
-- Check Railway docs: [docs.railway.app](https://docs.railway.app)
-- Railway Discord: [discord.gg/railway](https://discord.gg/railway)
+Both options keep SQLite on persistent storage if you need write access, whereas Vercel’s serverless handler resets state between invocations.

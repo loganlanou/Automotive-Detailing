@@ -74,6 +74,11 @@ make fmt          # Format code
 make clean        # Clean build artifacts
 ```
 
+## Deployment
+
+- **Vercel (default):** `vercel.json` + `api/index.go` configure the project for Go Serverless Functions. See `DEPLOYMENT.md` for the exact checklist (Git integration, build command, env vars, and troubleshooting).
+- **Other targets:** Render or Fly.io instructions are also documented in `DEPLOYMENT.md` if you prefer a long-running server with persistent storage.
+
 ## Project Structure
 
 ```

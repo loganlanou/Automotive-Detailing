@@ -11,7 +11,7 @@ import (
 func SetupRoutes(e *echo.Echo, db *sql.DB) {
 	h := handlers.New(db)
 
-	// Health check endpoint for Railway
+	// Health check endpoint for Vercel uptime probes
 	e.GET("/health", func(c echo.Context) error {
 		return c.JSON(200, map[string]string{"status": "ok"})
 	})
