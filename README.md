@@ -84,7 +84,7 @@ make clean        # Clean build artifacts
 ```
 .
 ├── cmd/server/           # Application entry point
-├── internal/
+├── pkg/
 │   ├── server/          # HTTP server, routes, middleware
 │   │   └── handlers/    # Request handlers
 │   ├── db/              # Database schema, queries, SQLC config
@@ -118,7 +118,7 @@ Copy `.env.example` to `.env` and configure:
 
 The project uses SQLite with SQLC for type-safe queries.
 
-**Schema:** See `internal/db/schema.sql`
+**Schema:** See `pkg/db/schema.sql`
 
 **Tables:**
 - `packages` - Detailing service packages
@@ -129,9 +129,9 @@ The project uses SQLite with SQLC for type-safe queries.
 - `posts` - Blog posts (optional)
 
 To modify the database:
-1. Edit `internal/db/schema.sql`
+1. Edit `pkg/db/schema.sql`
 2. Run `make migrate`
-3. Update queries in `internal/db/queries.sql`
+3. Update queries in `pkg/db/queries.sql`
 4. Run `make sqlc` to regenerate Go code
 
 ## Design System

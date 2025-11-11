@@ -44,12 +44,12 @@ This will:
 
 ### Option 2: Manual SQL Import
 ```bash
-sqlite3 ./data/detailing.db < ./internal/db/seed_vehicles.sql
+sqlite3 ./data/detailing.db < ./pkg/db/seed_vehicles.sql
 ```
 
 ## Files Added
 
-- `internal/db/seed_vehicles.sql` - SQL seed data for vehicles and jobs
+- `pkg/db/seed_vehicles.sql` - SQL seed data for vehicles and jobs
 - `cmd/seed/main.go` - Go script to seed the database
 - `cmd/migrate/main.go` - Database migration script to add missing columns
 - `cmd/check_schema/main.go` - Utility to check database schema

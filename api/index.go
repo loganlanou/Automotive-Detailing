@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"net/http"
 
-	"detailingpass/internal/server"
+	"detailingpass/pkg/server"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"

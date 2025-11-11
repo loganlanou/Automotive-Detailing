@@ -3,7 +3,7 @@ package server
 import (
 	"database/sql"
 
-	"detailingpass/internal/server/handlers"
+	"detailingpass/pkg/server/handlers"
 
 	"github.com/labstack/echo/v4"
 )

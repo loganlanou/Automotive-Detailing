@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"net/http"
 
-	"detailingpass/internal/db"
+	"detailingpass/pkg/db"
 	"detailingpass/web/templates/pages"
 
 	"github.com/labstack/echo/v4"

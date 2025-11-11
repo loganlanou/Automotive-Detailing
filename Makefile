@@ -21,7 +21,7 @@ tailwind-watch: ## Watch and build Tailwind CSS
 
 migrate: ## Run database migrations
 	@mkdir -p data
-	sqlite3 data/detailing.db < internal/db/schema.sql
+	sqlite3 data/detailing.db < pkg/db/schema.sql
 	@echo "✓ Database migrated"
 
 sqlc: ## Generate SQLC code

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 
-	"detailingpass/internal/db"
+	"detailingpass/pkg/db"
 
 	_ "modernc.org/sqlite"
 )

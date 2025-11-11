@@ -51,7 +51,7 @@ func main() {
 	}
 
 	// Read seed file
-	seedSQL, err := os.ReadFile("./internal/db/seed_vehicles.sql")
+	seedSQL, err := os.ReadFile("./pkg/db/seed_vehicles.sql")
 	if err != nil {
 		log.Fatal(err)
 	}

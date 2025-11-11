@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"detailingpass/internal/server"
+	"detailingpass/pkg/server"
 
 	_ "embed"
 

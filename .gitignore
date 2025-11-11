@@ -36,3 +36,4 @@ Thumbs.db
 # Uploads
 web/static/uploads/*
 !web/static/uploads/.gitkeep
+.vercel

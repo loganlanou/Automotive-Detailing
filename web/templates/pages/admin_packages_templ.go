@@ -9,7 +9,7 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
-	"detailingpass/internal/db"
+	"detailingpass/pkg/db"
 	"detailingpass/web/templates"
 	"fmt"
 )
