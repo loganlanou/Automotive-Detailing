@@ -5,7 +5,23 @@
   "framework": null,
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/static/(.*)",
+      "destination": "/web/static/$1"
+    },
+    {
+      "source": "/favicon.png",
+      "destination": "/public/favicon.png"
+    },
+    {
+      "source": "/favicon.ico",
+      "destination": "/public/favicon.png"
+    },
+    {
+      "source": "/robots.txt",
+      "destination": "/public/robots.txt"
+    },
+    {
+      "source": "/((?!web/|public/).*)",
       "destination": "/api/index"
     }
   ]
