@@ -56,33 +56,33 @@ func AdminDashboard(stats DashboardStats) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section class=\"grid gap-6 xl:grid-cols-3\"><div class=\"rounded-3xl border border-white/10 bg-gradient-to-br from-slate-950 to-slate-900 p-8 shadow-2xl shadow-blue-500/10\"><p class=\"text-xs uppercase tracking-[0.5em] text-slate-500 mb-4\">Live Bookings</p><div class=\"flex items-end justify-between\"><div><p class=\"text-5xl font-heading font-semibold text-white\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section class=\"grid gap-4 sm:gap-6 md:grid-cols-2 xl:grid-cols-3\"><div class=\"rounded-2xl sm:rounded-3xl border border-white/10 bg-gradient-to-br from-slate-950 to-slate-900 p-5 sm:p-8 shadow-2xl shadow-blue-500/10 md:col-span-2 xl:col-span-1\"><p class=\"text-xs uppercase tracking-[0.3em] sm:tracking-[0.5em] text-slate-500 mb-3 sm:mb-4\">Live Bookings</p><div class=\"flex items-end justify-between gap-4\"><div><p class=\"text-4xl sm:text-5xl font-heading font-semibold text-white\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", stats.BookingPending))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/admin_dashboard.templ`, Line: 25, Col: 105}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/admin_dashboard.templ`, Line: 25, Col: 117}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</p><p class=\"text-sm text-slate-400 mt-2\">requests awaiting review</p></div><div class=\"text-right\"><p class=\"text-sm text-slate-400\">Confirmed</p><p class=\"text-2xl font-semibold text-emerald-300\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</p><p class=\"text-sm text-slate-400 mt-1 sm:mt-2\">requests awaiting review</p></div><div class=\"text-right\"><p class=\"text-sm text-slate-400\">Confirmed</p><p class=\"text-xl sm:text-2xl font-semibold text-emerald-300\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", stats.BookingConfirmed))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/admin_dashboard.templ`, Line: 30, Col: 100}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/admin_dashboard.templ`, Line: 30, Col: 111}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</p></div></div><div class=\"mt-6 flex items-center justify-between text-sm\"><div class=\"flex items-center gap-3 text-slate-400\"><span class=\"inline-flex h-2 w-2 rounded-full bg-amber-400 animate-pulse\"></span> <span>Slots auto-lock once requests arrive</span></div><a href=\"/admin/bookings\" class=\"text-blue-300 hover:text-white transition\">View bookings →</a></div></div><div class=\"rounded-3xl border border-white/5 bg-slate-950/80 p-8 space-y-6\"><div><p class=\"text-xs uppercase tracking-[0.5em] text-slate-500 mb-2\">Content Overview</p><h2 class=\"text-2xl font-heading font-semibold text-white\">Asset pulse</h2></div><div class=\"grid grid-cols-2 gap-4\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</p></div></div><div class=\"mt-4 sm:mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-sm\"><div class=\"flex items-center gap-2 sm:gap-3 text-slate-400\"><span class=\"inline-flex h-2 w-2 rounded-full bg-amber-400 animate-pulse\"></span> <span class=\"text-xs sm:text-sm\">Slots auto-lock once requests arrive</span></div><a href=\"/admin/bookings\" class=\"text-blue-300 hover:text-white transition font-medium\">View bookings →</a></div></div><div class=\"rounded-2xl sm:rounded-3xl border border-white/5 bg-slate-950/80 p-5 sm:p-8 space-y-4 sm:space-y-6\"><div><p class=\"text-xs uppercase tracking-[0.3em] sm:tracking-[0.5em] text-slate-500 mb-1 sm:mb-2\">Content Overview</p><h2 class=\"text-xl sm:text-2xl font-heading font-semibold text-white\">Asset pulse</h2></div><div class=\"grid grid-cols-2 gap-3 sm:gap-4\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -102,7 +102,7 @@ func AdminDashboard(stats DashboardStats) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div></div><div class=\"rounded-3xl border border-blue-500/40 bg-blue-500/10 p-8 space-y-6\"><div><p class=\"text-xs uppercase tracking-[0.5em] text-blue-300 mb-2\">Quick launch</p><h2 class=\"text-2xl font-heading font-semibold text-white\">Ship updates faster</h2></div><div class=\"space-y-3\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div></div><div class=\"rounded-2xl sm:rounded-3xl border border-blue-500/40 bg-blue-500/10 p-5 sm:p-8 space-y-4 sm:space-y-6\"><div><p class=\"text-xs uppercase tracking-[0.3em] sm:tracking-[0.5em] text-blue-300 mb-1 sm:mb-2\">Quick launch</p><h2 class=\"text-xl sm:text-2xl font-heading font-semibold text-white\">Ship updates faster</h2></div><div class=\"space-y-2 sm:space-y-3\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -118,7 +118,7 @@ func AdminDashboard(stats DashboardStats) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div></div></section><section class=\"grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]\"><div class=\"rounded-3xl border border-white/5 bg-slate-950/80 p-8\"><div class=\"flex flex-col gap-4 md:flex-row md:items-center md:justify-between\"><div><p class=\"text-xs uppercase tracking-[0.5em] text-slate-500\">Workboard</p><h3 class=\"text-2xl font-heading font-semibold text-white mt-1\">Operational checklist</h3></div><a href=\"/admin/packages\" class=\"inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-sm font-medium text-white hover:border-blue-500/60\"><span>Open Packages</span> <svg class=\"w-4 h-4\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M17 8l4 4m0 0l-4 4m4-4H3\"></path></svg></a></div><div class=\"mt-6 grid gap-4 md:grid-cols-2\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div></div></section><section class=\"grid gap-4 sm:gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)]\"><div class=\"rounded-2xl sm:rounded-3xl border border-white/5 bg-slate-950/80 p-5 sm:p-8\"><div class=\"flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-center sm:justify-between\"><div><p class=\"text-xs uppercase tracking-[0.3em] sm:tracking-[0.5em] text-slate-500\">Workboard</p><h3 class=\"text-xl sm:text-2xl font-heading font-semibold text-white mt-1\">Operational checklist</h3></div><a href=\"/admin/packages\" class=\"inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-sm font-medium text-white hover:border-blue-500/60 transition\"><span>Open Packages</span> <svg class=\"w-4 h-4\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M17 8l4 4m0 0l-4 4m4-4H3\"></path></svg></a></div><div class=\"mt-4 sm:mt-6 grid gap-3 sm:gap-4 sm:grid-cols-2\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -138,20 +138,20 @@ func AdminDashboard(stats DashboardStats) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div></div><div class=\"rounded-3xl border border-white/10 bg-gradient-to-b from-slate-950 to-slate-900 p-8 space-y-4\"><p class=\"text-xs uppercase tracking-[0.5em] text-slate-500\">Tempo</p><h3 class=\"text-xl font-heading font-semibold text-white\">Total bookings</h3><p class=\"text-5xl font-heading text-white\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div></div><div class=\"rounded-2xl sm:rounded-3xl border border-white/10 bg-gradient-to-b from-slate-950 to-slate-900 p-5 sm:p-8 space-y-3 sm:space-y-4\"><p class=\"text-xs uppercase tracking-[0.3em] sm:tracking-[0.5em] text-slate-500\">Tempo</p><h3 class=\"text-lg sm:text-xl font-heading font-semibold text-white\">Total bookings</h3><p class=\"text-4xl sm:text-5xl font-heading text-white\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", stats.BookingTotal))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/admin_dashboard.templ`, Line: 93, Col: 87}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/admin_dashboard.templ`, Line: 93, Col: 99}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</p><p class=\"text-sm text-slate-400\">Total booking requests received</p><a href=\"/admin/bookings\" class=\"inline-flex items-center justify-center rounded-2xl bg-white/10 px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/20 transition\">Open Booking Queue</a></div></section>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</p><p class=\"text-sm text-slate-400\">Total booking requests received</p><a href=\"/admin/bookings\" class=\"inline-flex items-center justify-center w-full sm:w-auto rounded-xl sm:rounded-2xl bg-white/10 px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/20 transition\">Open Booking Queue</a></div></section>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -186,27 +186,27 @@ func adminDashboardStat(label string, value int64) templ.Component {
 			templ_7745c5c3_Var6 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"rounded-2xl border border-white/10 bg-slate-900/60 p-4\"><p class=\"text-sm text-slate-500\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"rounded-xl sm:rounded-2xl border border-white/10 bg-slate-900/60 p-3 sm:p-4\"><p class=\"text-xs sm:text-sm text-slate-500\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(label)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/admin_dashboard.templ`, Line: 105, Col: 43}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/admin_dashboard.templ`, Line: 105, Col: 54}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</p><p class=\"text-2xl font-heading font-semibold text-white mt-1\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</p><p class=\"text-xl sm:text-2xl font-heading font-semibold text-white mt-1\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(formatCount(value))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/admin_dashboard.templ`, Line: 106, Col: 85}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/admin_dashboard.templ`, Line: 106, Col: 96}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
@@ -254,7 +254,7 @@ func adminQuickAction(href templ.SafeURL, label string, icon string) templ.Compo
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" class=\"flex items-center justify-between rounded-2xl border border-blue-500/20 bg-blue-500/5 px-4 py-3 text-sm font-medium text-white hover:border-blue-400/60\"><span>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" class=\"flex items-center justify-between rounded-xl sm:rounded-2xl border border-blue-500/20 bg-blue-500/5 px-3 sm:px-4 py-2.5 sm:py-3 text-sm font-medium text-white hover:border-blue-400/60 hover:bg-blue-500/10 transition active:scale-[0.98]\"><span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -317,27 +317,27 @@ func adminChecklistCard(title string, subtitle string, href templ.SafeURL) templ
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\" class=\"rounded-2xl border border-white/10 bg-slate-900/40 p-4 hover:border-blue-500/40 transition\"><p class=\"text-sm uppercase tracking-[0.4em] text-slate-500\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\" class=\"block rounded-xl sm:rounded-2xl border border-white/10 bg-slate-900/40 p-3 sm:p-4 hover:border-blue-500/40 hover:bg-slate-900/60 transition active:scale-[0.98]\"><p class=\"text-xs sm:text-sm uppercase tracking-[0.3em] sm:tracking-[0.4em] text-slate-500\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var14 string
 		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/admin_dashboard.templ`, Line: 119, Col: 70}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/admin_dashboard.templ`, Line: 119, Col: 101}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</p><p class=\"text-base text-white mt-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</p><p class=\"text-sm sm:text-base text-white mt-1 sm:mt-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var15 string
 		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(subtitle)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/admin_dashboard.templ`, Line: 120, Col: 49}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/admin_dashboard.templ`, Line: 120, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 		if templ_7745c5c3_Err != nil {

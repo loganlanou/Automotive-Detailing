@@ -36,9 +36,9 @@ func SetupRoutes(e *echo.Echo, db *sql.DB) {
 	e.GET("/sign-in", h.SignIn)
 	e.GET("/sign-up", h.SignUp)
 
-	// Admin routes (protected with Clerk middleware)
+	// Admin routes (protected with Clerk middleware - requires authorized admin email)
 	admin := e.Group("/admin")
-	admin.Use(auth.RequireAuth())
+	admin.Use(auth.RequireAdmin())
 	admin.GET("", h.AdminDashboard)
 	admin.GET("/packages", h.AdminPackages)
 	admin.POST("/packages", h.CreatePackage)

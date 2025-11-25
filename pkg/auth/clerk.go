@@ -159,6 +159,96 @@ func isHTMLRequest(r *http.Request) bool {
 	return strings.Contains(accept, "text/html") || accept == "" || accept == "*/*"
 }
 
+// AdminEmails is a list of email addresses that are authorized to access admin pages
+var AdminEmails = []string{
+	"logan@lanou.com",
+}
+
+// IsAdminEmail checks if an email is in the authorized admin list
+func IsAdminEmail(email string) bool {
+	for _, adminEmail := range AdminEmails {
+		if strings.EqualFold(adminEmail, email) {
+			return true
+		}
+	}
+	return false
+}
+
+// RequireAdmin middleware ensures the user is authenticated AND authorized as an admin
+func RequireAdmin() echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			sessionToken := extractSessionToken(c.Request())
+			if sessionToken == "" {
+				if isHTMLRequest(c.Request()) {
+					return c.Redirect(http.StatusTemporaryRedirect, "/sign-in?redirect_url="+c.Request().URL.Path)
+				}
+				return c.JSON(http.StatusUnauthorized, map[string]string{
+					"error": "Authentication required",
+				})
+			}
+
+			// Verify the session token
+			claims, err := jwt.Verify(c.Request().Context(), &jwt.VerifyParams{
+				Token: sessionToken,
+			})
+			if err != nil {
+				if isHTMLRequest(c.Request()) {
+					return c.Redirect(http.StatusTemporaryRedirect, "/sign-in?redirect_url="+c.Request().URL.Path)
+				}
+				return c.JSON(http.StatusUnauthorized, map[string]string{
+					"error": "Invalid session",
+				})
+			}
+
+			// Fetch user to check email
+			u, err := user.Get(c.Request().Context(), claims.Subject)
+			if err != nil {
+				if isHTMLRequest(c.Request()) {
+					return c.Redirect(http.StatusTemporaryRedirect, "/sign-in?redirect_url="+c.Request().URL.Path)
+				}
+				return c.JSON(http.StatusUnauthorized, map[string]string{
+					"error": "Failed to verify user",
+				})
+			}
+
+			// Check if user email is authorized for admin access
+			isAdmin := false
+			for _, emailAddr := range u.EmailAddresses {
+				if IsAdminEmail(emailAddr.EmailAddress) {
+					isAdmin = true
+					break
+				}
+			}
+
+			if !isAdmin {
+				if isHTMLRequest(c.Request()) {
+					return c.HTML(http.StatusForbidden, `
+						<!DOCTYPE html>
+						<html><head><title>Access Denied</title>
+						<style>body{font-family:system-ui;background:#0B0F13;color:#F3F4F6;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}
+						.container{text-align:center;padding:2rem}.title{font-size:2rem;margin-bottom:1rem;color:#60A5FA}
+						a{color:#60A5FA;text-decoration:none}a:hover{text-decoration:underline}</style></head>
+						<body><div class="container"><h1 class="title">Access Denied</h1>
+						<p>You are not authorized to access the admin area.</p>
+						<p style="margin-top:2rem"><a href="/">Return to Home</a></p></div></body></html>
+					`)
+				}
+				return c.JSON(http.StatusForbidden, map[string]string{
+					"error": "Access denied - not authorized for admin access",
+				})
+			}
+
+			// Store user info in context
+			ctx := context.WithValue(c.Request().Context(), UserIDKey, claims.Subject)
+			ctx = context.WithValue(ctx, SessionIDKey, claims.SessionID)
+			c.SetRequest(c.Request().WithContext(ctx))
+
+			return next(c)
+		}
+	}
+}
+
 // UserInfo represents basic user information for templates
 type UserInfo struct {
 	ID             string

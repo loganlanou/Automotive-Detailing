@@ -42,7 +42,7 @@ func AdminLayout(title string, active string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, " | C Auto Admin</title><meta name=\"robots\" content=\"noindex, nofollow\"><link rel=\"icon\" type=\"image/png\" href=\"/favicon.png\"><link rel=\"stylesheet\" href=\"/static/css/output.css\"><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap\" rel=\"stylesheet\"></head><body class=\"bg-slate-950 text-slate-100 antialiased\"><div class=\"min-h-screen flex bg-slate-950\"><aside class=\"hidden lg:flex lg:flex-col w-72 border-r border-white/5 bg-gradient-to-b from-slate-950 to-slate-900/40\"><div class=\"px-6 pt-8 pb-6 border-b border-white/5\"><a href=\"/admin\" class=\"flex items-center gap-3\"><div class=\"w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center font-heading text-xl font-semibold\">CA</div><div><p class=\"text-sm uppercase tracking-[0.35em] text-slate-400\">C Auto</p><p class=\"text-xl font-heading font-bold mt-1\">Admin Hub</p></div></a></div><nav class=\"flex-1 px-4 py-6 space-y-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, " | C Auto Admin</title><meta name=\"robots\" content=\"noindex, nofollow\"><link rel=\"icon\" type=\"image/png\" href=\"/favicon.png\"><link rel=\"stylesheet\" href=\"/static/css/output.css\"><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap\" rel=\"stylesheet\"><style>\n\t\t\t\t/* Admin mobile menu animation */\n\t\t\t\t#admin-mobile-menu {\n\t\t\t\t\ttransform: translateX(-100%);\n\t\t\t\t\ttransition: transform 0.3s ease-in-out;\n\t\t\t\t}\n\t\t\t\t#admin-mobile-menu.open {\n\t\t\t\t\ttransform: translateX(0);\n\t\t\t\t}\n\t\t\t\t#admin-overlay {\n\t\t\t\t\topacity: 0;\n\t\t\t\t\tpointer-events: none;\n\t\t\t\t\ttransition: opacity 0.3s ease-in-out;\n\t\t\t\t}\n\t\t\t\t#admin-overlay.open {\n\t\t\t\t\topacity: 1;\n\t\t\t\t\tpointer-events: auto;\n\t\t\t\t}\n\t\t\t</style></head><body class=\"bg-slate-950 text-slate-100 antialiased\"><!-- Mobile Overlay --><div id=\"admin-overlay\" class=\"fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden\" onclick=\"toggleAdminMenu()\"></div><!-- Mobile Slide-out Menu --><aside id=\"admin-mobile-menu\" class=\"fixed inset-y-0 left-0 w-72 z-50 flex flex-col border-r border-white/5 bg-gradient-to-b from-slate-950 to-slate-900 lg:hidden\"><div class=\"px-6 pt-6 pb-4 border-b border-white/5 flex items-center justify-between\"><a href=\"/admin\" class=\"flex items-center gap-3\"><div class=\"w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center font-heading text-lg font-semibold\">CA</div><div><p class=\"text-xs uppercase tracking-[0.25em] text-slate-400\">C Auto</p><p class=\"text-lg font-heading font-bold\">Admin</p></div></a> <button onclick=\"toggleAdminMenu()\" class=\"p-2 rounded-lg hover:bg-white/10 transition\" aria-label=\"Close menu\"><svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M6 18L18 6M6 6l12 12\"></path></svg></button></div><nav class=\"flex-1 px-4 py-6 space-y-2 overflow-y-auto\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -62,20 +62,40 @@ func AdminLayout(title string, active string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</nav><div class=\"px-6 pb-8\"><div class=\"bg-white/5 rounded-2xl p-4\"><p class=\"text-sm text-slate-400 mb-2\">View public site</p><a href=\"/\" class=\"inline-flex items-center justify-center w-full rounded-xl bg-blue-500/20 border border-blue-400/40 text-sm font-semibold py-2.5\">Open Website</a></div></div></aside><div class=\"flex-1 flex flex-col\"><header class=\"border-b border-white/5 bg-slate-950/80 backdrop-blur px-4 sm:px-6 lg:px-10 py-5 flex items-center justify-between\"><div><p class=\"text-xs uppercase tracking-[0.35em] text-slate-500\">C Auto Detailing Studio</p><h1 class=\"text-2xl font-heading font-semibold mt-1\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</nav><div class=\"px-4 pb-6\"><a href=\"/\" class=\"flex items-center justify-center gap-2 w-full rounded-xl bg-blue-500/20 border border-blue-400/40 text-sm font-semibold py-3 hover:bg-blue-500/30 transition\"><svg class=\"w-4 h-4\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14\"></path></svg> <span>View Website</span></a></div></aside><div class=\"min-h-screen flex bg-slate-950\"><!-- Desktop Sidebar --><aside class=\"hidden lg:flex lg:flex-col w-72 border-r border-white/5 bg-gradient-to-b from-slate-950 to-slate-900/40 sticky top-0 h-screen\"><div class=\"px-6 pt-8 pb-6 border-b border-white/5\"><a href=\"/admin\" class=\"flex items-center gap-3\"><div class=\"w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center font-heading text-xl font-semibold\">CA</div><div><p class=\"text-sm uppercase tracking-[0.35em] text-slate-400\">C Auto</p><p class=\"text-xl font-heading font-bold mt-1\">Admin Hub</p></div></a></div><nav class=\"flex-1 px-4 py-6 space-y-2 overflow-y-auto\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = AdminNavItem("/admin", "Dashboard", "monitor", active).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = AdminNavItem("/admin/bookings", "Bookings", "calendar", active).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = AdminNavItem("/admin/packages", "Packages", "layers", active).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = AdminNavItem("/admin/gallery", "Gallery", "sparkles", active).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</nav><div class=\"px-6 pb-8\"><div class=\"bg-white/5 rounded-2xl p-4\"><p class=\"text-sm text-slate-400 mb-2\">View public site</p><a href=\"/\" class=\"inline-flex items-center justify-center w-full rounded-xl bg-blue-500/20 border border-blue-400/40 text-sm font-semibold py-2.5 hover:bg-blue-500/30 transition\">Open Website</a></div></div></aside><div class=\"flex-1 flex flex-col min-w-0\"><!-- Header with mobile menu button --><header class=\"border-b border-white/5 bg-slate-950/80 backdrop-blur px-4 sm:px-6 lg:px-10 py-4 flex items-center justify-between sticky top-0 z-30\"><div class=\"flex items-center gap-4\"><!-- Mobile menu button --><button onclick=\"toggleAdminMenu()\" class=\"lg:hidden p-2 -ml-2 rounded-lg hover:bg-white/10 transition\" aria-label=\"Open menu\"><svg class=\"w-6 h-6\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M4 6h16M4 12h16M4 18h16\"></path></svg></button><div><p class=\"text-xs uppercase tracking-[0.35em] text-slate-500 hidden sm:block\">C Auto Detailing Studio</p><h1 class=\"text-xl sm:text-2xl font-heading font-semibold mt-0.5\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_layout.templ`, Line: 51, Col: 67}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_layout.templ`, Line: 116, Col: 81}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</h1></div><a href=\"/\" class=\"text-sm font-medium text-slate-400 hover:text-white transition flex items-center gap-2\"><span>View Site</span> <svg class=\"w-4 h-4\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M17 8l4 4m0 0l-4 4m4-4H3\"></path></svg></a></header><main class=\"flex-1 px-4 sm:px-6 lg:px-10 py-10 bg-slate-950\"><div class=\"max-w-7xl mx-auto space-y-10\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</h1></div></div><a href=\"/\" class=\"text-sm font-medium text-slate-400 hover:text-white transition flex items-center gap-2\"><span class=\"hidden sm:inline\">View Site</span> <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14\"></path></svg></a></header><main class=\"flex-1 px-4 sm:px-6 lg:px-10 py-6 sm:py-10 bg-slate-950\"><div class=\"max-w-7xl mx-auto space-y-6 sm:space-y-10\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -83,7 +103,27 @@ func AdminLayout(title string, active string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div></main></div></div></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div></main><!-- Mobile Bottom Navigation --><nav class=\"lg:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur border-t border-white/10 px-2 py-2 z-30\"><div class=\"flex items-center justify-around\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = AdminBottomNavItem("/admin", "Dashboard", "monitor", active).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = AdminBottomNavItem("/admin/bookings", "Bookings", "calendar", active).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = AdminBottomNavItem("/admin/packages", "Packages", "layers", active).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = AdminBottomNavItem("/admin/gallery", "Gallery", "sparkles", active).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</div></nav><!-- Spacer for bottom nav on mobile --><div class=\"h-16 lg:hidden\"></div></div></div><script>\n\t\t\t\tfunction toggleAdminMenu() {\n\t\t\t\t\tconst menu = document.getElementById('admin-mobile-menu');\n\t\t\t\t\tconst overlay = document.getElementById('admin-overlay');\n\t\t\t\t\tmenu.classList.toggle('open');\n\t\t\t\t\toverlay.classList.toggle('open');\n\t\t\t\t\tdocument.body.classList.toggle('overflow-hidden');\n\t\t\t\t}\n\t\t\t</script></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -117,20 +157,20 @@ func AdminNavItem(href templ.SafeURL, label string, icon string, active string) 
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<a href=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<a href=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 templ.SafeURL
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinURLErrs(href)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_layout.templ`, Line: 73, Col: 15}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_layout.templ`, Line: 161, Col: 15}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\" class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -143,7 +183,7 @@ func AdminNavItem(href templ.SafeURL, label string, icon string, active string) 
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -151,20 +191,20 @@ func AdminNavItem(href templ.SafeURL, label string, icon string, active string) 
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<span class=\"font-medium\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<span class=\"font-medium\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(label)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_layout.templ`, Line: 75, Col: 35}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_layout.templ`, Line: 163, Col: 35}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</span></a>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</span></a>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -195,27 +235,27 @@ func AdminIcon(name string) templ.Component {
 		ctx = templ.ClearChildren(ctx)
 		switch name {
 		case "monitor":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M9.75 17h4.5M4 5h16v10H4zM8 21h8\"></path></svg>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M9.75 17h4.5M4 5h16v10H4zM8 21h8\"></path></svg>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "calendar":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7H3v12a2 2 0 002 2z\"></path></svg>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7H3v12a2 2 0 002 2z\"></path></svg>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "layers":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 2l9 4.5-9 4.5-9-4.5L12 2zm0 9l9 4.5-9 4.5-9-4.5 9-4.5z\"></path></svg>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 2l9 4.5-9 4.5-9-4.5L12 2zm0 9l9 4.5-9 4.5-9-4.5 9-4.5z\"></path></svg>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "sparkles":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M9 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2zM17 13l1 3 3 1-3 1-1 3-1-3-3-1 3-1z\"></path></svg>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M9 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2zM17 13l1 3 3 1-3 1-1 3-1-3-3-1 3-1z\"></path></svg>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		default:
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 6v12m6-6H6\"></path></svg>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 6v12m6-6H6\"></path></svg>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -230,6 +270,95 @@ func adminNavClass(active string, href string) string {
 		return base + "bg-blue-500/20 border border-blue-400/60 text-white shadow-lg shadow-blue-500/20"
 	}
 	return base + "border border-white/5 hover:border-white/20 text-slate-300"
+}
+
+func AdminBottomNavItem(href templ.SafeURL, label string, icon string, active string) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var10 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var10 == nil {
+			templ_7745c5c3_Var10 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		var templ_7745c5c3_Var11 = []any{adminBottomNavClass(active, string(href))}
+		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var11...)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "<a href=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var12 templ.SafeURL
+		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinURLErrs(href)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_layout.templ`, Line: 201, Col: 15}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "\" class=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var13 string
+		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var11).String())
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_layout.templ`, Line: 1, Col: 0}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = AdminIcon(icon).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<span class=\"text-xs mt-1\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var14 string
+		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(label)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_layout.templ`, Line: 203, Col: 36}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</span></a>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func adminBottomNavClass(active string, href string) string {
+	base := "flex flex-col items-center justify-center py-2 px-3 rounded-xl transition min-w-[64px] "
+	if active == href {
+		return base + "bg-blue-500/20 text-blue-400"
+	}
+	return base + "text-slate-400 hover:text-slate-200"
 }
 
 var _ = templruntime.GeneratedTemplate

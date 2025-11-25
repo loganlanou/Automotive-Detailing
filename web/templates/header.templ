@@ -2,20 +2,20 @@ package templates
 
 templ Header() {
 	<header id="main-header" class="bg-brand-secondary/95 backdrop-blur-md border-b border-border sticky top-0 z-50 transition-all duration-300">
-		<nav class="container mx-auto px-4 py-5" aria-label="Main navigation">
+		<nav class="container mx-auto px-4 py-3 sm:py-4" aria-label="Main navigation">
 			<div class="flex items-center justify-between">
-				<a href="/" class="flex items-center gap-3 group">
-					<img src="/static/images/logo.png" alt="C Auto Detailing Studio Logo" class="h-10 w-auto transition-transform group-hover:scale-105"/>
+				<a href="/" class="flex items-center gap-2 sm:gap-3 group">
+					<img src="/static/images/logo.png" alt="C Auto Detailing Studio Logo" class="h-8 sm:h-10 w-auto transition-transform group-hover:scale-105"/>
 					<div class="flex flex-col">
-						<span class="text-xl font-heading font-bold text-brand-accent group-hover:text-brand-accent-bright transition-colors">
-							C Auto Detailing Studio
+						<span class="text-base sm:text-xl font-heading font-bold text-brand-accent group-hover:text-brand-accent-bright transition-colors">
+							C Auto Detailing
 						</span>
-						<span class="text-xs font-script text-muted -mt-1">Premium Auto Care</span>
+						<span class="text-[10px] sm:text-xs font-script text-muted -mt-0.5 sm:-mt-1 hidden xs:block">Premium Auto Care</span>
 					</div>
 				</a>
 
 				<!-- Desktop Navigation -->
-				<div class="hidden md:flex items-center gap-8">
+				<div class="hidden md:flex items-center gap-6 lg:gap-8">
 					<a href="/" class="nav-link text-base font-bold hover:text-brand-accent-bright">Home</a>
 					<a href="/gallery" class="nav-link text-base font-bold hover:text-brand-accent-bright">Gallery</a>
 					<a href="/about" class="nav-link text-base font-bold hover:text-brand-accent-bright">About</a>
@@ -27,7 +27,7 @@ templ Header() {
 				<!-- Mobile Menu Button -->
 				<button
 					id="mobile-menu-btn"
-					class="md:hidden text-brand-fg focus:outline-none focus:ring-2 focus:ring-brand-accent rounded"
+					class="md:hidden p-2 -mr-2 text-brand-fg focus:outline-none focus:ring-2 focus:ring-brand-accent rounded-lg hover:bg-brand-bg/50 transition active:scale-95"
 					aria-label="Toggle menu"
 					aria-expanded="false"
 				>
@@ -38,14 +38,35 @@ templ Header() {
 			</div>
 
 			<!-- Mobile Navigation -->
-			<div id="mobile-menu" class="md:hidden border-t border-border">
-				<div class="flex flex-col gap-4 pt-4 pb-4">
-					<a href="/" class="nav-link hover:bg-brand-bg px-3 py-2 rounded">Home</a>
-					<a href="/gallery" class="nav-link hover:bg-brand-bg px-3 py-2 rounded">Gallery</a>
-					<a href="/about" class="nav-link hover:bg-brand-bg px-3 py-2 rounded">About</a>
-					<a href="/booking" class="nav-link hover:bg-brand-bg px-3 py-2 rounded font-semibold text-brand-accent">Book Now</a>
+			<div id="mobile-menu" class="md:hidden border-t border-border mt-3">
+				<div class="flex flex-col gap-1 pt-3 pb-4">
+					<a href="/" class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-brand-bg/70 transition active:scale-[0.98]">
+						<svg class="w-5 h-5 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+						</svg>
+						<span class="font-medium">Home</span>
+					</a>
+					<a href="/gallery" class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-brand-bg/70 transition active:scale-[0.98]">
+						<svg class="w-5 h-5 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+						</svg>
+						<span class="font-medium">Gallery</span>
+					</a>
+					<a href="/about" class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-brand-bg/70 transition active:scale-[0.98]">
+						<svg class="w-5 h-5 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+						</svg>
+						<span class="font-medium">About</span>
+					</a>
+					<div class="border-t border-border my-2"></div>
+					<a href="/booking" class="flex items-center justify-center gap-2 mx-2 py-3 rounded-lg bg-gradient-to-r from-brand-primary to-brand-accent text-white font-bold transition active:scale-[0.98]">
+						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+						</svg>
+						<span>Book Now</span>
+					</a>
 					<!-- Mobile Clerk User Button -->
-					<div id="clerk-user-button-mobile" class="px-3 py-2"></div>
+					<div id="clerk-user-button-mobile" class="px-3 py-2 mt-1"></div>
 				</div>
 			</div>
 		</nav>
