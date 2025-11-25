@@ -128,56 +128,76 @@ class BookingApp {
 		}
 
 		const today = this.today();
+		const isMobile = window.innerWidth < 640;
+
 		this.daysContainer.innerHTML = this.state.days
 			.map((day) => {
 				const dateNumber = parseInt(day.date.split('-')[2], 10);
 				const topLabel = day.label.split(',')[0] || '';
+				const openSlots = day.slots ? day.slots.filter((slot) => slot.available).length : 0;
 				const statusText = day.is_closed
 					? 'Closed'
 					: day.has_availability
-						? `${day.slots.filter((slot) => slot.available).length} open`
-						: 'Booked';
+						? `${openSlots} open`
+						: 'Full';
 				const isSelected = day.date === this.state.selectedDate;
 				const disabled = day.is_closed || !day.has_availability;
 				const highlight = day.is_today ? 'text-brand-accent' : 'text-muted';
+
+				// Mobile-optimized compact classes
 				const baseClasses = [
-					'rounded-xl',
+					'rounded-lg',
+					'sm:rounded-xl',
 					'border',
 					'border-border',
-					'p-3',
-					'text-left',
+					'p-2',
+					'sm:p-3',
+					'text-center',
+					'sm:text-left',
 					'transition',
 					'focus-visible:outline-none',
 					'focus-visible:ring-2',
 					'focus-visible:ring-brand-accent',
+					'active:scale-95',
 				];
 
 				if (isSelected) {
-					baseClasses.push('border-brand-accent', 'bg-brand-accent/10', 'shadow-md');
+					baseClasses.push('border-brand-accent', 'bg-brand-accent/10', 'shadow-md', 'ring-1', 'ring-brand-accent/50');
 				} else if (disabled) {
-					baseClasses.push('opacity-50', 'cursor-not-allowed');
+					baseClasses.push('opacity-40', 'cursor-not-allowed');
 				} else {
-					baseClasses.push('hover:border-brand-accent', 'cursor-pointer');
+					baseClasses.push('hover:border-brand-accent', 'cursor-pointer', 'hover:bg-white/5');
 				}
 
-				const tag = day.is_today ? '<span class="text-[10px] uppercase tracking-wide text-brand-accent font-semibold">Today</span>' : '';
-				const soldOutBadge = !day.is_closed && !day.has_availability
-					? '<span class="text-[10px] uppercase tracking-wide text-rose-300 font-semibold">Full</span>'
+				// Status indicator color
+				const statusColor = day.is_closed
+					? 'text-slate-500'
+					: day.has_availability
+						? 'text-emerald-400'
+						: 'text-rose-400';
+
+				const todayBadge = day.is_today
+					? '<span class="absolute -top-1 -right-1 w-2 h-2 bg-brand-accent rounded-full sm:hidden"></span><span class="hidden sm:inline text-[9px] sm:text-[10px] uppercase tracking-wide text-brand-accent font-semibold">Today</span>'
+					: '';
+				const fullBadge = !day.is_closed && !day.has_availability
+					? '<span class="hidden sm:inline text-[9px] sm:text-[10px] uppercase tracking-wide text-rose-400 font-semibold">Full</span>'
 					: '';
 
 				return `
 					<button
 						type="button"
-						class="${baseClasses.join(' ')}"
+						class="${baseClasses.join(' ')} relative"
 						data-date="${day.date}"
 						${disabled ? 'disabled' : ''}
 					>
-						<div class="flex items-center justify-between mb-1">
-							<span class="text-xs uppercase tracking-wide ${highlight}">${topLabel}</span>
-							${tag || soldOutBadge}
+						${todayBadge.includes('absolute') ? todayBadge.split('<span class="hidden')[0] : ''}
+						<div class="hidden sm:flex items-center justify-between mb-1">
+							<span class="text-[10px] sm:text-xs uppercase tracking-wide ${highlight}">${topLabel}</span>
+							${todayBadge.includes('hidden sm:inline') ? todayBadge.split('</span>')[1] + '</span>' : ''}${fullBadge}
 						</div>
-						<p class="text-2xl font-heading font-bold">${dateNumber}</p>
-						<p class="text-xs text-muted mt-1">${statusText}</p>
+						<div class="sm:hidden text-[10px] uppercase tracking-wide ${highlight} mb-0.5">${topLabel}</div>
+						<p class="text-xl sm:text-2xl font-heading font-bold ${day.is_today ? 'text-brand-accent' : ''}">${dateNumber}</p>
+						<p class="text-[10px] sm:text-xs ${statusColor} mt-0.5 sm:mt-1 font-medium">${statusText}</p>
 					</button>
 				`;
 			})

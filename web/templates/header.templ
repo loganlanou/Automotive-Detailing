@@ -15,13 +15,19 @@ templ Header() {
 				</a>
 
 				<!-- Desktop Navigation -->
-				<div class="hidden md:flex items-center gap-6 lg:gap-8">
-					<a href="/" class="nav-link text-base font-bold hover:text-brand-accent-bright">Home</a>
-					<a href="/gallery" class="nav-link text-base font-bold hover:text-brand-accent-bright">Gallery</a>
-					<a href="/about" class="nav-link text-base font-bold hover:text-brand-accent-bright">About</a>
+				<div class="hidden md:flex items-center gap-5 lg:gap-6">
+					<a href="/" class="nav-link text-sm lg:text-base font-bold hover:text-brand-accent-bright">Home</a>
+					<a href="/gallery" class="nav-link text-sm lg:text-base font-bold hover:text-brand-accent-bright">Gallery</a>
+					<a href="/about" class="nav-link text-sm lg:text-base font-bold hover:text-brand-accent-bright">About</a>
+					<div class="h-5 w-px bg-border"></div>
+					<!-- Auth links - hidden when user is signed in -->
+					<div id="clerk-auth-links" class="flex items-center gap-4">
+						<a href="/sign-in" class="nav-link text-sm lg:text-base font-medium hover:text-brand-accent-bright">Sign In</a>
+						<a href="/sign-up" class="text-sm lg:text-base font-medium text-brand-accent hover:text-brand-accent-bright transition">Sign Up</a>
+					</div>
+					<!-- Clerk User Button - shown when user is signed in -->
+					<div id="clerk-user-button" class="hidden"></div>
 					<a href="/booking" class="btn-primary text-sm">Book Now</a>
-					<!-- Clerk User Button / Sign In -->
-					<div id="clerk-user-button" class="flex items-center"></div>
 				</div>
 
 				<!-- Mobile Menu Button -->
@@ -59,14 +65,30 @@ templ Header() {
 						<span class="font-medium">About</span>
 					</a>
 					<div class="border-t border-border my-2"></div>
+					<!-- Mobile Auth Links - hidden when signed in -->
+					<div id="clerk-auth-links-mobile" class="flex flex-col gap-1">
+						<a href="/sign-in" class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-brand-bg/70 transition active:scale-[0.98]">
+							<svg class="w-5 h-5 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+							</svg>
+							<span class="font-medium">Sign In</span>
+						</a>
+						<a href="/sign-up" class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-brand-bg/70 transition active:scale-[0.98]">
+							<svg class="w-5 h-5 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+							</svg>
+							<span class="font-medium">Sign Up</span>
+						</a>
+					</div>
+					<!-- Mobile Clerk User Button - shown when signed in -->
+					<div id="clerk-user-button-mobile" class="hidden px-3 py-2"></div>
+					<div class="border-t border-border my-2"></div>
 					<a href="/booking" class="flex items-center justify-center gap-2 mx-2 py-3 rounded-lg bg-gradient-to-r from-brand-primary to-brand-accent text-white font-bold transition active:scale-[0.98]">
 						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
 						</svg>
 						<span>Book Now</span>
 					</a>
-					<!-- Mobile Clerk User Button -->
-					<div id="clerk-user-button-mobile" class="px-3 py-2 mt-1"></div>
 				</div>
 			</div>
 		</nav>
@@ -75,29 +97,40 @@ templ Header() {
 		window.addEventListener('load', async () => {
 			if (window.Clerk) {
 				await window.Clerk.load();
+
+				// Desktop elements
+				const authLinksEl = document.getElementById('clerk-auth-links');
 				const userButtonEl = document.getElementById('clerk-user-button');
+
+				// Mobile elements
+				const authLinksMobileEl = document.getElementById('clerk-auth-links-mobile');
 				const userButtonMobileEl = document.getElementById('clerk-user-button-mobile');
 
 				if (window.Clerk.user) {
-					// User is signed in - show user button
+					// User is signed in - hide auth links, show user button
+					if (authLinksEl) authLinksEl.classList.add('hidden');
+					if (authLinksMobileEl) authLinksMobileEl.classList.add('hidden');
+
 					if (userButtonEl) {
+						userButtonEl.classList.remove('hidden');
+						userButtonEl.classList.add('flex', 'items-center');
 						window.Clerk.mountUserButton(userButtonEl, {
 							afterSignOutUrl: '/',
 						});
 					}
 					if (userButtonMobileEl) {
-						window.Clerk.mountUserButton(userButtonMobileEl, {
+						userButtonMobileEl.classList.remove('hidden');
+						userButtonMobileEl.innerHTML = '<div class="flex items-center gap-3 px-0 py-1"><div id="clerk-user-btn-mobile-inner"></div><span class="font-medium text-sm text-muted">Account</span></div>';
+						window.Clerk.mountUserButton(document.getElementById('clerk-user-btn-mobile-inner') || userButtonMobileEl, {
 							afterSignOutUrl: '/',
 						});
 					}
 				} else {
-					// User is not signed in - show sign in link
-					if (userButtonEl) {
-						userButtonEl.innerHTML = '<a href="/sign-in" class="nav-link text-base font-bold hover:text-brand-accent-bright">Sign In</a>';
-					}
-					if (userButtonMobileEl) {
-						userButtonMobileEl.innerHTML = '<a href="/sign-in" class="nav-link hover:bg-brand-bg rounded">Sign In</a>';
-					}
+					// User is not signed in - show auth links (already visible by default)
+					if (authLinksEl) authLinksEl.classList.remove('hidden');
+					if (authLinksMobileEl) authLinksMobileEl.classList.remove('hidden');
+					if (userButtonEl) userButtonEl.classList.add('hidden');
+					if (userButtonMobileEl) userButtonMobileEl.classList.add('hidden');
 				}
 			}
 		});
