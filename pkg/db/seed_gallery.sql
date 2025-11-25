@@ -1,121 +1,62 @@
-package handler
+-- Seed data for Ford vehicle gallery
+-- Run this to populate the gallery with placeholder images
 
-import (
-	"database/sql"
-	"net/http"
-	"os"
+-- Clear existing gallery data
+DELETE FROM media WHERE gallery_group_id IS NOT NULL;
+DELETE FROM gallery_groups;
 
-	"detailingpass/pkg/auth"
-	"detailingpass/pkg/server"
+-- Reset auto-increment
+DELETE FROM sqlite_sequence WHERE name='gallery_groups';
+DELETE FROM sqlite_sequence WHERE name='media';
 
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-	_ "modernc.org/sqlite"
-)
-
-// Schema for C Auto Detailing Studio
-var schema string = `
-PRAGMA foreign_keys = ON;
-
-CREATE TABLE IF NOT EXISTS packages (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    slug TEXT UNIQUE NOT NULL,
-    name TEXT NOT NULL,
-    short_desc TEXT,
-    long_desc TEXT,
-    price_min INTEGER,
-    price_max INTEGER,
-    duration_est INTEGER,
-    is_active BOOLEAN DEFAULT 1,
-    sort_order INTEGER DEFAULT 0,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS gallery_groups (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL,
-    slug TEXT UNIQUE NOT NULL,
-    vehicle_make TEXT,
-    vehicle_model TEXT,
-    vehicle_year INTEGER,
-    description TEXT,
-    is_featured BOOLEAN DEFAULT 0,
-    sort_order INTEGER DEFAULT 0,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS media (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    gallery_group_id INTEGER,
-    url TEXT NOT NULL,
-    kind TEXT DEFAULT 'gallery',
-    sort_order INTEGER DEFAULT 0,
-    alt_text TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (gallery_group_id) REFERENCES gallery_groups(id) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS reviews (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    author TEXT NOT NULL,
-    rating INTEGER DEFAULT 5,
-    body TEXT,
-    source TEXT,
-    is_featured BOOLEAN DEFAULT 0,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS bookings (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    customer_name TEXT NOT NULL,
-    email TEXT NOT NULL,
-    phone TEXT,
-    vehicle_details TEXT,
-    service_interest TEXT,
-    notes TEXT,
-    requested_start DATETIME NOT NULL,
-    requested_end DATETIME NOT NULL,
-    status TEXT DEFAULT 'pending',
-    source TEXT DEFAULT 'web',
-    internal_notes TEXT,
-    clerk_user_id TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE INDEX IF NOT EXISTS idx_gallery_groups_featured ON gallery_groups(is_featured);
-CREATE INDEX IF NOT EXISTS idx_media_gallery_group_id ON media(gallery_group_id);
-CREATE INDEX IF NOT EXISTS idx_bookings_requested_start ON bookings(requested_start);
-CREATE INDEX IF NOT EXISTS idx_bookings_status ON bookings(status);
-`
-
-// Seed data for Ford vehicle gallery
-var seedData string = `
 -- Insert Ford F-150 gallery groups
 INSERT INTO gallery_groups (title, slug, vehicle_make, vehicle_model, vehicle_year, description, is_featured, sort_order) VALUES
 ('2024 Ford F-150 XLT - Full Detail', 'f150-xlt-white-2024', 'Ford', 'F-150 XLT', 2024, 'Complete exterior and interior detail on this stunning white F-150. Paint correction, ceramic coating, and premium interior conditioning.', 1, 1),
 ('2023 Ford F-150 Lariat - Interior Reset', 'f150-lariat-black-2023', 'Ford', 'F-150 Lariat', 2023, 'Deep interior cleaning and leather conditioning on this black F-150 Lariat. Dashboard restoration and complete sanitization.', 0, 2),
 ('2024 Ford F-150 Raptor R - Performance Detail', 'f150-raptor-r-2024', 'Ford', 'F-150 Raptor R', 2024, 'High-performance detail package on this aggressive Raptor R. Paint protection film and ceramic coating for off-road protection.', 1, 3),
-('2023 Ford F-150 Raptor - Adventure Ready', 'f150-raptor-white-2023', 'Ford', 'F-150 Raptor', 2023, 'Full detail and protection package on this white Raptor. Prepared for any adventure with premium protection.', 0, 4),
+('2023 Ford F-150 Raptor - Adventure Ready', 'f150-raptor-white-2023', 'Ford', 'F-150 Raptor', 2023, 'Full detail and protection package on this white Raptor. Prepared for any adventure with premium protection.', 0, 4);
+
+-- Insert Ford F-250/F-350 Super Duty gallery groups
+INSERT INTO gallery_groups (title, slug, vehicle_make, vehicle_model, vehicle_year, description, is_featured, sort_order) VALUES
 ('2024 Ford F-250 Super Duty - Work Truck Detail', 'f250-super-duty-2024', 'Ford', 'F-250 Super Duty', 2024, 'Heavy-duty detail for this workhorse F-250. Complete decontamination, paint correction, and protective coating.', 0, 5),
-('2023 Ford F-350 Platinum - Premium Detail', 'f350-platinum-2023', 'Ford', 'F-350 Platinum', 2023, 'Luxury treatment for this premium F-350 Platinum. Multi-stage paint correction and top-tier ceramic coating.', 1, 6),
+('2023 Ford F-350 Platinum - Premium Detail', 'f350-platinum-2023', 'Ford', 'F-350 Platinum', 2023, 'Luxury treatment for this premium F-350 Platinum. Multi-stage paint correction and top-tier ceramic coating.', 1, 6);
+
+-- Insert Ford Mustang gallery groups
+INSERT INTO gallery_groups (title, slug, vehicle_make, vehicle_model, vehicle_year, description, is_featured, sort_order) VALUES
 ('2024 Ford Mustang GT - Track Ready', 'mustang-gt-green-2024', 'Ford', 'Mustang GT', 2024, 'Performance detail on this stunning green Mustang GT. Paint correction and ceramic coating for showroom shine.', 1, 7),
 ('2023 Ford Mustang GT - Urban Style', 'mustang-gt-black-2023', 'Ford', 'Mustang GT', 2023, 'Sleek black Mustang GT detailed to perfection. Full paint correction and glass coating.', 0, 8),
 ('2024 Ford Mustang Mach 1 - Orange Fury', 'mustang-mach1-orange-2024', 'Ford', 'Mustang Mach 1', 2024, 'Vibrant orange Mustang Mach 1 with complete detail package. Enhanced paint clarity and depth.', 1, 9),
 ('2023 Ford Mustang Shelby GT500 - Snow White', 'mustang-shelby-white-2023', 'Ford', 'Mustang Shelby GT500', 2023, 'Premium detail on this iconic Shelby GT500. Paint correction and ceramic coating protection.', 1, 10),
 ('1969 Ford Mustang Boss 302 - Classic Restoration', 'mustang-boss-302-vintage', 'Ford', 'Mustang Boss 302', 1969, 'Classic Mustang restoration detail. Careful paint correction preserving original character.', 1, 11),
-('2024 Ford Mustang EcoBoost - Daily Driver Detail', 'mustang-ecoboost-red-2024', 'Ford', 'Mustang EcoBoost', 2024, 'Complete detail package for this red Mustang EcoBoost. Perfect daily driver protection.', 0, 12),
-('2024 Ford Explorer ST - Family Performance', 'explorer-st-white-2024', 'Ford', 'Explorer ST', 2024, 'Full detail on this white Explorer ST. Family-friendly SUV with sport appeal, detailed inside and out.', 1, 13),
-('2024 Ford Escape Hybrid - Eco Detail', 'escape-hybrid-2024', 'Ford', 'Escape Hybrid', 2024, 'Compact SUV detail with eco-friendly products. Complete interior and exterior refresh.', 0, 14),
-('2024 Ford Expedition Limited - Full Size Luxury', 'expedition-limited-2024', 'Ford', 'Expedition Limited', 2024, 'Premium detail on this full-size luxury SUV. All three rows deep cleaned and conditioned.', 0, 15),
-('2024 Ford Bronco Badlands - Trail Ready', 'bronco-badlands-2024', 'Ford', 'Bronco Badlands', 2024, 'Adventure-ready detail package on this Bronco Badlands. Protected for off-road use.', 1, 16),
-('2024 Ford Maverick Lariat - Compact Truck Detail', 'maverick-lariat-2024', 'Ford', 'Maverick Lariat', 2024, 'Full detail on this versatile compact truck. Perfect balance of utility and style.', 0, 17),
+('2024 Ford Mustang EcoBoost - Daily Driver Detail', 'mustang-ecoboost-red-2024', 'Ford', 'Mustang EcoBoost', 2024, 'Complete detail package for this red Mustang EcoBoost. Perfect daily driver protection.', 0, 12);
+
+-- Insert Ford Explorer gallery groups
+INSERT INTO gallery_groups (title, slug, vehicle_make, vehicle_model, vehicle_year, description, is_featured, sort_order) VALUES
+('2024 Ford Explorer ST - Family Performance', 'explorer-st-white-2024', 'Ford', 'Explorer ST', 2024, 'Full detail on this white Explorer ST. Family-friendly SUV with sport appeal, detailed inside and out.', 1, 13);
+
+-- Insert Ford Escape gallery groups
+INSERT INTO gallery_groups (title, slug, vehicle_make, vehicle_model, vehicle_year, description, is_featured, sort_order) VALUES
+('2024 Ford Escape Hybrid - Eco Detail', 'escape-hybrid-2024', 'Ford', 'Escape Hybrid', 2024, 'Compact SUV detail with eco-friendly products. Complete interior and exterior refresh.', 0, 14);
+
+-- Insert Ford Expedition gallery groups
+INSERT INTO gallery_groups (title, slug, vehicle_make, vehicle_model, vehicle_year, description, is_featured, sort_order) VALUES
+('2024 Ford Expedition Limited - Full Size Luxury', 'expedition-limited-2024', 'Ford', 'Expedition Limited', 2024, 'Premium detail on this full-size luxury SUV. All three rows deep cleaned and conditioned.', 0, 15);
+
+-- Insert Ford Bronco gallery groups
+INSERT INTO gallery_groups (title, slug, vehicle_make, vehicle_model, vehicle_year, description, is_featured, sort_order) VALUES
+('2024 Ford Bronco Badlands - Trail Ready', 'bronco-badlands-2024', 'Ford', 'Bronco Badlands', 2024, 'Adventure-ready detail package on this Bronco Badlands. Protected for off-road use.', 1, 16);
+
+-- Insert Ford Maverick gallery groups
+INSERT INTO gallery_groups (title, slug, vehicle_make, vehicle_model, vehicle_year, description, is_featured, sort_order) VALUES
+('2024 Ford Maverick Lariat - Compact Truck Detail', 'maverick-lariat-2024', 'Ford', 'Maverick Lariat', 2024, 'Full detail on this versatile compact truck. Perfect balance of utility and style.', 0, 17);
+
+-- Insert Classic Ford Trucks gallery groups
+INSERT INTO gallery_groups (title, slug, vehicle_make, vehicle_model, vehicle_year, description, is_featured, sort_order) VALUES
 ('1978 Ford F-100 - Classic Restoration', 'f100-classic-red-1978', 'Ford', 'F-100', 1978, 'Vintage truck restoration detail. Careful treatment preserving classic character.', 1, 18),
 ('1965 Ford F-250 - Heritage Detail', 'f250-heritage-blue-1965', 'Ford', 'F-250', 1965, 'Classic American truck detailed with care. Original paint enhanced and protected.', 0, 19);
 
--- Insert media for F-150 XLT White (ID 1)
+-- Now insert media for each gallery group
+-- F-150 XLT White (ID 1)
 INSERT INTO media (gallery_group_id, url, kind, sort_order, alt_text) VALUES
 (1, '/static/images/gallery/f150-white-1.jpg', 'hero', 0, '2024 Ford F-150 XLT exterior'),
 (1, '/static/images/gallery/f150-closeup-1.jpg', 'gallery', 1, 'F-150 front grille detail'),
@@ -247,47 +188,3 @@ INSERT INTO media (gallery_group_id, url, kind, sort_order, alt_text) VALUES
 (19, '/static/images/gallery/ford-single-cab-1.jpg', 'gallery', 1, 'Classic F-250 profile'),
 (19, '/static/images/gallery/car-detailing-1.jpg', 'gallery', 2, 'Heritage detail work'),
 (19, '/static/images/gallery/ford-logo-1.jpg', 'gallery', 3, 'Vintage Ford emblem');
-
--- Insert some sample packages
-INSERT INTO packages (slug, name, short_desc, price_min, price_max, duration_est, is_active, sort_order) VALUES
-('interior-detail', 'Interior Detail', 'Deep vacuum, steam cleaning, leather conditioning, and odor elimination', 15000, 20000, 180, 1, 1),
-('exterior-detail', 'Exterior Detail', 'Hand wash, clay bar, polish, and premium wax protection', 20000, 30000, 240, 1, 2),
-('full-detail', 'Full Detail', 'Complete interior and exterior detailing for showroom finish', 30000, 50000, 360, 1, 3),
-('ceramic-coating', 'Ceramic Coating', 'Professional ceramic coating application for long-lasting protection', 50000, 150000, 480, 1, 4),
-('paint-correction', 'Paint Correction', 'Multi-stage paint correction to remove swirls and scratches', 40000, 80000, 360, 1, 5);
-`
-
-func Handler(w http.ResponseWriter, r *http.Request) {
-	// Initialize Clerk SDK
-	clerkSecretKey := os.Getenv("CLERK_SECRET_KEY")
-	if clerkSecretKey != "" {
-		auth.Init(clerkSecretKey)
-	}
-
-	// Create Echo instance
-	e := echo.New()
-	e.HideBanner = true
-
-	// Middleware
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-
-	// Static files
-	e.Static("/static", "web/static")
-	e.Static("/uploads", "web/static/uploads")
-	e.File("/favicon.png", "public/favicon.png")
-	e.File("/favicon.ico", "public/favicon.png")
-	e.File("/robots.txt", "public/robots.txt")
-	e.File("/sitemap.xml", "public/sitemap.xml")
-
-	// Initialize database
-	db, _ := sql.Open("sqlite", ":memory:")
-	db.Exec(schema)
-	db.Exec(seedData)
-
-	// Setup routes
-	server.SetupRoutes(e, db)
-
-	// Serve the request
-	e.ServeHTTP(w, r)
-}
