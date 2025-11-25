@@ -1,0 +1,169 @@
+package pages
+
+import "detailingpass/web/templates"
+
+type BookingSlot struct {
+	ID          string
+	Label       string
+	Description string
+	Duration    string
+}
+
+type BookingPageData struct {
+	Slots []BookingSlot
+}
+
+templ Booking(data BookingPageData) {
+	@templates.Layout("Book Your Detail") {
+		<div class="bg-brand-bg text-brand-fg py-16">
+			<div class="container mx-auto px-4">
+				<div class="max-w-5xl mx-auto mb-12 text-center">
+					<p class="text-sm uppercase tracking-[0.3em] text-brand-accent mb-4">Schedule</p>
+					<h1 class="text-4xl md:text-5xl font-heading font-bold mb-4">Lock In Your Detailing Session</h1>
+					<p class="text-lg text-muted max-w-3xl mx-auto">Choose an available date and time that works for you. Once we receive your request we’ll confirm all of the details and follow up with any prep instructions.</p>
+				</div>
+
+				<div id="booking-app"
+					class="grid lg:grid-cols-3 gap-8"
+					data-availability-endpoint="/api/bookings/availability"
+					data-submit-endpoint="/api/bookings">
+					<div class="lg:col-span-2 space-y-8">
+						<section class="bg-brand-secondary border border-border rounded-2xl p-6">
+							<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+								<div>
+									<p class="text-xs uppercase tracking-[0.35em] text-muted mb-2">Step 1</p>
+									<h2 class="text-2xl font-heading font-semibold">Select a Date</h2>
+									<p class="text-sm text-muted mt-1">We’ll disable any dates or times as soon as they are claimed.</p>
+								</div>
+								<div class="flex items-center gap-2">
+									<button type="button" data-month-nav="prev" class="p-2 rounded-full border border-border hover:border-brand-accent transition">
+										<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+										</svg>
+									</button>
+									<div class="text-center">
+										<p class="text-sm text-muted">Viewing</p>
+										<p data-calendar-range class="font-semibold">Loading…</p>
+									</div>
+									<button type="button" data-month-nav="next" class="p-2 rounded-full border border-border hover:border-brand-accent transition">
+										<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+										</svg>
+									</button>
+								</div>
+							</div>
+
+							<div class="grid grid-cols-7 gap-2 text-xs font-semibold text-muted uppercase tracking-wide mb-3">
+								<span>Sun</span>
+								<span>Mon</span>
+								<span>Tue</span>
+								<span>Wed</span>
+								<span>Thu</span>
+								<span>Fri</span>
+								<span>Sat</span>
+							</div>
+
+							<div data-calendar-days class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 text-sm">
+								<!-- Populated via booking.js -->
+								<div class="col-span-full flex items-center justify-center text-muted text-sm py-6">
+									Loading availability…
+								</div>
+							</div>
+						</section>
+
+						<section class="bg-brand-secondary border border-border rounded-2xl p-6">
+							<div class="mb-6">
+								<p class="text-xs uppercase tracking-[0.35em] text-muted mb-2">Step 2</p>
+								<h2 class="text-2xl font-heading font-semibold">Pick a Time Slot</h2>
+								<p class="text-sm text-muted mt-1">Slots refresh automatically when a booking comes in, so you always see the live schedule.</p>
+							</div>
+							<div data-slot-list class="grid gap-3 md:grid-cols-2">
+								<div class="border border-border rounded-xl p-4 text-muted text-sm col-span-full">
+									Select a date to see available times.
+								</div>
+							</div>
+						</section>
+					</div>
+
+					<div class="space-y-8">
+						<section class="bg-brand-secondary border border-border rounded-2xl p-6">
+							<div class="mb-4">
+								<p class="text-xs uppercase tracking-[0.35em] text-muted mb-2">Step 3</p>
+								<h2 class="text-2xl font-heading font-semibold">Tell Us About the Vehicle</h2>
+								<p class="text-sm text-muted">Share a few quick details so we can prepare the right game plan.</p>
+							</div>
+
+							<div id="booking-feedback" class="hidden mb-4 rounded-xl border border-brand-accent/40 bg-brand-accent/10 p-3 text-sm"></div>
+
+							<form id="booking-form" class="space-y-4">
+								<input type="hidden" name="selected_date"/>
+								<input type="hidden" name="slot_id"/>
+
+								<div data-selection-pill class="hidden rounded-xl border border-brand-accent/40 bg-brand-accent/5 px-4 py-3 text-sm text-brand-fg/80"></div>
+
+								<div>
+									<label class="text-sm font-medium block mb-2">Full Name *</label>
+									<input name="name" type="text" required class="input" placeholder="Logan Lanou"/>
+								</div>
+								<div>
+									<label class="text-sm font-medium block mb-2">Email *</label>
+									<input name="email" type="email" required class="input" placeholder="hello@detailingpass.com"/>
+								</div>
+								<div>
+									<label class="text-sm font-medium block mb-2">Phone</label>
+									<input name="phone" type="tel" class="input" placeholder="(704) 555-0118"/>
+								</div>
+								<div>
+									<label class="text-sm font-medium block mb-2">Vehicle / Notes</label>
+									<textarea name="vehicle" rows="2" class="input" placeholder="2023 Rivian R1S • daily driver"></textarea>
+								</div>
+								<div>
+									<label class="text-sm font-medium block mb-2">Service Focus</label>
+									<select name="service" class="input">
+										<option value="">Select a package</option>
+										<option value="full-detail">Full Detail</option>
+										<option value="interior-reset">Interior Reset</option>
+										<option value="paint-correction">Paint Correction</option>
+										<option value="coating">Ceramic Coating</option>
+										<option value="fleet">Fleet / Multi-Vehicle</option>
+									</select>
+								</div>
+								<div>
+									<label class="text-sm font-medium block mb-2">Anything Else?</label>
+									<textarea name="notes" rows="3" class="input" placeholder="Add specific concerns or requests"></textarea>
+								</div>
+
+								<button type="submit" class="btn-primary w-full flex items-center justify-center gap-2">
+									<span>Submit Booking Request</span>
+									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+									</svg>
+								</button>
+								<p class="text-xs text-muted text-center">No charges today — we’ll confirm and send checkout options once approved.</p>
+							</form>
+						</section>
+
+						<section class="bg-brand-secondary border border-border rounded-2xl p-6 space-y-4">
+							<h3 class="text-lg font-heading font-semibold">Sessions Offered</h3>
+							for _, slot := range data.Slots {
+								<div class="border border-border rounded-xl p-4 bg-brand-bg/40">
+									<div class="flex items-center justify-between mb-2 gap-2">
+										<p class="font-semibold">{ slot.Label }</p>
+										<span class="text-xs text-brand-accent">{ slot.Duration }</span>
+									</div>
+									<p class="text-sm text-muted">{ slot.Description }</p>
+								</div>
+							}
+							<div class="rounded-xl border border-brand-accent/30 bg-brand-accent/10 p-4 text-sm text-muted">
+								<p class="font-semibold text-brand-fg mb-1">Need a custom window?</p>
+								<p>Leave a note in the form and we’ll accommodate mobile or after-hours requests whenever possible.</p>
+							</div>
+						</section>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script defer src="/static/js/booking.js"></script>
+	}
+}

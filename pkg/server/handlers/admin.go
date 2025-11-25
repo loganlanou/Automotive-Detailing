@@ -14,24 +14,27 @@ import (
 )
 
 func (h *Handler) AdminDashboard(c echo.Context) error {
-	ctx := context.Background()
+	ctx := c.Request().Context()
 	queries := db.New(h.db)
 
 	// Get counts for all entities
 	packageCount, _ := queries.CountPackages(ctx)
-	vehicleCount, _ := queries.CountVehicles(ctx)
-	jobCount, _ := queries.CountJobs(ctx)
+	galleryCount, _ := queries.CountGalleryGroups(ctx)
 	mediaCount, _ := queries.CountMedia(ctx)
 	reviewCount, _ := queries.CountReviews(ctx)
-	postCount, _ := queries.CountPosts(ctx)
+
+	bookingTotal, _ := queries.CountBookings(ctx)
+	bookingPending, _ := queries.CountBookingsByStatus(ctx, sql.NullString{String: "pending", Valid: true})
+	bookingConfirmed, _ := queries.CountBookingsByStatus(ctx, sql.NullString{String: "confirmed", Valid: true})
 
 	stats := pages.DashboardStats{
-		PackageCount: packageCount,
-		VehicleCount: vehicleCount,
-		JobCount:     jobCount,
-		MediaCount:   mediaCount,
-		ReviewCount:  reviewCount,
-		PostCount:    postCount,
+		PackageCount:     packageCount,
+		GalleryCount:     galleryCount,
+		MediaCount:       mediaCount,
+		ReviewCount:      reviewCount,
+		BookingTotal:     bookingTotal,
+		BookingPending:   bookingPending,
+		BookingConfirmed: bookingConfirmed,
 	}
 
 	return pages.AdminDashboard(stats).Render(c.Request().Context(), c.Response().Writer)
@@ -201,39 +204,4 @@ func (h *Handler) DeletePackage(c echo.Context) error {
 	}
 
 	return c.Redirect(http.StatusSeeOther, "/admin/packages")
-}
-
-func (h *Handler) AdminVehicles(c echo.Context) error {
-	// TODO: CRUD for vehicles
-	return c.String(http.StatusOK, "Admin Vehicles - Coming Soon")
-}
-
-func (h *Handler) AdminJobs(c echo.Context) error {
-	// TODO: CRUD for jobs
-	return c.String(http.StatusOK, "Admin Jobs - Coming Soon")
-}
-
-func (h *Handler) AdminMedia(c echo.Context) error {
-	// TODO: Upload and manage media
-	return c.String(http.StatusOK, "Admin Media - Coming Soon")
-}
-
-func (h *Handler) DealerSync(c echo.Context) error {
-	// TODO: Accept JSON payload for vehicle + job sync
-	// TODO: Create or update vehicle and job records
-	// TODO: Log sync attempt
-	return c.JSON(http.StatusOK, map[string]string{
-		"status": "synced",
-	})
-}
-
-func (h *Handler) DealerExport(c echo.Context) error {
-	// TODO: Export recent jobs as CSV
-	c.Response().Header().Set("Content-Type", "text/csv")
-	c.Response().Header().Set("Content-Disposition", "attachment; filename=dealer-export.csv")
-
-	csv := "VIN,Make,Model,Year,Package,Completed,URL\n"
-	// TODO: Add actual data
-
-	return c.String(http.StatusOK, csv)
 }

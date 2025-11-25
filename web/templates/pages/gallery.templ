@@ -1,0 +1,235 @@
+package pages
+
+import (
+	"detailingpass/web/templates"
+	"fmt"
+	"strconv"
+)
+
+// GalleryItem represents a gallery group with its images
+type GalleryItem struct {
+	ID           int64
+	Slug         string
+	Title        string
+	VehicleMake  string
+	VehicleModel string
+	VehicleYear  int64
+	Description  string
+	IsFeatured   bool
+	HeroImage    string
+	Images       []GalleryImage
+}
+
+type GalleryImage struct {
+	ID      int64
+	URL     string
+	Kind    string
+	AltText string
+}
+
+templ Gallery(items []GalleryItem) {
+	@templates.Layout("Gallery") {
+		@templates.Hero(
+			"Our Work",
+			"See the transformation we deliver on every vehicle",
+			"",
+			"",
+		)
+
+		<section class="container mx-auto px-4 py-16">
+			if len(items) == 0 {
+				<!-- Empty State -->
+				<div class="text-center py-20">
+					<div class="w-24 h-24 bg-brand-accent/20 rounded-full flex items-center justify-center mx-auto mb-6">
+						<svg class="w-12 h-12 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+						</svg>
+					</div>
+					<h2 class="text-2xl font-heading font-bold mb-4">Gallery Coming Soon</h2>
+					<p class="text-muted max-w-md mx-auto mb-8">We're preparing our gallery of detailing work. Check back soon to see the amazing transformations!</p>
+					<a href="/booking" class="btn-primary">Book Your Detail</a>
+				</div>
+			} else {
+				<!-- Gallery Grid -->
+				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+					for _, item := range items {
+						<div class="card group cursor-pointer gallery-item" data-gallery-id={ strconv.FormatInt(item.ID, 10) }>
+							<div class="aspect-video bg-border rounded-lg mb-4 overflow-hidden relative">
+								<img
+									src={ item.HeroImage }
+									alt={ item.Title }
+									class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+									onerror="this.src='/static/images/placeholder.jpg'"
+								/>
+								if len(item.Images) > 1 {
+									<div class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+										{ fmt.Sprintf("%d photos", len(item.Images)) }
+									</div>
+								}
+								if item.IsFeatured {
+									<div class="absolute top-2 left-2 bg-brand-accent text-white text-xs px-2 py-1 rounded font-semibold">
+										Featured
+									</div>
+								}
+							</div>
+							<h3 class="text-xl font-heading font-semibold mb-2 group-hover:text-brand-accent transition">
+								{ item.Title }
+							</h3>
+							if item.VehicleYear > 0 || item.VehicleMake != "" || item.VehicleModel != "" {
+								<p class="text-muted text-sm mb-2">
+									if item.VehicleYear > 0 {
+										{ strconv.FormatInt(item.VehicleYear, 10) }
+									}
+									{ item.VehicleMake } { item.VehicleModel }
+								</p>
+							}
+							if item.Description != "" {
+								<p class="text-muted text-sm line-clamp-2">{ item.Description }</p>
+							}
+
+							<!-- Hidden images data for lightbox -->
+							<div class="hidden gallery-images" data-images={ formatImagesJSON(item.Images) }></div>
+						</div>
+					}
+				</div>
+			}
+		</section>
+
+		<!-- CTA Section -->
+		<section class="bg-brand-secondary py-16">
+			<div class="container mx-auto px-4 text-center">
+				<h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">Want Results Like These?</h2>
+				<p class="text-muted text-lg mb-8 max-w-2xl mx-auto">Book your appointment today and let us transform your vehicle.</p>
+				<a href="/booking" class="btn-primary text-lg px-10 py-4">Book Your Detail</a>
+			</div>
+		</section>
+
+		<!-- Lightbox Modal -->
+		<div id="lightbox" class="fixed inset-0 bg-black/95 z-50 hidden flex items-center justify-center">
+			<button id="lightbox-close" class="absolute top-4 right-4 text-white hover:text-brand-accent transition z-10">
+				<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+				</svg>
+			</button>
+
+			<button id="lightbox-prev" class="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-brand-accent transition z-10">
+				<svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+				</svg>
+			</button>
+
+			<button id="lightbox-next" class="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-brand-accent transition z-10">
+				<svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+				</svg>
+			</button>
+
+			<div class="max-w-5xl max-h-[90vh] px-4">
+				<img id="lightbox-image" src="" alt="" class="max-w-full max-h-[85vh] object-contain mx-auto"/>
+				<div id="lightbox-caption" class="text-center text-white mt-4"></div>
+				<div id="lightbox-counter" class="text-center text-muted text-sm mt-2"></div>
+			</div>
+		</div>
+
+		<script>
+			(function() {
+				const lightbox = document.getElementById('lightbox');
+				const lightboxImage = document.getElementById('lightbox-image');
+				const lightboxCaption = document.getElementById('lightbox-caption');
+				const lightboxCounter = document.getElementById('lightbox-counter');
+				const closeBtn = document.getElementById('lightbox-close');
+				const prevBtn = document.getElementById('lightbox-prev');
+				const nextBtn = document.getElementById('lightbox-next');
+
+				let currentImages = [];
+				let currentIndex = 0;
+
+				// Open lightbox when clicking gallery item
+				document.querySelectorAll('.gallery-item').forEach(item => {
+					item.addEventListener('click', function() {
+						const imagesData = this.querySelector('.gallery-images');
+						if (imagesData) {
+							try {
+								currentImages = JSON.parse(imagesData.dataset.images || '[]');
+								if (currentImages.length > 0) {
+									currentIndex = 0;
+									showImage();
+									lightbox.classList.remove('hidden');
+									document.body.style.overflow = 'hidden';
+								}
+							} catch (e) {
+								console.error('Error parsing gallery images:', e);
+							}
+						}
+					});
+				});
+
+				function showImage() {
+					if (currentImages.length === 0) return;
+					const img = currentImages[currentIndex];
+					lightboxImage.src = img.url;
+					lightboxImage.alt = img.alt || '';
+					lightboxCaption.textContent = img.alt || '';
+					lightboxCounter.textContent = `${currentIndex + 1} / ${currentImages.length}`;
+
+					// Show/hide nav buttons
+					prevBtn.style.display = currentImages.length > 1 ? 'block' : 'none';
+					nextBtn.style.display = currentImages.length > 1 ? 'block' : 'none';
+				}
+
+				function closeLightbox() {
+					lightbox.classList.add('hidden');
+					document.body.style.overflow = '';
+				}
+
+				function nextImage() {
+					currentIndex = (currentIndex + 1) % currentImages.length;
+					showImage();
+				}
+
+				function prevImage() {
+					currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+					showImage();
+				}
+
+				closeBtn.addEventListener('click', closeLightbox);
+				nextBtn.addEventListener('click', nextImage);
+				prevBtn.addEventListener('click', prevImage);
+
+				// Close on background click
+				lightbox.addEventListener('click', function(e) {
+					if (e.target === lightbox) {
+						closeLightbox();
+					}
+				});
+
+				// Keyboard navigation
+				document.addEventListener('keydown', function(e) {
+					if (lightbox.classList.contains('hidden')) return;
+
+					if (e.key === 'Escape') closeLightbox();
+					if (e.key === 'ArrowRight') nextImage();
+					if (e.key === 'ArrowLeft') prevImage();
+				});
+			})();
+		</script>
+	}
+}
+
+// Helper function to format images as JSON for the lightbox
+func formatImagesJSON(images []GalleryImage) string {
+	if len(images) == 0 {
+		return "[]"
+	}
+	result := "["
+	for i, img := range images {
+		if i > 0 {
+			result += ","
+		}
+		// Escape quotes in alt text
+		alt := img.AltText
+		result += fmt.Sprintf(`{"url":"%s","alt":"%s","kind":"%s"}`, img.URL, alt, img.Kind)
+	}
+	result += "]"
+	return result
+}

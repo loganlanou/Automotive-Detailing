@@ -4,6 +4,7 @@ go 1.23.0
 
 require (
 	github.com/a-h/templ v0.3.960
+	github.com/clerk/clerk-sdk-go/v2 v2.5.0
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.13.3
 	modernc.org/sqlite v1.39.0
@@ -11,6 +12,7 @@ require (
 
 require (
 	github.com/dustin/go-humanize v1.0.1 // indirect
+	github.com/go-jose/go-jose/v3 v3.0.4 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect

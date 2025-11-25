@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "detailingpass/web/templates"
 
-func BlogPost(slug string) templ.Component {
+func SignIn(redirectUrl string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -43,26 +43,13 @@ func BlogPost(slug string) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<article class=\"container mx-auto px-4 py-16 max-w-3xl\"><h1 class=\"text-4xl font-heading font-bold mb-4\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var3 string
-			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(slug)
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/blog_post.templ`, Line: 8, Col: 58}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</h1><p class=\"text-muted mb-8\">January 15, 2025 • 5 min read • By Detailing Pass Team</p><div class=\"aspect-video bg-border rounded-lg mb-8 overflow-hidden\"><img src=\"/static/images/work/placeholder-1.jpg\" alt=\"Blog post featured image\" class=\"w-full h-full object-cover\"></div><div class=\"prose prose-invert max-w-none\"><p>Blog post content will go here. This will be dynamically loaded from the database.</p></div></article>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section class=\"min-h-[80vh] flex items-center justify-center py-20 px-4\"><div class=\"w-full max-w-md\"><div class=\"text-center mb-8\"><h1 class=\"text-3xl font-heading font-bold text-brand-fg mb-2\">Welcome Back</h1><p class=\"text-muted\">Sign in to manage your bookings</p></div><div id=\"clerk-sign-in\" class=\"flex justify-center\"></div></div></section><script>\n\t\t\twindow.addEventListener('load', async () => {\n\t\t\t\tif (window.Clerk) {\n\t\t\t\t\tawait window.Clerk.load();\n\t\t\t\t\tconst signInEl = document.getElementById('clerk-sign-in');\n\t\t\t\t\tif (signInEl) {\n\t\t\t\t\t\tconst redirectUrl = { templ.JSONString(redirectUrl) };\n\t\t\t\t\t\twindow.Clerk.mountSignIn(signInEl, {\n\t\t\t\t\t\t\tafterSignInUrl: redirectUrl || '/',\n\t\t\t\t\t\t\tafterSignUpUrl: redirectUrl || '/',\n\t\t\t\t\t\t\tsignUpUrl: '/sign-up',\n\t\t\t\t\t\t});\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t});\n\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = templates.Layout("Blog Post").Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = templates.Layout("Sign In").Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

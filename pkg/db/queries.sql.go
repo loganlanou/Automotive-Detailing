@@ -8,14 +8,52 @@ package db
 import (
 	"context"
 	"database/sql"
+	"time"
 )
 
-const countJobs = `-- name: CountJobs :one
-SELECT COUNT(*) FROM jobs
+const countBlockedSlotsAt = `-- name: CountBlockedSlotsAt :one
+SELECT COUNT(*)
+FROM bookings
+WHERE requested_start = ?
+  AND status IN ('pending', 'confirmed')
 `
 
-func (q *Queries) CountJobs(ctx context.Context) (int64, error) {
-	row := q.db.QueryRowContext(ctx, countJobs)
+func (q *Queries) CountBlockedSlotsAt(ctx context.Context, requestedStart time.Time) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countBlockedSlotsAt, requestedStart)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
+const countBookings = `-- name: CountBookings :one
+SELECT COUNT(*) FROM bookings
+`
+
+func (q *Queries) CountBookings(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countBookings)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
+const countBookingsByStatus = `-- name: CountBookingsByStatus :one
+SELECT COUNT(*) FROM bookings
+WHERE status = ?
+`
+
+func (q *Queries) CountBookingsByStatus(ctx context.Context, status sql.NullString) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countBookingsByStatus, status)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
+const countGalleryGroups = `-- name: CountGalleryGroups :one
+SELECT COUNT(*) FROM gallery_groups
+`
+
+func (q *Queries) CountGalleryGroups(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countGalleryGroups)
 	var count int64
 	err := row.Scan(&count)
 	return count, err
@@ -33,24 +71,11 @@ func (q *Queries) CountMedia(ctx context.Context) (int64, error) {
 }
 
 const countPackages = `-- name: CountPackages :one
-
 SELECT COUNT(*) FROM packages
 `
 
-// Admin queries
 func (q *Queries) CountPackages(ctx context.Context) (int64, error) {
 	row := q.db.QueryRowContext(ctx, countPackages)
-	var count int64
-	err := row.Scan(&count)
-	return count, err
-}
-
-const countPosts = `-- name: CountPosts :one
-SELECT COUNT(*) FROM posts
-`
-
-func (q *Queries) CountPosts(ctx context.Context) (int64, error) {
-	row := q.db.QueryRowContext(ctx, countPosts)
 	var count int64
 	err := row.Scan(&count)
 	return count, err
@@ -67,15 +92,150 @@ func (q *Queries) CountReviews(ctx context.Context) (int64, error) {
 	return count, err
 }
 
-const countVehicles = `-- name: CountVehicles :one
-SELECT COUNT(*) FROM vehicles
+const createBooking = `-- name: CreateBooking :one
+INSERT INTO bookings (
+    customer_name,
+    email,
+    phone,
+    vehicle_details,
+    service_interest,
+    notes,
+    requested_start,
+    requested_end,
+    status,
+    source,
+    clerk_user_id
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+RETURNING id, customer_name, email, phone, vehicle_details, service_interest, notes, requested_start, requested_end, status, source, internal_notes, clerk_user_id, created_at, updated_at
 `
 
-func (q *Queries) CountVehicles(ctx context.Context) (int64, error) {
-	row := q.db.QueryRowContext(ctx, countVehicles)
-	var count int64
-	err := row.Scan(&count)
-	return count, err
+type CreateBookingParams struct {
+	CustomerName    string         `json:"customer_name"`
+	Email           string         `json:"email"`
+	Phone           sql.NullString `json:"phone"`
+	VehicleDetails  sql.NullString `json:"vehicle_details"`
+	ServiceInterest sql.NullString `json:"service_interest"`
+	Notes           sql.NullString `json:"notes"`
+	RequestedStart  time.Time      `json:"requested_start"`
+	RequestedEnd    time.Time      `json:"requested_end"`
+	Status          sql.NullString `json:"status"`
+	Source          sql.NullString `json:"source"`
+	ClerkUserID     sql.NullString `json:"clerk_user_id"`
+}
+
+func (q *Queries) CreateBooking(ctx context.Context, arg CreateBookingParams) (Booking, error) {
+	row := q.db.QueryRowContext(ctx, createBooking,
+		arg.CustomerName,
+		arg.Email,
+		arg.Phone,
+		arg.VehicleDetails,
+		arg.ServiceInterest,
+		arg.Notes,
+		arg.RequestedStart,
+		arg.RequestedEnd,
+		arg.Status,
+		arg.Source,
+		arg.ClerkUserID,
+	)
+	var i Booking
+	err := row.Scan(
+		&i.ID,
+		&i.CustomerName,
+		&i.Email,
+		&i.Phone,
+		&i.VehicleDetails,
+		&i.ServiceInterest,
+		&i.Notes,
+		&i.RequestedStart,
+		&i.RequestedEnd,
+		&i.Status,
+		&i.Source,
+		&i.InternalNotes,
+		&i.ClerkUserID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const createGalleryGroup = `-- name: CreateGalleryGroup :one
+INSERT INTO gallery_groups (title, slug, vehicle_make, vehicle_model, vehicle_year, description, is_featured, sort_order)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+RETURNING id, title, slug, vehicle_make, vehicle_model, vehicle_year, description, is_featured, sort_order, created_at, updated_at
+`
+
+type CreateGalleryGroupParams struct {
+	Title        string         `json:"title"`
+	Slug         string         `json:"slug"`
+	VehicleMake  sql.NullString `json:"vehicle_make"`
+	VehicleModel sql.NullString `json:"vehicle_model"`
+	VehicleYear  sql.NullInt64  `json:"vehicle_year"`
+	Description  sql.NullString `json:"description"`
+	IsFeatured   sql.NullBool   `json:"is_featured"`
+	SortOrder    sql.NullInt64  `json:"sort_order"`
+}
+
+func (q *Queries) CreateGalleryGroup(ctx context.Context, arg CreateGalleryGroupParams) (GalleryGroup, error) {
+	row := q.db.QueryRowContext(ctx, createGalleryGroup,
+		arg.Title,
+		arg.Slug,
+		arg.VehicleMake,
+		arg.VehicleModel,
+		arg.VehicleYear,
+		arg.Description,
+		arg.IsFeatured,
+		arg.SortOrder,
+	)
+	var i GalleryGroup
+	err := row.Scan(
+		&i.ID,
+		&i.Title,
+		&i.Slug,
+		&i.VehicleMake,
+		&i.VehicleModel,
+		&i.VehicleYear,
+		&i.Description,
+		&i.IsFeatured,
+		&i.SortOrder,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const createMedia = `-- name: CreateMedia :one
+INSERT INTO media (gallery_group_id, url, kind, sort_order, alt_text)
+VALUES (?, ?, ?, ?, ?)
+RETURNING id, gallery_group_id, url, kind, sort_order, alt_text, created_at
+`
+
+type CreateMediaParams struct {
+	GalleryGroupID sql.NullInt64  `json:"gallery_group_id"`
+	Url            string         `json:"url"`
+	Kind           sql.NullString `json:"kind"`
+	SortOrder      sql.NullInt64  `json:"sort_order"`
+	AltText        sql.NullString `json:"alt_text"`
+}
+
+func (q *Queries) CreateMedia(ctx context.Context, arg CreateMediaParams) (Medium, error) {
+	row := q.db.QueryRowContext(ctx, createMedia,
+		arg.GalleryGroupID,
+		arg.Url,
+		arg.Kind,
+		arg.SortOrder,
+		arg.AltText,
+	)
+	var i Medium
+	err := row.Scan(
+		&i.ID,
+		&i.GalleryGroupID,
+		&i.Url,
+		&i.Kind,
+		&i.SortOrder,
+		&i.AltText,
+		&i.CreatedAt,
+	)
+	return i, err
 }
 
 const createPackage = `-- name: CreatePackage :one
@@ -126,6 +286,59 @@ func (q *Queries) CreatePackage(ctx context.Context, arg CreatePackageParams) (P
 	return i, err
 }
 
+const createReview = `-- name: CreateReview :one
+INSERT INTO reviews (author, rating, body, source, is_featured)
+VALUES (?, ?, ?, ?, ?)
+RETURNING id, author, rating, body, source, is_featured, created_at
+`
+
+type CreateReviewParams struct {
+	Author     string         `json:"author"`
+	Rating     sql.NullInt64  `json:"rating"`
+	Body       sql.NullString `json:"body"`
+	Source     sql.NullString `json:"source"`
+	IsFeatured sql.NullBool   `json:"is_featured"`
+}
+
+func (q *Queries) CreateReview(ctx context.Context, arg CreateReviewParams) (Review, error) {
+	row := q.db.QueryRowContext(ctx, createReview,
+		arg.Author,
+		arg.Rating,
+		arg.Body,
+		arg.Source,
+		arg.IsFeatured,
+	)
+	var i Review
+	err := row.Scan(
+		&i.ID,
+		&i.Author,
+		&i.Rating,
+		&i.Body,
+		&i.Source,
+		&i.IsFeatured,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const deleteGalleryGroup = `-- name: DeleteGalleryGroup :exec
+DELETE FROM gallery_groups WHERE id = ?
+`
+
+func (q *Queries) DeleteGalleryGroup(ctx context.Context, id int64) error {
+	_, err := q.db.ExecContext(ctx, deleteGalleryGroup, id)
+	return err
+}
+
+const deleteMedia = `-- name: DeleteMedia :exec
+DELETE FROM media WHERE id = ?
+`
+
+func (q *Queries) DeleteMedia(ctx context.Context, id int64) error {
+	_, err := q.db.ExecContext(ctx, deleteMedia, id)
+	return err
+}
+
 const deletePackage = `-- name: DeletePackage :exec
 DELETE FROM packages WHERE id = ?
 `
@@ -135,12 +348,23 @@ func (q *Queries) DeletePackage(ctx context.Context, id int64) error {
 	return err
 }
 
+const deleteReview = `-- name: DeleteReview :exec
+DELETE FROM reviews WHERE id = ?
+`
+
+func (q *Queries) DeleteReview(ctx context.Context, id int64) error {
+	_, err := q.db.ExecContext(ctx, deleteReview, id)
+	return err
+}
+
 const getAllPackages = `-- name: GetAllPackages :many
+
 SELECT id, slug, name, short_desc, long_desc, price_min, price_max, duration_est, is_active, sort_order, created_at, updated_at FROM packages
 WHERE is_active = 1
 ORDER BY sort_order, id
 `
 
+// Package queries
 func (q *Queries) GetAllPackages(ctx context.Context) ([]Package, error) {
 	rows, err := q.db.QueryContext(ctx, getAllPackages)
 	if err != nil {
@@ -218,154 +442,114 @@ func (q *Queries) GetAllPackagesAdmin(ctx context.Context) ([]Package, error) {
 	return items, nil
 }
 
-const getFeaturedWork = `-- name: GetFeaturedWork :many
-SELECT
-    j.id,
-    j.slug,
-    j.featured,
-    j.highlight_text,
-    j.display_price,
-    j.completed_at,
-    v.year as vehicle_year,
-    v.make as vehicle_make,
-    v.model as vehicle_model,
-    v.trim as vehicle_trim,
-    v.dealership_name,
-    p.name as package_name
-FROM jobs j
-LEFT JOIN vehicles v ON j.vehicle_id = v.id
-LEFT JOIN packages p ON j.package_id = p.id
-WHERE j.featured = 1 AND j.completed_at IS NOT NULL
-ORDER BY j.completed_at DESC
-LIMIT ?
+const getBookingByID = `-- name: GetBookingByID :one
+SELECT id, customer_name, email, phone, vehicle_details, service_interest, notes, requested_start, requested_end, status, source, internal_notes, clerk_user_id, created_at, updated_at FROM bookings
+WHERE id = ? LIMIT 1
 `
 
-type GetFeaturedWorkRow struct {
-	ID             int64          `json:"id"`
-	Slug           sql.NullString `json:"slug"`
-	Featured       sql.NullBool   `json:"featured"`
-	HighlightText  sql.NullString `json:"highlight_text"`
-	DisplayPrice   sql.NullInt64  `json:"display_price"`
-	CompletedAt    sql.NullTime   `json:"completed_at"`
-	VehicleYear    sql.NullInt64  `json:"vehicle_year"`
-	VehicleMake    sql.NullString `json:"vehicle_make"`
-	VehicleModel   sql.NullString `json:"vehicle_model"`
-	VehicleTrim    sql.NullString `json:"vehicle_trim"`
-	DealershipName sql.NullString `json:"dealership_name"`
-	PackageName    sql.NullString `json:"package_name"`
-}
-
-func (q *Queries) GetFeaturedWork(ctx context.Context, limit int64) ([]GetFeaturedWorkRow, error) {
-	rows, err := q.db.QueryContext(ctx, getFeaturedWork, limit)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []GetFeaturedWorkRow
-	for rows.Next() {
-		var i GetFeaturedWorkRow
-		if err := rows.Scan(
-			&i.ID,
-			&i.Slug,
-			&i.Featured,
-			&i.HighlightText,
-			&i.DisplayPrice,
-			&i.CompletedAt,
-			&i.VehicleYear,
-			&i.VehicleMake,
-			&i.VehicleModel,
-			&i.VehicleTrim,
-			&i.DealershipName,
-			&i.PackageName,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const getJobByID = `-- name: GetJobByID :one
-SELECT id, slug, vehicle_id, package_id, technician, notes, completed_at, duration_actual, featured, display_price, highlight_text, customer_testimonial, customer_name, meta_description, meta_keywords, created_at, updated_at FROM jobs WHERE id = ?
-`
-
-func (q *Queries) GetJobByID(ctx context.Context, id int64) (Job, error) {
-	row := q.db.QueryRowContext(ctx, getJobByID, id)
-	var i Job
+func (q *Queries) GetBookingByID(ctx context.Context, id int64) (Booking, error) {
+	row := q.db.QueryRowContext(ctx, getBookingByID, id)
+	var i Booking
 	err := row.Scan(
 		&i.ID,
-		&i.Slug,
-		&i.VehicleID,
-		&i.PackageID,
-		&i.Technician,
-		&i.Notes,
-		&i.CompletedAt,
-		&i.DurationActual,
-		&i.Featured,
-		&i.DisplayPrice,
-		&i.HighlightText,
-		&i.CustomerTestimonial,
 		&i.CustomerName,
-		&i.MetaDescription,
-		&i.MetaKeywords,
+		&i.Email,
+		&i.Phone,
+		&i.VehicleDetails,
+		&i.ServiceInterest,
+		&i.Notes,
+		&i.RequestedStart,
+		&i.RequestedEnd,
+		&i.Status,
+		&i.Source,
+		&i.InternalNotes,
+		&i.ClerkUserID,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
 	return i, err
 }
 
-const getMediaForJob = `-- name: GetMediaForJob :many
-SELECT id, job_id, vehicle_id, url, kind, sort_order, alt_text, created_at FROM media
-WHERE job_id = ?
-ORDER BY sort_order, id
+const getGalleryGroupByID = `-- name: GetGalleryGroupByID :one
+SELECT id, title, slug, vehicle_make, vehicle_model, vehicle_year, description, is_featured, sort_order, created_at, updated_at FROM gallery_groups
+WHERE id = ? LIMIT 1
 `
 
-func (q *Queries) GetMediaForJob(ctx context.Context, jobID sql.NullInt64) ([]Medium, error) {
-	rows, err := q.db.QueryContext(ctx, getMediaForJob, jobID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Medium
-	for rows.Next() {
-		var i Medium
-		if err := rows.Scan(
-			&i.ID,
-			&i.JobID,
-			&i.VehicleID,
-			&i.Url,
-			&i.Kind,
-			&i.SortOrder,
-			&i.AltText,
-			&i.CreatedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
+func (q *Queries) GetGalleryGroupByID(ctx context.Context, id int64) (GalleryGroup, error) {
+	row := q.db.QueryRowContext(ctx, getGalleryGroupByID, id)
+	var i GalleryGroup
+	err := row.Scan(
+		&i.ID,
+		&i.Title,
+		&i.Slug,
+		&i.VehicleMake,
+		&i.VehicleModel,
+		&i.VehicleYear,
+		&i.Description,
+		&i.IsFeatured,
+		&i.SortOrder,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
 }
 
-const getMediaForVehicle = `-- name: GetMediaForVehicle :many
-SELECT id, job_id, vehicle_id, url, kind, sort_order, alt_text, created_at FROM media
-WHERE vehicle_id = ?
+const getGalleryGroupBySlug = `-- name: GetGalleryGroupBySlug :one
+SELECT id, title, slug, vehicle_make, vehicle_model, vehicle_year, description, is_featured, sort_order, created_at, updated_at FROM gallery_groups
+WHERE slug = ? LIMIT 1
+`
+
+func (q *Queries) GetGalleryGroupBySlug(ctx context.Context, slug string) (GalleryGroup, error) {
+	row := q.db.QueryRowContext(ctx, getGalleryGroupBySlug, slug)
+	var i GalleryGroup
+	err := row.Scan(
+		&i.ID,
+		&i.Title,
+		&i.Slug,
+		&i.VehicleMake,
+		&i.VehicleModel,
+		&i.VehicleYear,
+		&i.Description,
+		&i.IsFeatured,
+		&i.SortOrder,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const getHeroImageForGalleryGroup = `-- name: GetHeroImageForGalleryGroup :one
+SELECT id, gallery_group_id, url, kind, sort_order, alt_text, created_at FROM media
+WHERE gallery_group_id = ? AND kind = 'hero'
+ORDER BY sort_order
+LIMIT 1
+`
+
+func (q *Queries) GetHeroImageForGalleryGroup(ctx context.Context, galleryGroupID sql.NullInt64) (Medium, error) {
+	row := q.db.QueryRowContext(ctx, getHeroImageForGalleryGroup, galleryGroupID)
+	var i Medium
+	err := row.Scan(
+		&i.ID,
+		&i.GalleryGroupID,
+		&i.Url,
+		&i.Kind,
+		&i.SortOrder,
+		&i.AltText,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const getMediaForGalleryGroup = `-- name: GetMediaForGalleryGroup :many
+
+SELECT id, gallery_group_id, url, kind, sort_order, alt_text, created_at FROM media
+WHERE gallery_group_id = ?
 ORDER BY sort_order, id
 `
 
-func (q *Queries) GetMediaForVehicle(ctx context.Context, vehicleID sql.NullInt64) ([]Medium, error) {
-	rows, err := q.db.QueryContext(ctx, getMediaForVehicle, vehicleID)
+// Media queries
+func (q *Queries) GetMediaForGalleryGroup(ctx context.Context, galleryGroupID sql.NullInt64) ([]Medium, error) {
+	rows, err := q.db.QueryContext(ctx, getMediaForGalleryGroup, galleryGroupID)
 	if err != nil {
 		return nil, err
 	}
@@ -375,8 +559,7 @@ func (q *Queries) GetMediaForVehicle(ctx context.Context, vehicleID sql.NullInt6
 		var i Medium
 		if err := rows.Scan(
 			&i.ID,
-			&i.JobID,
-			&i.VehicleID,
+			&i.GalleryGroupID,
 			&i.Url,
 			&i.Kind,
 			&i.SortOrder,
@@ -446,87 +629,36 @@ func (q *Queries) GetPackageBySlug(ctx context.Context, slug string) (Package, e
 	return i, err
 }
 
-const getPostBySlug = `-- name: GetPostBySlug :one
-SELECT id, slug, title, excerpt, body, author, published_at, created_at, updated_at FROM posts
-WHERE slug = ? AND published_at IS NOT NULL LIMIT 1
+const listBlockedSlots = `-- name: ListBlockedSlots :many
+SELECT requested_start, requested_end, status
+FROM bookings
+WHERE requested_start >= ?
+  AND requested_start < ?
+  AND status IN ('pending', 'confirmed')
+ORDER BY requested_start
 `
 
-func (q *Queries) GetPostBySlug(ctx context.Context, slug string) (Post, error) {
-	row := q.db.QueryRowContext(ctx, getPostBySlug, slug)
-	var i Post
-	err := row.Scan(
-		&i.ID,
-		&i.Slug,
-		&i.Title,
-		&i.Excerpt,
-		&i.Body,
-		&i.Author,
-		&i.PublishedAt,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-	)
-	return i, err
+type ListBlockedSlotsParams struct {
+	RequestedStart   time.Time `json:"requested_start"`
+	RequestedStart_2 time.Time `json:"requested_start_2"`
 }
 
-const getRelatedWork = `-- name: GetRelatedWork :many
-SELECT
-    j.id,
-    j.slug,
-    j.featured,
-    j.completed_at,
-    v.year as vehicle_year,
-    v.make as vehicle_make,
-    v.model as vehicle_model,
-    v.dealership_name,
-    p.name as package_name
-FROM jobs j
-LEFT JOIN vehicles v ON j.vehicle_id = v.id
-LEFT JOIN packages p ON j.package_id = p.id
-WHERE j.id != ?
-  AND (v.make = ? OR j.package_id = ?)
-  AND j.completed_at IS NOT NULL
-ORDER BY j.featured DESC, j.completed_at DESC
-LIMIT 3
-`
-
-type GetRelatedWorkParams struct {
-	ID        int64         `json:"id"`
-	Make      string        `json:"make"`
-	PackageID sql.NullInt64 `json:"package_id"`
+type ListBlockedSlotsRow struct {
+	RequestedStart time.Time      `json:"requested_start"`
+	RequestedEnd   time.Time      `json:"requested_end"`
+	Status         sql.NullString `json:"status"`
 }
 
-type GetRelatedWorkRow struct {
-	ID             int64          `json:"id"`
-	Slug           sql.NullString `json:"slug"`
-	Featured       sql.NullBool   `json:"featured"`
-	CompletedAt    sql.NullTime   `json:"completed_at"`
-	VehicleYear    sql.NullInt64  `json:"vehicle_year"`
-	VehicleMake    sql.NullString `json:"vehicle_make"`
-	VehicleModel   sql.NullString `json:"vehicle_model"`
-	DealershipName sql.NullString `json:"dealership_name"`
-	PackageName    sql.NullString `json:"package_name"`
-}
-
-func (q *Queries) GetRelatedWork(ctx context.Context, arg GetRelatedWorkParams) ([]GetRelatedWorkRow, error) {
-	rows, err := q.db.QueryContext(ctx, getRelatedWork, arg.ID, arg.Make, arg.PackageID)
+func (q *Queries) ListBlockedSlots(ctx context.Context, arg ListBlockedSlotsParams) ([]ListBlockedSlotsRow, error) {
+	rows, err := q.db.QueryContext(ctx, listBlockedSlots, arg.RequestedStart, arg.RequestedStart_2)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []GetRelatedWorkRow
+	var items []ListBlockedSlotsRow
 	for rows.Next() {
-		var i GetRelatedWorkRow
-		if err := rows.Scan(
-			&i.ID,
-			&i.Slug,
-			&i.Featured,
-			&i.CompletedAt,
-			&i.VehicleYear,
-			&i.VehicleMake,
-			&i.VehicleModel,
-			&i.DealershipName,
-			&i.PackageName,
-		); err != nil {
+		var i ListBlockedSlotsRow
+		if err := rows.Scan(&i.RequestedStart, &i.RequestedEnd, &i.Status); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -540,199 +672,44 @@ func (q *Queries) GetRelatedWork(ctx context.Context, arg GetRelatedWorkParams) 
 	return items, nil
 }
 
-const getVehicleBySlug = `-- name: GetVehicleBySlug :one
-SELECT id, slug, vin, year, make, model, trim, color, price, stock_number, dealership_name, dealership_logo_url, dealership_listing_url, dealership_location, status, posted_at, created_at, updated_at FROM vehicles
-WHERE slug = ? LIMIT 1
-`
+const listBookings = `-- name: ListBookings :many
 
-func (q *Queries) GetVehicleBySlug(ctx context.Context, slug string) (Vehicle, error) {
-	row := q.db.QueryRowContext(ctx, getVehicleBySlug, slug)
-	var i Vehicle
-	err := row.Scan(
-		&i.ID,
-		&i.Slug,
-		&i.Vin,
-		&i.Year,
-		&i.Make,
-		&i.Model,
-		&i.Trim,
-		&i.Color,
-		&i.Price,
-		&i.StockNumber,
-		&i.DealershipName,
-		&i.DealershipLogoUrl,
-		&i.DealershipListingUrl,
-		&i.DealershipLocation,
-		&i.Status,
-		&i.PostedAt,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-	)
-	return i, err
-}
-
-const getWorkBySlug = `-- name: GetWorkBySlug :one
-
-SELECT
-    j.id, j.slug, j.vehicle_id, j.package_id, j.technician, j.notes, j.completed_at, j.duration_actual, j.featured, j.display_price, j.highlight_text, j.customer_testimonial, j.customer_name, j.meta_description, j.meta_keywords, j.created_at, j.updated_at,
-    v.slug as vehicle_slug,
-    v.year as vehicle_year,
-    v.make as vehicle_make,
-    v.model as vehicle_model,
-    v.trim as vehicle_trim,
-    v.color as vehicle_color,
-    v.dealership_name,
-    v.dealership_logo_url,
-    v.dealership_listing_url,
-    v.dealership_location,
-    p.name as package_name,
-    p.short_desc as package_short_desc,
-    p.price_min as package_price_min,
-    p.price_max as package_price_max
-FROM jobs j
-LEFT JOIN vehicles v ON j.vehicle_id = v.id
-LEFT JOIN packages p ON j.package_id = p.id
-WHERE j.slug = ? LIMIT 1
-`
-
-type GetWorkBySlugRow struct {
-	ID                   int64          `json:"id"`
-	Slug                 sql.NullString `json:"slug"`
-	VehicleID            sql.NullInt64  `json:"vehicle_id"`
-	PackageID            sql.NullInt64  `json:"package_id"`
-	Technician           sql.NullString `json:"technician"`
-	Notes                sql.NullString `json:"notes"`
-	CompletedAt          sql.NullTime   `json:"completed_at"`
-	DurationActual       sql.NullInt64  `json:"duration_actual"`
-	Featured             sql.NullBool   `json:"featured"`
-	DisplayPrice         sql.NullInt64  `json:"display_price"`
-	HighlightText        sql.NullString `json:"highlight_text"`
-	CustomerTestimonial  sql.NullString `json:"customer_testimonial"`
-	CustomerName         sql.NullString `json:"customer_name"`
-	MetaDescription      sql.NullString `json:"meta_description"`
-	MetaKeywords         sql.NullString `json:"meta_keywords"`
-	CreatedAt            sql.NullTime   `json:"created_at"`
-	UpdatedAt            sql.NullTime   `json:"updated_at"`
-	VehicleSlug          sql.NullString `json:"vehicle_slug"`
-	VehicleYear          sql.NullInt64  `json:"vehicle_year"`
-	VehicleMake          sql.NullString `json:"vehicle_make"`
-	VehicleModel         sql.NullString `json:"vehicle_model"`
-	VehicleTrim          sql.NullString `json:"vehicle_trim"`
-	VehicleColor         sql.NullString `json:"vehicle_color"`
-	DealershipName       sql.NullString `json:"dealership_name"`
-	DealershipLogoUrl    sql.NullString `json:"dealership_logo_url"`
-	DealershipListingUrl sql.NullString `json:"dealership_listing_url"`
-	DealershipLocation   sql.NullString `json:"dealership_location"`
-	PackageName          sql.NullString `json:"package_name"`
-	PackageShortDesc     sql.NullString `json:"package_short_desc"`
-	PackagePriceMin      sql.NullInt64  `json:"package_price_min"`
-	PackagePriceMax      sql.NullInt64  `json:"package_price_max"`
-}
-
-// Work/Portfolio queries
-func (q *Queries) GetWorkBySlug(ctx context.Context, slug sql.NullString) (GetWorkBySlugRow, error) {
-	row := q.db.QueryRowContext(ctx, getWorkBySlug, slug)
-	var i GetWorkBySlugRow
-	err := row.Scan(
-		&i.ID,
-		&i.Slug,
-		&i.VehicleID,
-		&i.PackageID,
-		&i.Technician,
-		&i.Notes,
-		&i.CompletedAt,
-		&i.DurationActual,
-		&i.Featured,
-		&i.DisplayPrice,
-		&i.HighlightText,
-		&i.CustomerTestimonial,
-		&i.CustomerName,
-		&i.MetaDescription,
-		&i.MetaKeywords,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-		&i.VehicleSlug,
-		&i.VehicleYear,
-		&i.VehicleMake,
-		&i.VehicleModel,
-		&i.VehicleTrim,
-		&i.VehicleColor,
-		&i.DealershipName,
-		&i.DealershipLogoUrl,
-		&i.DealershipListingUrl,
-		&i.DealershipLocation,
-		&i.PackageName,
-		&i.PackageShortDesc,
-		&i.PackagePriceMin,
-		&i.PackagePriceMax,
-	)
-	return i, err
-}
-
-const listAllWork = `-- name: ListAllWork :many
-SELECT
-    j.id,
-    j.slug,
-    j.featured,
-    j.highlight_text,
-    j.display_price,
-    j.completed_at,
-    v.year as vehicle_year,
-    v.make as vehicle_make,
-    v.model as vehicle_model,
-    v.trim as vehicle_trim,
-    v.dealership_name,
-    p.name as package_name
-FROM jobs j
-LEFT JOIN vehicles v ON j.vehicle_id = v.id
-LEFT JOIN packages p ON j.package_id = p.id
-WHERE j.completed_at IS NOT NULL
-ORDER BY j.completed_at DESC
+SELECT id, customer_name, email, phone, vehicle_details, service_interest, notes, requested_start, requested_end, status, source, internal_notes, clerk_user_id, created_at, updated_at FROM bookings
+ORDER BY requested_start DESC
 LIMIT ? OFFSET ?
 `
 
-type ListAllWorkParams struct {
+type ListBookingsParams struct {
 	Limit  int64 `json:"limit"`
 	Offset int64 `json:"offset"`
 }
 
-type ListAllWorkRow struct {
-	ID             int64          `json:"id"`
-	Slug           sql.NullString `json:"slug"`
-	Featured       sql.NullBool   `json:"featured"`
-	HighlightText  sql.NullString `json:"highlight_text"`
-	DisplayPrice   sql.NullInt64  `json:"display_price"`
-	CompletedAt    sql.NullTime   `json:"completed_at"`
-	VehicleYear    sql.NullInt64  `json:"vehicle_year"`
-	VehicleMake    sql.NullString `json:"vehicle_make"`
-	VehicleModel   sql.NullString `json:"vehicle_model"`
-	VehicleTrim    sql.NullString `json:"vehicle_trim"`
-	DealershipName sql.NullString `json:"dealership_name"`
-	PackageName    sql.NullString `json:"package_name"`
-}
-
-func (q *Queries) ListAllWork(ctx context.Context, arg ListAllWorkParams) ([]ListAllWorkRow, error) {
-	rows, err := q.db.QueryContext(ctx, listAllWork, arg.Limit, arg.Offset)
+// Booking queries
+func (q *Queries) ListBookings(ctx context.Context, arg ListBookingsParams) ([]Booking, error) {
+	rows, err := q.db.QueryContext(ctx, listBookings, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []ListAllWorkRow
+	var items []Booking
 	for rows.Next() {
-		var i ListAllWorkRow
+		var i Booking
 		if err := rows.Scan(
 			&i.ID,
-			&i.Slug,
-			&i.Featured,
-			&i.HighlightText,
-			&i.DisplayPrice,
-			&i.CompletedAt,
-			&i.VehicleYear,
-			&i.VehicleMake,
-			&i.VehicleModel,
-			&i.VehicleTrim,
-			&i.DealershipName,
-			&i.PackageName,
+			&i.CustomerName,
+			&i.Email,
+			&i.Phone,
+			&i.VehicleDetails,
+			&i.ServiceInterest,
+			&i.Notes,
+			&i.RequestedStart,
+			&i.RequestedEnd,
+			&i.Status,
+			&i.Source,
+			&i.InternalNotes,
+			&i.ClerkUserID,
+			&i.CreatedAt,
+			&i.UpdatedAt,
 		); err != nil {
 			return nil, err
 		}
@@ -747,70 +724,144 @@ func (q *Queries) ListAllWork(ctx context.Context, arg ListAllWorkParams) ([]Lis
 	return items, nil
 }
 
-const listFeaturedJobs = `-- name: ListFeaturedJobs :many
-SELECT j.id, j.slug, j.vehicle_id, j.package_id, j.technician, j.notes, j.completed_at, j.duration_actual, j.featured, j.display_price, j.highlight_text, j.customer_testimonial, j.customer_name, j.meta_description, j.meta_keywords, j.created_at, j.updated_at, v.make, v.model, v.year, v.slug as vehicle_slug
-FROM jobs j
-LEFT JOIN vehicles v ON j.vehicle_id = v.id
-WHERE j.featured = 1
-ORDER BY j.completed_at DESC
-LIMIT ?
+const listBookingsByStatus = `-- name: ListBookingsByStatus :many
+SELECT id, customer_name, email, phone, vehicle_details, service_interest, notes, requested_start, requested_end, status, source, internal_notes, clerk_user_id, created_at, updated_at FROM bookings
+WHERE status = ?
+ORDER BY requested_start ASC
+LIMIT ? OFFSET ?
 `
 
-type ListFeaturedJobsRow struct {
-	ID                  int64          `json:"id"`
-	Slug                sql.NullString `json:"slug"`
-	VehicleID           sql.NullInt64  `json:"vehicle_id"`
-	PackageID           sql.NullInt64  `json:"package_id"`
-	Technician          sql.NullString `json:"technician"`
-	Notes               sql.NullString `json:"notes"`
-	CompletedAt         sql.NullTime   `json:"completed_at"`
-	DurationActual      sql.NullInt64  `json:"duration_actual"`
-	Featured            sql.NullBool   `json:"featured"`
-	DisplayPrice        sql.NullInt64  `json:"display_price"`
-	HighlightText       sql.NullString `json:"highlight_text"`
-	CustomerTestimonial sql.NullString `json:"customer_testimonial"`
-	CustomerName        sql.NullString `json:"customer_name"`
-	MetaDescription     sql.NullString `json:"meta_description"`
-	MetaKeywords        sql.NullString `json:"meta_keywords"`
-	CreatedAt           sql.NullTime   `json:"created_at"`
-	UpdatedAt           sql.NullTime   `json:"updated_at"`
-	Make                sql.NullString `json:"make"`
-	Model               sql.NullString `json:"model"`
-	Year                sql.NullInt64  `json:"year"`
-	VehicleSlug         sql.NullString `json:"vehicle_slug"`
+type ListBookingsByStatusParams struct {
+	Status sql.NullString `json:"status"`
+	Limit  int64          `json:"limit"`
+	Offset int64          `json:"offset"`
 }
 
-func (q *Queries) ListFeaturedJobs(ctx context.Context, limit int64) ([]ListFeaturedJobsRow, error) {
-	rows, err := q.db.QueryContext(ctx, listFeaturedJobs, limit)
+func (q *Queries) ListBookingsByStatus(ctx context.Context, arg ListBookingsByStatusParams) ([]Booking, error) {
+	rows, err := q.db.QueryContext(ctx, listBookingsByStatus, arg.Status, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []ListFeaturedJobsRow
+	var items []Booking
 	for rows.Next() {
-		var i ListFeaturedJobsRow
+		var i Booking
 		if err := rows.Scan(
 			&i.ID,
-			&i.Slug,
-			&i.VehicleID,
-			&i.PackageID,
-			&i.Technician,
-			&i.Notes,
-			&i.CompletedAt,
-			&i.DurationActual,
-			&i.Featured,
-			&i.DisplayPrice,
-			&i.HighlightText,
-			&i.CustomerTestimonial,
 			&i.CustomerName,
-			&i.MetaDescription,
-			&i.MetaKeywords,
+			&i.Email,
+			&i.Phone,
+			&i.VehicleDetails,
+			&i.ServiceInterest,
+			&i.Notes,
+			&i.RequestedStart,
+			&i.RequestedEnd,
+			&i.Status,
+			&i.Source,
+			&i.InternalNotes,
+			&i.ClerkUserID,
 			&i.CreatedAt,
 			&i.UpdatedAt,
-			&i.Make,
-			&i.Model,
-			&i.Year,
-			&i.VehicleSlug,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listBookingsForCalendar = `-- name: ListBookingsForCalendar :many
+SELECT id, customer_name, email, phone, vehicle_details, service_interest, requested_start, requested_end, status
+FROM bookings
+WHERE requested_start >= ?
+  AND requested_start < ?
+ORDER BY requested_start ASC
+`
+
+type ListBookingsForCalendarParams struct {
+	RequestedStart   time.Time `json:"requested_start"`
+	RequestedStart_2 time.Time `json:"requested_start_2"`
+}
+
+type ListBookingsForCalendarRow struct {
+	ID              int64          `json:"id"`
+	CustomerName    string         `json:"customer_name"`
+	Email           string         `json:"email"`
+	Phone           sql.NullString `json:"phone"`
+	VehicleDetails  sql.NullString `json:"vehicle_details"`
+	ServiceInterest sql.NullString `json:"service_interest"`
+	RequestedStart  time.Time      `json:"requested_start"`
+	RequestedEnd    time.Time      `json:"requested_end"`
+	Status          sql.NullString `json:"status"`
+}
+
+func (q *Queries) ListBookingsForCalendar(ctx context.Context, arg ListBookingsForCalendarParams) ([]ListBookingsForCalendarRow, error) {
+	rows, err := q.db.QueryContext(ctx, listBookingsForCalendar, arg.RequestedStart, arg.RequestedStart_2)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ListBookingsForCalendarRow
+	for rows.Next() {
+		var i ListBookingsForCalendarRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.CustomerName,
+			&i.Email,
+			&i.Phone,
+			&i.VehicleDetails,
+			&i.ServiceInterest,
+			&i.RequestedStart,
+			&i.RequestedEnd,
+			&i.Status,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listFeaturedGalleryGroups = `-- name: ListFeaturedGalleryGroups :many
+SELECT id, title, slug, vehicle_make, vehicle_model, vehicle_year, description, is_featured, sort_order, created_at, updated_at FROM gallery_groups
+WHERE is_featured = 1
+ORDER BY sort_order, created_at DESC
+LIMIT ?
+`
+
+func (q *Queries) ListFeaturedGalleryGroups(ctx context.Context, limit int64) ([]GalleryGroup, error) {
+	rows, err := q.db.QueryContext(ctx, listFeaturedGalleryGroups, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GalleryGroup
+	for rows.Next() {
+		var i GalleryGroup
+		if err := rows.Scan(
+			&i.ID,
+			&i.Title,
+			&i.Slug,
+			&i.VehicleMake,
+			&i.VehicleModel,
+			&i.VehicleYear,
+			&i.Description,
+			&i.IsFeatured,
+			&i.SortOrder,
+			&i.CreatedAt,
+			&i.UpdatedAt,
 		); err != nil {
 			return nil, err
 		}
@@ -863,117 +914,38 @@ func (q *Queries) ListFeaturedReviews(ctx context.Context, limit int64) ([]Revie
 	return items, nil
 }
 
-const listJobs = `-- name: ListJobs :many
-SELECT j.id, j.slug, j.vehicle_id, j.package_id, j.technician, j.notes, j.completed_at, j.duration_actual, j.featured, j.display_price, j.highlight_text, j.customer_testimonial, j.customer_name, j.meta_description, j.meta_keywords, j.created_at, j.updated_at, v.make, v.model, v.year, v.slug as vehicle_slug
-FROM jobs j
-LEFT JOIN vehicles v ON j.vehicle_id = v.id
-ORDER BY j.completed_at DESC
+const listGalleryGroups = `-- name: ListGalleryGroups :many
+
+SELECT id, title, slug, vehicle_make, vehicle_model, vehicle_year, description, is_featured, sort_order, created_at, updated_at FROM gallery_groups
+ORDER BY sort_order, created_at DESC
 LIMIT ? OFFSET ?
 `
 
-type ListJobsParams struct {
+type ListGalleryGroupsParams struct {
 	Limit  int64 `json:"limit"`
 	Offset int64 `json:"offset"`
 }
 
-type ListJobsRow struct {
-	ID                  int64          `json:"id"`
-	Slug                sql.NullString `json:"slug"`
-	VehicleID           sql.NullInt64  `json:"vehicle_id"`
-	PackageID           sql.NullInt64  `json:"package_id"`
-	Technician          sql.NullString `json:"technician"`
-	Notes               sql.NullString `json:"notes"`
-	CompletedAt         sql.NullTime   `json:"completed_at"`
-	DurationActual      sql.NullInt64  `json:"duration_actual"`
-	Featured            sql.NullBool   `json:"featured"`
-	DisplayPrice        sql.NullInt64  `json:"display_price"`
-	HighlightText       sql.NullString `json:"highlight_text"`
-	CustomerTestimonial sql.NullString `json:"customer_testimonial"`
-	CustomerName        sql.NullString `json:"customer_name"`
-	MetaDescription     sql.NullString `json:"meta_description"`
-	MetaKeywords        sql.NullString `json:"meta_keywords"`
-	CreatedAt           sql.NullTime   `json:"created_at"`
-	UpdatedAt           sql.NullTime   `json:"updated_at"`
-	Make                sql.NullString `json:"make"`
-	Model               sql.NullString `json:"model"`
-	Year                sql.NullInt64  `json:"year"`
-	VehicleSlug         sql.NullString `json:"vehicle_slug"`
-}
-
-func (q *Queries) ListJobs(ctx context.Context, arg ListJobsParams) ([]ListJobsRow, error) {
-	rows, err := q.db.QueryContext(ctx, listJobs, arg.Limit, arg.Offset)
+// Gallery queries
+func (q *Queries) ListGalleryGroups(ctx context.Context, arg ListGalleryGroupsParams) ([]GalleryGroup, error) {
+	rows, err := q.db.QueryContext(ctx, listGalleryGroups, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []ListJobsRow
+	var items []GalleryGroup
 	for rows.Next() {
-		var i ListJobsRow
+		var i GalleryGroup
 		if err := rows.Scan(
 			&i.ID,
-			&i.Slug,
-			&i.VehicleID,
-			&i.PackageID,
-			&i.Technician,
-			&i.Notes,
-			&i.CompletedAt,
-			&i.DurationActual,
-			&i.Featured,
-			&i.DisplayPrice,
-			&i.HighlightText,
-			&i.CustomerTestimonial,
-			&i.CustomerName,
-			&i.MetaDescription,
-			&i.MetaKeywords,
-			&i.CreatedAt,
-			&i.UpdatedAt,
-			&i.Make,
-			&i.Model,
-			&i.Year,
-			&i.VehicleSlug,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const listPosts = `-- name: ListPosts :many
-SELECT id, slug, title, excerpt, body, author, published_at, created_at, updated_at FROM posts
-WHERE published_at IS NOT NULL
-ORDER BY published_at DESC
-LIMIT ? OFFSET ?
-`
-
-type ListPostsParams struct {
-	Limit  int64 `json:"limit"`
-	Offset int64 `json:"offset"`
-}
-
-func (q *Queries) ListPosts(ctx context.Context, arg ListPostsParams) ([]Post, error) {
-	rows, err := q.db.QueryContext(ctx, listPosts, arg.Limit, arg.Offset)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Post
-	for rows.Next() {
-		var i Post
-		if err := rows.Scan(
-			&i.ID,
-			&i.Slug,
 			&i.Title,
-			&i.Excerpt,
-			&i.Body,
-			&i.Author,
-			&i.PublishedAt,
+			&i.Slug,
+			&i.VehicleMake,
+			&i.VehicleModel,
+			&i.VehicleYear,
+			&i.Description,
+			&i.IsFeatured,
+			&i.SortOrder,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -991,11 +963,13 @@ func (q *Queries) ListPosts(ctx context.Context, arg ListPostsParams) ([]Post, e
 }
 
 const listReviews = `-- name: ListReviews :many
+
 SELECT id, author, rating, body, source, is_featured, created_at FROM reviews
 ORDER BY created_at DESC
 LIMIT ?
 `
 
+// Review queries
 func (q *Queries) ListReviews(ctx context.Context, limit int64) ([]Review, error) {
 	rows, err := q.db.QueryContext(ctx, listReviews, limit)
 	if err != nil {
@@ -1025,6 +999,173 @@ func (q *Queries) ListReviews(ctx context.Context, limit int64) ([]Review, error
 		return nil, err
 	}
 	return items, nil
+}
+
+const listUpcomingBookings = `-- name: ListUpcomingBookings :many
+SELECT id, customer_name, email, phone, vehicle_details, service_interest, notes, requested_start, requested_end, status, source, internal_notes, clerk_user_id, created_at, updated_at FROM bookings
+WHERE requested_start >= datetime('now')
+  AND status IN ('pending', 'confirmed')
+ORDER BY requested_start ASC
+LIMIT ?
+`
+
+func (q *Queries) ListUpcomingBookings(ctx context.Context, limit int64) ([]Booking, error) {
+	rows, err := q.db.QueryContext(ctx, listUpcomingBookings, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Booking
+	for rows.Next() {
+		var i Booking
+		if err := rows.Scan(
+			&i.ID,
+			&i.CustomerName,
+			&i.Email,
+			&i.Phone,
+			&i.VehicleDetails,
+			&i.ServiceInterest,
+			&i.Notes,
+			&i.RequestedStart,
+			&i.RequestedEnd,
+			&i.Status,
+			&i.Source,
+			&i.InternalNotes,
+			&i.ClerkUserID,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const updateBookingStatus = `-- name: UpdateBookingStatus :one
+UPDATE bookings
+SET status = ?, internal_notes = ?, updated_at = CURRENT_TIMESTAMP
+WHERE id = ?
+RETURNING id, customer_name, email, phone, vehicle_details, service_interest, notes, requested_start, requested_end, status, source, internal_notes, clerk_user_id, created_at, updated_at
+`
+
+type UpdateBookingStatusParams struct {
+	Status        sql.NullString `json:"status"`
+	InternalNotes sql.NullString `json:"internal_notes"`
+	ID            int64          `json:"id"`
+}
+
+func (q *Queries) UpdateBookingStatus(ctx context.Context, arg UpdateBookingStatusParams) (Booking, error) {
+	row := q.db.QueryRowContext(ctx, updateBookingStatus, arg.Status, arg.InternalNotes, arg.ID)
+	var i Booking
+	err := row.Scan(
+		&i.ID,
+		&i.CustomerName,
+		&i.Email,
+		&i.Phone,
+		&i.VehicleDetails,
+		&i.ServiceInterest,
+		&i.Notes,
+		&i.RequestedStart,
+		&i.RequestedEnd,
+		&i.Status,
+		&i.Source,
+		&i.InternalNotes,
+		&i.ClerkUserID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const updateGalleryGroup = `-- name: UpdateGalleryGroup :one
+UPDATE gallery_groups
+SET title = ?, slug = ?, vehicle_make = ?, vehicle_model = ?, vehicle_year = ?, description = ?, is_featured = ?, sort_order = ?, updated_at = CURRENT_TIMESTAMP
+WHERE id = ?
+RETURNING id, title, slug, vehicle_make, vehicle_model, vehicle_year, description, is_featured, sort_order, created_at, updated_at
+`
+
+type UpdateGalleryGroupParams struct {
+	Title        string         `json:"title"`
+	Slug         string         `json:"slug"`
+	VehicleMake  sql.NullString `json:"vehicle_make"`
+	VehicleModel sql.NullString `json:"vehicle_model"`
+	VehicleYear  sql.NullInt64  `json:"vehicle_year"`
+	Description  sql.NullString `json:"description"`
+	IsFeatured   sql.NullBool   `json:"is_featured"`
+	SortOrder    sql.NullInt64  `json:"sort_order"`
+	ID           int64          `json:"id"`
+}
+
+func (q *Queries) UpdateGalleryGroup(ctx context.Context, arg UpdateGalleryGroupParams) (GalleryGroup, error) {
+	row := q.db.QueryRowContext(ctx, updateGalleryGroup,
+		arg.Title,
+		arg.Slug,
+		arg.VehicleMake,
+		arg.VehicleModel,
+		arg.VehicleYear,
+		arg.Description,
+		arg.IsFeatured,
+		arg.SortOrder,
+		arg.ID,
+	)
+	var i GalleryGroup
+	err := row.Scan(
+		&i.ID,
+		&i.Title,
+		&i.Slug,
+		&i.VehicleMake,
+		&i.VehicleModel,
+		&i.VehicleYear,
+		&i.Description,
+		&i.IsFeatured,
+		&i.SortOrder,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const updateMedia = `-- name: UpdateMedia :one
+UPDATE media
+SET url = ?, kind = ?, sort_order = ?, alt_text = ?
+WHERE id = ?
+RETURNING id, gallery_group_id, url, kind, sort_order, alt_text, created_at
+`
+
+type UpdateMediaParams struct {
+	Url       string         `json:"url"`
+	Kind      sql.NullString `json:"kind"`
+	SortOrder sql.NullInt64  `json:"sort_order"`
+	AltText   sql.NullString `json:"alt_text"`
+	ID        int64          `json:"id"`
+}
+
+func (q *Queries) UpdateMedia(ctx context.Context, arg UpdateMediaParams) (Medium, error) {
+	row := q.db.QueryRowContext(ctx, updateMedia,
+		arg.Url,
+		arg.Kind,
+		arg.SortOrder,
+		arg.AltText,
+		arg.ID,
+	)
+	var i Medium
+	err := row.Scan(
+		&i.ID,
+		&i.GalleryGroupID,
+		&i.Url,
+		&i.Kind,
+		&i.SortOrder,
+		&i.AltText,
+		&i.CreatedAt,
+	)
+	return i, err
 }
 
 const updatePackage = `-- name: UpdatePackage :one

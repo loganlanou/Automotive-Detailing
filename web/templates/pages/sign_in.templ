@@ -1,0 +1,33 @@
+package pages
+
+import "detailingpass/web/templates"
+
+templ SignIn(redirectUrl string) {
+	@templates.Layout("Sign In") {
+		<section class="min-h-[80vh] flex items-center justify-center py-20 px-4">
+			<div class="w-full max-w-md">
+				<div class="text-center mb-8">
+					<h1 class="text-3xl font-heading font-bold text-brand-fg mb-2">Welcome Back</h1>
+					<p class="text-muted">Sign in to manage your bookings</p>
+				</div>
+				<div id="clerk-sign-in" class="flex justify-center"></div>
+			</div>
+		</section>
+		<script>
+			window.addEventListener('load', async () => {
+				if (window.Clerk) {
+					await window.Clerk.load();
+					const signInEl = document.getElementById('clerk-sign-in');
+					if (signInEl) {
+						const redirectUrl = { templ.JSONString(redirectUrl) };
+						window.Clerk.mountSignIn(signInEl, {
+							afterSignInUrl: redirectUrl || '/',
+							afterSignUpUrl: redirectUrl || '/',
+							signUpUrl: '/sign-up',
+						});
+					}
+				}
+			});
+		</script>
+	}
+}

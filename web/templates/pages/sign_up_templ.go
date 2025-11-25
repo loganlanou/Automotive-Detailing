@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "detailingpass/web/templates"
 
-func ServiceDetail(slug string) templ.Component {
+func SignUp(redirectUrl string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -43,26 +43,13 @@ func ServiceDetail(slug string) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"container mx-auto px-4 py-16\"><h1 class=\"text-4xl font-heading font-bold mb-6\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var3 string
-			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(slug)
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/service_detail.templ`, Line: 8, Col: 58}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</h1><p class=\"text-muted mb-8\">Comprehensive package description goes here</p><div class=\"grid grid-cols-1 md:grid-cols-2 gap-12\"><div><h2 class=\"text-2xl font-heading font-bold mb-4\">What's Included</h2><ul class=\"space-y-3\"><li class=\"flex items-start gap-3\"><svg class=\"w-6 h-6 text-brand-accent flex-shrink-0 mt-0.5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M5 13l4 4L19 7\"></path></svg> <span>Service item description</span></li></ul></div><div class=\"bg-brand-secondary p-8 rounded-lg\"><h3 class=\"text-2xl font-heading font-bold mb-4\">Book This Package</h3><div class=\"mb-6\"><p class=\"text-3xl font-bold text-brand-accent mb-2\">$XXX - $XXX</p><p class=\"text-muted\">Estimated duration: X-X hours</p></div><a href=\"/contact\" class=\"btn-primary block text-center mb-4\">Book Now</a> <a href=\"/contact\" class=\"btn-secondary block text-center\">Request Quote</a></div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section class=\"min-h-[80vh] flex items-center justify-center py-20 px-4\"><div class=\"w-full max-w-md\"><div class=\"text-center mb-8\"><h1 class=\"text-3xl font-heading font-bold text-brand-fg mb-2\">Create Account</h1><p class=\"text-muted\">Join C Auto Detailing Studio</p></div><div id=\"clerk-sign-up\" class=\"flex justify-center\"></div></div></section><script>\n\t\t\twindow.addEventListener('load', async () => {\n\t\t\t\tif (window.Clerk) {\n\t\t\t\t\tawait window.Clerk.load();\n\t\t\t\t\tconst signUpEl = document.getElementById('clerk-sign-up');\n\t\t\t\t\tif (signUpEl) {\n\t\t\t\t\t\tconst redirectUrl = { templ.JSONString(redirectUrl) };\n\t\t\t\t\t\twindow.Clerk.mountSignUp(signUpEl, {\n\t\t\t\t\t\t\tafterSignInUrl: redirectUrl || '/',\n\t\t\t\t\t\t\tafterSignUpUrl: redirectUrl || '/',\n\t\t\t\t\t\t\tsignInUrl: '/sign-in',\n\t\t\t\t\t\t});\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t});\n\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = templates.Layout("Service Detail").Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = templates.Layout("Sign Up").Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

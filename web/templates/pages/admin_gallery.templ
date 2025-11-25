@@ -1,0 +1,238 @@
+package pages
+
+import (
+	"detailingpass/pkg/db"
+	"detailingpass/web/templates"
+	"fmt"
+	"strconv"
+)
+
+type GalleryFormData struct {
+	ID           int64
+	Title        string
+	Slug         string
+	VehicleMake  string
+	VehicleModel string
+	VehicleYear  int64
+	Description  string
+	IsFeatured   bool
+	SortOrder    int64
+	IsEdit       bool
+}
+
+templ AdminGallery(groups []db.GalleryGroup, formData *GalleryFormData) {
+	@templates.AdminLayout("Gallery Management", "/admin/gallery") {
+		<div class="grid gap-8 lg:grid-cols-[1fr_400px]">
+			<!-- Gallery List -->
+			<div class="rounded-3xl border border-white/10 bg-slate-950/80 p-8">
+				<div class="flex items-center justify-between mb-6">
+					<h2 class="text-2xl font-heading font-semibold text-white">Gallery Groups</h2>
+					<span class="text-sm text-slate-400">{ fmt.Sprintf("%d groups", len(groups)) }</span>
+				</div>
+
+				if len(groups) == 0 {
+					<div class="text-center py-12">
+						<p class="text-slate-400 mb-4">No gallery groups yet</p>
+						<p class="text-sm text-slate-500">Create your first gallery group using the form on the right</p>
+					</div>
+				} else {
+					<div class="space-y-4">
+						for _, group := range groups {
+							<div class="rounded-2xl border border-white/10 bg-slate-900/40 p-4 hover:border-blue-500/40 transition">
+								<div class="flex items-start justify-between">
+									<div class="flex-1">
+										<div class="flex items-center gap-2 mb-1">
+											<h3 class="text-lg font-semibold text-white">{ group.Title }</h3>
+											if group.IsFeatured.Bool {
+												<span class="text-xs bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded">Featured</span>
+											}
+										</div>
+										<p class="text-sm text-slate-400">
+											if group.VehicleYear.Int64 > 0 {
+												{ strconv.FormatInt(group.VehicleYear.Int64, 10) }
+											}
+											{ group.VehicleMake.String } { group.VehicleModel.String }
+										</p>
+										if group.Description.String != "" {
+											<p class="text-sm text-slate-500 mt-2 line-clamp-2">{ group.Description.String }</p>
+										}
+									</div>
+									<div class="flex items-center gap-2 ml-4">
+										<a
+											href={ templ.SafeURL(fmt.Sprintf("/admin/gallery?edit=%d", group.ID)) }
+											class="text-blue-400 hover:text-blue-300 transition text-sm"
+										>
+											Edit
+										</a>
+										<form action={ templ.SafeURL(fmt.Sprintf("/admin/gallery/%d/delete", group.ID)) } method="POST" class="inline">
+											<button
+												type="submit"
+												class="text-red-400 hover:text-red-300 transition text-sm"
+												onclick="return confirm('Delete this gallery group?')"
+											>
+												Delete
+											</button>
+										</form>
+									</div>
+								</div>
+							</div>
+						}
+					</div>
+				}
+			</div>
+
+			<!-- Form -->
+			<div class="rounded-3xl border border-white/10 bg-slate-950/80 p-8">
+				<h2 class="text-xl font-heading font-semibold text-white mb-6">
+					if formData != nil && formData.IsEdit {
+						Edit Gallery Group
+					} else {
+						Add Gallery Group
+					}
+				</h2>
+
+				<form
+					if formData != nil && formData.IsEdit {
+						action={ templ.SafeURL(fmt.Sprintf("/admin/gallery/%d", formData.ID)) }
+					} else {
+						action="/admin/gallery"
+					}
+					method="POST"
+					class="space-y-4"
+				>
+					<div>
+						<label class="block text-sm text-slate-400 mb-1">Title *</label>
+						<input
+							type="text"
+							name="title"
+							if formData != nil {
+								value={ formData.Title }
+							}
+							required
+							class="w-full rounded-xl border border-white/10 bg-slate-900/60 px-4 py-2.5 text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none"
+							placeholder="2024 BMW M4 Full Detail"
+						/>
+					</div>
+
+					<div>
+						<label class="block text-sm text-slate-400 mb-1">Slug</label>
+						<input
+							type="text"
+							name="slug"
+							if formData != nil {
+								value={ formData.Slug }
+							}
+							class="w-full rounded-xl border border-white/10 bg-slate-900/60 px-4 py-2.5 text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none"
+							placeholder="2024-bmw-m4-full-detail"
+						/>
+						<p class="text-xs text-slate-500 mt-1">Leave blank to auto-generate from title</p>
+					</div>
+
+					<div class="grid grid-cols-3 gap-3">
+						<div>
+							<label class="block text-sm text-slate-400 mb-1">Year</label>
+							<input
+								type="number"
+								name="vehicle_year"
+								if formData != nil && formData.VehicleYear > 0 {
+									value={ strconv.FormatInt(formData.VehicleYear, 10) }
+								}
+								class="w-full rounded-xl border border-white/10 bg-slate-900/60 px-4 py-2.5 text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none"
+								placeholder="2024"
+							/>
+						</div>
+						<div>
+							<label class="block text-sm text-slate-400 mb-1">Make</label>
+							<input
+								type="text"
+								name="vehicle_make"
+								if formData != nil {
+									value={ formData.VehicleMake }
+								}
+								class="w-full rounded-xl border border-white/10 bg-slate-900/60 px-4 py-2.5 text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none"
+								placeholder="BMW"
+							/>
+						</div>
+						<div>
+							<label class="block text-sm text-slate-400 mb-1">Model</label>
+							<input
+								type="text"
+								name="vehicle_model"
+								if formData != nil {
+									value={ formData.VehicleModel }
+								}
+								class="w-full rounded-xl border border-white/10 bg-slate-900/60 px-4 py-2.5 text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none"
+								placeholder="M4"
+							/>
+						</div>
+					</div>
+
+					<div>
+						<label class="block text-sm text-slate-400 mb-1">Description</label>
+						<textarea
+							name="description"
+							rows="3"
+							class="w-full rounded-xl border border-white/10 bg-slate-900/60 px-4 py-2.5 text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none resize-none"
+							placeholder="Brief description of the detailing work..."
+						>
+							if formData != nil {
+								{ formData.Description }
+							}
+						</textarea>
+					</div>
+
+					<div class="grid grid-cols-2 gap-3">
+						<div>
+							<label class="block text-sm text-slate-400 mb-1">Sort Order</label>
+							<input
+								type="number"
+								name="sort_order"
+								if formData != nil {
+									value={ strconv.FormatInt(formData.SortOrder, 10) }
+								} else {
+									value="0"
+								}
+								class="w-full rounded-xl border border-white/10 bg-slate-900/60 px-4 py-2.5 text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none"
+							/>
+						</div>
+						<div class="flex items-center pt-6">
+							<label class="flex items-center gap-2 cursor-pointer">
+								<input
+									type="checkbox"
+									name="is_featured"
+									value="true"
+									if formData != nil && formData.IsFeatured {
+										checked
+									}
+									class="w-4 h-4 rounded border-white/10 bg-slate-900/60 text-blue-500 focus:ring-blue-500"
+								/>
+								<span class="text-sm text-slate-400">Featured</span>
+							</label>
+						</div>
+					</div>
+
+					<div class="flex gap-3 pt-4">
+						<button
+							type="submit"
+							class="flex-1 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-500 transition"
+						>
+							if formData != nil && formData.IsEdit {
+								Update Group
+							} else {
+								Create Group
+							}
+						</button>
+						if formData != nil && formData.IsEdit {
+							<a
+								href="/admin/gallery"
+								class="rounded-xl border border-white/10 px-4 py-2.5 text-sm font-semibold text-white hover:border-white/20 transition"
+							>
+								Cancel
+							</a>
+						}
+					</div>
+				</form>
+			</div>
+		</div>
+	}
+}

@@ -1,0 +1,33 @@
+package pages
+
+import "detailingpass/web/templates"
+
+templ SignUp(redirectUrl string) {
+	@templates.Layout("Sign Up") {
+		<section class="min-h-[80vh] flex items-center justify-center py-20 px-4">
+			<div class="w-full max-w-md">
+				<div class="text-center mb-8">
+					<h1 class="text-3xl font-heading font-bold text-brand-fg mb-2">Create Account</h1>
+					<p class="text-muted">Join C Auto Detailing Studio</p>
+				</div>
+				<div id="clerk-sign-up" class="flex justify-center"></div>
+			</div>
+		</section>
+		<script>
+			window.addEventListener('load', async () => {
+				if (window.Clerk) {
+					await window.Clerk.load();
+					const signUpEl = document.getElementById('clerk-sign-up');
+					if (signUpEl) {
+						const redirectUrl = { templ.JSONString(redirectUrl) };
+						window.Clerk.mountSignUp(signUpEl, {
+							afterSignInUrl: redirectUrl || '/',
+							afterSignUpUrl: redirectUrl || '/',
+							signInUrl: '/sign-in',
+						});
+					}
+				}
+			});
+		</script>
+	}
+}

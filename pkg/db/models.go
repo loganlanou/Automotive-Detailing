@@ -6,37 +6,49 @@ package db
 
 import (
 	"database/sql"
+	"time"
 )
 
-type Job struct {
-	ID                  int64          `json:"id"`
-	Slug                sql.NullString `json:"slug"`
-	VehicleID           sql.NullInt64  `json:"vehicle_id"`
-	PackageID           sql.NullInt64  `json:"package_id"`
-	Technician          sql.NullString `json:"technician"`
-	Notes               sql.NullString `json:"notes"`
-	CompletedAt         sql.NullTime   `json:"completed_at"`
-	DurationActual      sql.NullInt64  `json:"duration_actual"`
-	Featured            sql.NullBool   `json:"featured"`
-	DisplayPrice        sql.NullInt64  `json:"display_price"`
-	HighlightText       sql.NullString `json:"highlight_text"`
-	CustomerTestimonial sql.NullString `json:"customer_testimonial"`
-	CustomerName        sql.NullString `json:"customer_name"`
-	MetaDescription     sql.NullString `json:"meta_description"`
-	MetaKeywords        sql.NullString `json:"meta_keywords"`
-	CreatedAt           sql.NullTime   `json:"created_at"`
-	UpdatedAt           sql.NullTime   `json:"updated_at"`
+type Booking struct {
+	ID              int64          `json:"id"`
+	CustomerName    string         `json:"customer_name"`
+	Email           string         `json:"email"`
+	Phone           sql.NullString `json:"phone"`
+	VehicleDetails  sql.NullString `json:"vehicle_details"`
+	ServiceInterest sql.NullString `json:"service_interest"`
+	Notes           sql.NullString `json:"notes"`
+	RequestedStart  time.Time      `json:"requested_start"`
+	RequestedEnd    time.Time      `json:"requested_end"`
+	Status          sql.NullString `json:"status"`
+	Source          sql.NullString `json:"source"`
+	InternalNotes   sql.NullString `json:"internal_notes"`
+	ClerkUserID     sql.NullString `json:"clerk_user_id"`
+	CreatedAt       sql.NullTime   `json:"created_at"`
+	UpdatedAt       sql.NullTime   `json:"updated_at"`
+}
+
+type GalleryGroup struct {
+	ID           int64          `json:"id"`
+	Title        string         `json:"title"`
+	Slug         string         `json:"slug"`
+	VehicleMake  sql.NullString `json:"vehicle_make"`
+	VehicleModel sql.NullString `json:"vehicle_model"`
+	VehicleYear  sql.NullInt64  `json:"vehicle_year"`
+	Description  sql.NullString `json:"description"`
+	IsFeatured   sql.NullBool   `json:"is_featured"`
+	SortOrder    sql.NullInt64  `json:"sort_order"`
+	CreatedAt    sql.NullTime   `json:"created_at"`
+	UpdatedAt    sql.NullTime   `json:"updated_at"`
 }
 
 type Medium struct {
-	ID        int64          `json:"id"`
-	JobID     sql.NullInt64  `json:"job_id"`
-	VehicleID sql.NullInt64  `json:"vehicle_id"`
-	Url       string         `json:"url"`
-	Kind      sql.NullString `json:"kind"`
-	SortOrder sql.NullInt64  `json:"sort_order"`
-	AltText   sql.NullString `json:"alt_text"`
-	CreatedAt sql.NullTime   `json:"created_at"`
+	ID             int64          `json:"id"`
+	GalleryGroupID sql.NullInt64  `json:"gallery_group_id"`
+	Url            string         `json:"url"`
+	Kind           sql.NullString `json:"kind"`
+	SortOrder      sql.NullInt64  `json:"sort_order"`
+	AltText        sql.NullString `json:"alt_text"`
+	CreatedAt      sql.NullTime   `json:"created_at"`
 }
 
 type Package struct {
@@ -54,18 +66,6 @@ type Package struct {
 	UpdatedAt   sql.NullTime   `json:"updated_at"`
 }
 
-type Post struct {
-	ID          int64          `json:"id"`
-	Slug        string         `json:"slug"`
-	Title       string         `json:"title"`
-	Excerpt     sql.NullString `json:"excerpt"`
-	Body        sql.NullString `json:"body"`
-	Author      sql.NullString `json:"author"`
-	PublishedAt sql.NullTime   `json:"published_at"`
-	CreatedAt   sql.NullTime   `json:"created_at"`
-	UpdatedAt   sql.NullTime   `json:"updated_at"`
-}
-
 type Review struct {
 	ID         int64          `json:"id"`
 	Author     string         `json:"author"`
@@ -74,25 +74,4 @@ type Review struct {
 	Source     sql.NullString `json:"source"`
 	IsFeatured sql.NullBool   `json:"is_featured"`
 	CreatedAt  sql.NullTime   `json:"created_at"`
-}
-
-type Vehicle struct {
-	ID                   int64          `json:"id"`
-	Slug                 string         `json:"slug"`
-	Vin                  sql.NullString `json:"vin"`
-	Year                 sql.NullInt64  `json:"year"`
-	Make                 string         `json:"make"`
-	Model                string         `json:"model"`
-	Trim                 sql.NullString `json:"trim"`
-	Color                sql.NullString `json:"color"`
-	Price                sql.NullInt64  `json:"price"`
-	StockNumber          sql.NullString `json:"stock_number"`
-	DealershipName       sql.NullString `json:"dealership_name"`
-	DealershipLogoUrl    sql.NullString `json:"dealership_logo_url"`
-	DealershipListingUrl sql.NullString `json:"dealership_listing_url"`
-	DealershipLocation   sql.NullString `json:"dealership_location"`
-	Status               sql.NullString `json:"status"`
-	PostedAt             sql.NullTime   `json:"posted_at"`
-	CreatedAt            sql.NullTime   `json:"created_at"`
-	UpdatedAt            sql.NullTime   `json:"updated_at"`
 }

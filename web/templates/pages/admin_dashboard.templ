@@ -6,134 +6,139 @@ import (
 )
 
 type DashboardStats struct {
-	PackageCount int64
-	VehicleCount int64
-	JobCount     int64
-	MediaCount   int64
-	ReviewCount  int64
-	PostCount    int64
+	PackageCount     int64
+	GalleryCount     int64
+	MediaCount       int64
+	ReviewCount      int64
+	BookingTotal     int64
+	BookingPending   int64
+	BookingConfirmed int64
 }
 
 templ AdminDashboard(stats DashboardStats) {
-	@templates.Layout("Admin Dashboard") {
-		<div class="min-h-screen bg-brand-bg py-12">
-			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-				<!-- Header -->
-				<div class="mb-8">
-					<h1 class="text-4xl font-heading font-bold text-brand-fg mb-2">Admin Dashboard</h1>
-					<p class="text-muted">Manage your detailing business content</p>
-				</div>
-
-				<!-- Stats Grid -->
-				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-					<!-- Packages Card -->
-					<a href="/admin/packages" class="bg-brand-secondary border border-border rounded-lg p-6 hover:border-brand-accent transition-colors">
-						<div class="flex items-center justify-between mb-4">
-							<h3 class="text-xl font-heading font-semibold text-brand-fg">Packages</h3>
-							<svg class="w-8 h-8 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-							</svg>
-						</div>
-						<div class="text-4xl font-bold text-brand-accent mb-2">{ formatCount(stats.PackageCount) }</div>
-						<p class="text-muted text-sm">Detailing service packages</p>
-					</a>
-
-					<!-- Vehicles Card -->
-					<a href="/admin/vehicles" class="bg-brand-secondary border border-border rounded-lg p-6 hover:border-brand-accent transition-colors">
-						<div class="flex items-center justify-between mb-4">
-							<h3 class="text-xl font-heading font-semibold text-brand-fg">Vehicles</h3>
-							<svg class="w-8 h-8 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
-							</svg>
-						</div>
-						<div class="text-4xl font-bold text-brand-accent mb-2">{ formatCount(stats.VehicleCount) }</div>
-						<p class="text-muted text-sm">Vehicles in database</p>
-					</a>
-
-					<!-- Jobs Card -->
-					<a href="/admin/jobs" class="bg-brand-secondary border border-border rounded-lg p-6 hover:border-brand-accent transition-colors">
-						<div class="flex items-center justify-between mb-4">
-							<h3 class="text-xl font-heading font-semibold text-brand-fg">Jobs</h3>
-							<svg class="w-8 h-8 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-							</svg>
-						</div>
-						<div class="text-4xl font-bold text-brand-accent mb-2">{ formatCount(stats.JobCount) }</div>
-						<p class="text-muted text-sm">Completed detailing jobs</p>
-					</a>
-
-					<!-- Media Card -->
-					<a href="/admin/media" class="bg-brand-secondary border border-border rounded-lg p-6 hover:border-brand-accent transition-colors">
-						<div class="flex items-center justify-between mb-4">
-							<h3 class="text-xl font-heading font-semibold text-brand-fg">Media</h3>
-							<svg class="w-8 h-8 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-							</svg>
-						</div>
-						<div class="text-4xl font-bold text-brand-accent mb-2">{ formatCount(stats.MediaCount) }</div>
-						<p class="text-muted text-sm">Photos and images</p>
-					</a>
-
-					<!-- Reviews Card -->
-					<div class="bg-brand-secondary border border-border rounded-lg p-6">
-						<div class="flex items-center justify-between mb-4">
-							<h3 class="text-xl font-heading font-semibold text-brand-fg">Reviews</h3>
-							<svg class="w-8 h-8 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
-							</svg>
-						</div>
-						<div class="text-4xl font-bold text-brand-accent mb-2">{ formatCount(stats.ReviewCount) }</div>
-						<p class="text-muted text-sm">Customer testimonials</p>
+	@templates.AdminLayout("Dashboard", "/admin") {
+		<section class="grid gap-6 xl:grid-cols-3">
+			<div class="rounded-3xl border border-white/10 bg-gradient-to-br from-slate-950 to-slate-900 p-8 shadow-2xl shadow-blue-500/10">
+				<p class="text-xs uppercase tracking-[0.5em] text-slate-500 mb-4">Live Bookings</p>
+				<div class="flex items-end justify-between">
+					<div>
+						<p class="text-5xl font-heading font-semibold text-white">{ fmt.Sprintf("%d", stats.BookingPending) }</p>
+						<p class="text-sm text-slate-400 mt-2">requests awaiting review</p>
 					</div>
-
-					<!-- Posts Card -->
-					<div class="bg-brand-secondary border border-border rounded-lg p-6">
-						<div class="flex items-center justify-between mb-4">
-							<h3 class="text-xl font-heading font-semibold text-brand-fg">Blog Posts</h3>
-							<svg class="w-8 h-8 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
-							</svg>
-						</div>
-						<div class="text-4xl font-bold text-brand-accent mb-2">{ formatCount(stats.PostCount) }</div>
-						<p class="text-muted text-sm">Blog articles</p>
+					<div class="text-right">
+						<p class="text-sm text-slate-400">Confirmed</p>
+						<p class="text-2xl font-semibold text-emerald-300">{ fmt.Sprintf("%d", stats.BookingConfirmed) }</p>
 					</div>
 				</div>
-
-				<!-- Quick Actions -->
-				<div class="bg-brand-secondary border border-border rounded-lg p-6">
-					<h2 class="text-2xl font-heading font-bold text-brand-fg mb-4">Quick Actions</h2>
-					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-						<a href="/admin/packages?action=new" class="flex items-center gap-3 p-4 bg-brand-bg border border-border rounded-lg hover:border-brand-accent transition-colors">
-							<svg class="w-6 h-6 text-brand-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-							</svg>
-							<div>
-								<div class="text-brand-fg font-semibold">New Package</div>
-								<div class="text-muted text-sm">Create a service package</div>
-							</div>
-						</a>
-						<a href="/admin/jobs?action=new" class="flex items-center gap-3 p-4 bg-brand-bg border border-border rounded-lg hover:border-brand-accent transition-colors">
-							<svg class="w-6 h-6 text-brand-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-							</svg>
-							<div>
-								<div class="text-brand-fg font-semibold">New Job</div>
-								<div class="text-muted text-sm">Add a completed job</div>
-							</div>
-						</a>
-						<a href="/admin/media?action=upload" class="flex items-center gap-3 p-4 bg-brand-bg border border-border rounded-lg hover:border-brand-accent transition-colors">
-							<svg class="w-6 h-6 text-brand-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-							</svg>
-							<div>
-								<div class="text-brand-fg font-semibold">Upload Media</div>
-								<div class="text-muted text-sm">Add photos</div>
-							</div>
-						</a>
+				<div class="mt-6 flex items-center justify-between text-sm">
+					<div class="flex items-center gap-3 text-slate-400">
+						<span class="inline-flex h-2 w-2 rounded-full bg-amber-400 animate-pulse"></span>
+						<span>Slots auto-lock once requests arrive</span>
 					</div>
+					<a href="/admin/bookings" class="text-blue-300 hover:text-white transition">View bookings →</a>
 				</div>
 			</div>
-		</div>
+
+			<div class="rounded-3xl border border-white/5 bg-slate-950/80 p-8 space-y-6">
+				<div>
+					<p class="text-xs uppercase tracking-[0.5em] text-slate-500 mb-2">Content Overview</p>
+					<h2 class="text-2xl font-heading font-semibold text-white">Asset pulse</h2>
+				</div>
+				<div class="grid grid-cols-2 gap-4">
+					@adminDashboardStat("Packages", stats.PackageCount)
+					@adminDashboardStat("Gallery", stats.GalleryCount)
+					@adminDashboardStat("Media", stats.MediaCount)
+					@adminDashboardStat("Reviews", stats.ReviewCount)
+				</div>
+			</div>
+
+			<div class="rounded-3xl border border-blue-500/40 bg-blue-500/10 p-8 space-y-6">
+				<div>
+					<p class="text-xs uppercase tracking-[0.5em] text-blue-300 mb-2">Quick launch</p>
+					<h2 class="text-2xl font-heading font-semibold text-white">Ship updates faster</h2>
+				</div>
+				<div class="space-y-3">
+					@adminQuickAction("/admin/bookings", "Review Bookings", "calendar-check")
+					@adminQuickAction("/admin/packages", "Manage Packages", "layers")
+					@adminQuickAction("/admin/gallery", "Manage Gallery", "sparkles")
+				</div>
+			</div>
+		</section>
+
+		<section class="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]">
+			<div class="rounded-3xl border border-white/5 bg-slate-950/80 p-8">
+				<div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+					<div>
+						<p class="text-xs uppercase tracking-[0.5em] text-slate-500">Workboard</p>
+						<h3 class="text-2xl font-heading font-semibold text-white mt-1">Operational checklist</h3>
+					</div>
+					<a href="/admin/packages" class="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-sm font-medium text-white hover:border-blue-500/60">
+						<span>Open Packages</span>
+						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+						</svg>
+					</a>
+				</div>
+				<div class="mt-6 grid gap-4 md:grid-cols-2">
+					@adminChecklistCard("Packages", "Update pricing and service descriptions", "/admin/packages")
+					@adminChecklistCard("Gallery", "Add new detailing work photos", "/admin/gallery")
+					@adminChecklistCard("Bookings", "Review and confirm pending requests", "/admin/bookings")
+					@adminChecklistCard("Public Site", "Preview the customer-facing website", "/")
+				</div>
+			</div>
+
+			<div class="rounded-3xl border border-white/10 bg-gradient-to-b from-slate-950 to-slate-900 p-8 space-y-4">
+				<p class="text-xs uppercase tracking-[0.5em] text-slate-500">Tempo</p>
+				<h3 class="text-xl font-heading font-semibold text-white">Total bookings</h3>
+				<p class="text-5xl font-heading text-white">{ fmt.Sprintf("%d", stats.BookingTotal) }</p>
+				<p class="text-sm text-slate-400">Total booking requests received</p>
+				<a href="/admin/bookings" class="inline-flex items-center justify-center rounded-2xl bg-white/10 px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/20 transition">
+					Open Booking Queue
+				</a>
+			</div>
+		</section>
+	}
+}
+
+templ adminDashboardStat(label string, value int64) {
+	<div class="rounded-2xl border border-white/10 bg-slate-900/60 p-4">
+		<p class="text-sm text-slate-500">{ label }</p>
+		<p class="text-2xl font-heading font-semibold text-white mt-1">{ formatCount(value) }</p>
+	</div>
+}
+
+templ adminQuickAction(href templ.SafeURL, label string, icon string) {
+	<a href={ href } class="flex items-center justify-between rounded-2xl border border-blue-500/20 bg-blue-500/5 px-4 py-3 text-sm font-medium text-white hover:border-blue-400/60">
+		<span>{ label }</span>
+		@adminIcon(icon)
+	</a>
+}
+
+templ adminChecklistCard(title string, subtitle string, href templ.SafeURL) {
+	<a href={ href } class="rounded-2xl border border-white/10 bg-slate-900/40 p-4 hover:border-blue-500/40 transition">
+		<p class="text-sm uppercase tracking-[0.4em] text-slate-500">{ title }</p>
+		<p class="text-base text-white mt-2">{ subtitle }</p>
+	</a>
+}
+
+templ adminIcon(name string) {
+	switch name {
+	case "calendar-check":
+		<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7H3v12a2 2 0 002 2zm3-7l2 2 4-4"></path>
+		</svg>
+	case "layers":
+		<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l9 4.5-9 4.5-9-4.5L12 2zm0 9l9 4.5-9 4.5-9-4.5 9-4.5z"></path>
+		</svg>
+	case "sparkles":
+		<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2zM17 13l1 3 3 1-3 1-1 3-1-3-3-1 3-1z"></path>
+		</svg>
+	default:
+		<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"></path>
+		</svg>
 	}
 }
 

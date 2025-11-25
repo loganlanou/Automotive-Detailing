@@ -2,13 +2,21 @@ package server
 
 import (
 	"database/sql"
+	"os"
 
+	"detailingpass/pkg/auth"
 	"detailingpass/pkg/server/handlers"
 
 	"github.com/labstack/echo/v4"
 )
 
 func SetupRoutes(e *echo.Echo, db *sql.DB) {
+	// Initialize Clerk SDK
+	clerkSecretKey := os.Getenv("CLERK_SECRET_KEY")
+	if clerkSecretKey != "" {
+		auth.Init(clerkSecretKey)
+	}
+
 	h := handlers.New(db)
 
 	// Health check endpoint for Vercel uptime probes
@@ -18,37 +26,34 @@ func SetupRoutes(e *echo.Echo, db *sql.DB) {
 
 	// Public pages
 	e.GET("/", h.Home)
+	e.GET("/gallery", h.Gallery)
 	e.GET("/about", h.About)
-	e.GET("/services", h.Services)
-	e.GET("/services/:slug", h.ServiceDetail)
-	e.GET("/work", h.Work)
-	e.GET("/work/:slug", h.WorkDetail)
-	e.GET("/reviews", h.Reviews)
-	e.GET("/contact", h.Contact)
-	e.POST("/contact", h.ContactSubmit)
-	e.GET("/blog", h.Blog)
-	e.GET("/blog/:slug", h.BlogPost)
-	e.GET("/faq", h.FAQ)
+	e.GET("/booking", h.BookingPage)
 	e.GET("/privacy", h.Privacy)
 	e.GET("/terms", h.Terms)
 
-	// Design system showcase
-	e.GET("/style", h.StyleGuide)
+	// Auth pages
+	e.GET("/sign-in", h.SignIn)
+	e.GET("/sign-up", h.SignUp)
 
-	// Admin routes (to be protected with Clerk middleware)
+	// Admin routes (protected with Clerk middleware)
 	admin := e.Group("/admin")
-	// TODO: Add Clerk auth middleware here
+	admin.Use(auth.RequireAuth())
 	admin.GET("", h.AdminDashboard)
 	admin.GET("/packages", h.AdminPackages)
 	admin.POST("/packages", h.CreatePackage)
 	admin.POST("/packages/:id", h.UpdatePackage)
 	admin.POST("/packages/:id/delete", h.DeletePackage)
-	admin.GET("/vehicles", h.AdminVehicles)
-	admin.GET("/jobs", h.AdminJobs)
-	admin.GET("/media", h.AdminMedia)
+	admin.GET("/bookings", h.AdminBookings)
+	admin.POST("/bookings/:id/status", h.UpdateBookingStatus)
+	admin.GET("/gallery", h.AdminGallery)
+	admin.POST("/gallery", h.CreateGalleryGroup)
+	admin.POST("/gallery/:id", h.UpdateGalleryGroup)
+	admin.POST("/gallery/:id/delete", h.DeleteGalleryGroup)
 
-	// API routes
+	// API routes (with optional auth to capture user ID if logged in)
 	api := e.Group("/api")
-	api.POST("/dealer/sync", h.DealerSync)
-	api.GET("/dealer/export", h.DealerExport)
+	api.Use(auth.OptionalAuth())
+	api.GET("/bookings/availability", h.BookingAvailability)
+	api.POST("/bookings", h.CreateBookingRequest)
 }

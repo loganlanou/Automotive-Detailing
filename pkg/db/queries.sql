@@ -1,3 +1,5 @@
+-- Package queries
+
 -- name: GetAllPackages :many
 SELECT * FROM packages
 WHERE is_active = 1
@@ -7,86 +9,13 @@ ORDER BY sort_order, id;
 SELECT * FROM packages
 WHERE slug = ? LIMIT 1;
 
--- name: ListFeaturedJobs :many
-SELECT j.*, v.make, v.model, v.year, v.slug as vehicle_slug
-FROM jobs j
-LEFT JOIN vehicles v ON j.vehicle_id = v.id
-WHERE j.featured = 1
-ORDER BY j.completed_at DESC
-LIMIT ?;
-
--- name: GetJobByID :one
-SELECT * FROM jobs WHERE id = ?;
-
--- name: ListJobs :many
-SELECT j.*, v.make, v.model, v.year, v.slug as vehicle_slug
-FROM jobs j
-LEFT JOIN vehicles v ON j.vehicle_id = v.id
-ORDER BY j.completed_at DESC
-LIMIT ? OFFSET ?;
-
--- name: GetVehicleBySlug :one
-SELECT * FROM vehicles
-WHERE slug = ? LIMIT 1;
-
--- name: GetMediaForJob :many
-SELECT * FROM media
-WHERE job_id = ?
-ORDER BY sort_order, id;
-
--- name: GetMediaForVehicle :many
-SELECT * FROM media
-WHERE vehicle_id = ?
-ORDER BY sort_order, id;
-
--- name: ListReviews :many
-SELECT * FROM reviews
-ORDER BY created_at DESC
-LIMIT ?;
-
--- name: ListFeaturedReviews :many
-SELECT * FROM reviews
-WHERE is_featured = 1
-ORDER BY created_at DESC
-LIMIT ?;
-
--- name: GetPostBySlug :one
-SELECT * FROM posts
-WHERE slug = ? AND published_at IS NOT NULL LIMIT 1;
-
--- name: ListPosts :many
-SELECT * FROM posts
-WHERE published_at IS NOT NULL
-ORDER BY published_at DESC
-LIMIT ? OFFSET ?;
-
--- Admin queries
-
--- name: CountPackages :one
-SELECT COUNT(*) FROM packages;
-
--- name: CountVehicles :one
-SELECT COUNT(*) FROM vehicles;
-
--- name: CountJobs :one
-SELECT COUNT(*) FROM jobs;
-
--- name: CountMedia :one
-SELECT COUNT(*) FROM media;
-
--- name: CountReviews :one
-SELECT COUNT(*) FROM reviews;
-
--- name: CountPosts :one
-SELECT COUNT(*) FROM posts;
+-- name: GetPackageByID :one
+SELECT * FROM packages
+WHERE id = ? LIMIT 1;
 
 -- name: GetAllPackagesAdmin :many
 SELECT * FROM packages
 ORDER BY sort_order, id;
-
--- name: GetPackageByID :one
-SELECT * FROM packages
-WHERE id = ? LIMIT 1;
 
 -- name: CreatePackage :one
 INSERT INTO packages (slug, name, short_desc, long_desc, price_min, price_max, duration_est, is_active, sort_order)
@@ -102,88 +31,171 @@ RETURNING *;
 -- name: DeletePackage :exec
 DELETE FROM packages WHERE id = ?;
 
--- Work/Portfolio queries
+-- name: CountPackages :one
+SELECT COUNT(*) FROM packages;
 
--- name: GetWorkBySlug :one
-SELECT
-    j.*,
-    v.slug as vehicle_slug,
-    v.year as vehicle_year,
-    v.make as vehicle_make,
-    v.model as vehicle_model,
-    v.trim as vehicle_trim,
-    v.color as vehicle_color,
-    v.dealership_name,
-    v.dealership_logo_url,
-    v.dealership_listing_url,
-    v.dealership_location,
-    p.name as package_name,
-    p.short_desc as package_short_desc,
-    p.price_min as package_price_min,
-    p.price_max as package_price_max
-FROM jobs j
-LEFT JOIN vehicles v ON j.vehicle_id = v.id
-LEFT JOIN packages p ON j.package_id = p.id
-WHERE j.slug = ? LIMIT 1;
+-- Gallery queries
 
--- name: GetFeaturedWork :many
-SELECT
-    j.id,
-    j.slug,
-    j.featured,
-    j.highlight_text,
-    j.display_price,
-    j.completed_at,
-    v.year as vehicle_year,
-    v.make as vehicle_make,
-    v.model as vehicle_model,
-    v.trim as vehicle_trim,
-    v.dealership_name,
-    p.name as package_name
-FROM jobs j
-LEFT JOIN vehicles v ON j.vehicle_id = v.id
-LEFT JOIN packages p ON j.package_id = p.id
-WHERE j.featured = 1 AND j.completed_at IS NOT NULL
-ORDER BY j.completed_at DESC
-LIMIT ?;
-
--- name: ListAllWork :many
-SELECT
-    j.id,
-    j.slug,
-    j.featured,
-    j.highlight_text,
-    j.display_price,
-    j.completed_at,
-    v.year as vehicle_year,
-    v.make as vehicle_make,
-    v.model as vehicle_model,
-    v.trim as vehicle_trim,
-    v.dealership_name,
-    p.name as package_name
-FROM jobs j
-LEFT JOIN vehicles v ON j.vehicle_id = v.id
-LEFT JOIN packages p ON j.package_id = p.id
-WHERE j.completed_at IS NOT NULL
-ORDER BY j.completed_at DESC
+-- name: ListGalleryGroups :many
+SELECT * FROM gallery_groups
+ORDER BY sort_order, created_at DESC
 LIMIT ? OFFSET ?;
 
--- name: GetRelatedWork :many
-SELECT
-    j.id,
-    j.slug,
-    j.featured,
-    j.completed_at,
-    v.year as vehicle_year,
-    v.make as vehicle_make,
-    v.model as vehicle_model,
-    v.dealership_name,
-    p.name as package_name
-FROM jobs j
-LEFT JOIN vehicles v ON j.vehicle_id = v.id
-LEFT JOIN packages p ON j.package_id = p.id
-WHERE j.id != ?
-  AND (v.make = ? OR j.package_id = ?)
-  AND j.completed_at IS NOT NULL
-ORDER BY j.featured DESC, j.completed_at DESC
-LIMIT 3;
+-- name: ListFeaturedGalleryGroups :many
+SELECT * FROM gallery_groups
+WHERE is_featured = 1
+ORDER BY sort_order, created_at DESC
+LIMIT ?;
+
+-- name: GetGalleryGroupBySlug :one
+SELECT * FROM gallery_groups
+WHERE slug = ? LIMIT 1;
+
+-- name: GetGalleryGroupByID :one
+SELECT * FROM gallery_groups
+WHERE id = ? LIMIT 1;
+
+-- name: CreateGalleryGroup :one
+INSERT INTO gallery_groups (title, slug, vehicle_make, vehicle_model, vehicle_year, description, is_featured, sort_order)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+RETURNING *;
+
+-- name: UpdateGalleryGroup :one
+UPDATE gallery_groups
+SET title = ?, slug = ?, vehicle_make = ?, vehicle_model = ?, vehicle_year = ?, description = ?, is_featured = ?, sort_order = ?, updated_at = CURRENT_TIMESTAMP
+WHERE id = ?
+RETURNING *;
+
+-- name: DeleteGalleryGroup :exec
+DELETE FROM gallery_groups WHERE id = ?;
+
+-- name: CountGalleryGroups :one
+SELECT COUNT(*) FROM gallery_groups;
+
+-- Media queries
+
+-- name: GetMediaForGalleryGroup :many
+SELECT * FROM media
+WHERE gallery_group_id = ?
+ORDER BY sort_order, id;
+
+-- name: GetHeroImageForGalleryGroup :one
+SELECT * FROM media
+WHERE gallery_group_id = ? AND kind = 'hero'
+ORDER BY sort_order
+LIMIT 1;
+
+-- name: CreateMedia :one
+INSERT INTO media (gallery_group_id, url, kind, sort_order, alt_text)
+VALUES (?, ?, ?, ?, ?)
+RETURNING *;
+
+-- name: UpdateMedia :one
+UPDATE media
+SET url = ?, kind = ?, sort_order = ?, alt_text = ?
+WHERE id = ?
+RETURNING *;
+
+-- name: DeleteMedia :exec
+DELETE FROM media WHERE id = ?;
+
+-- name: CountMedia :one
+SELECT COUNT(*) FROM media;
+
+-- Review queries
+
+-- name: ListReviews :many
+SELECT * FROM reviews
+ORDER BY created_at DESC
+LIMIT ?;
+
+-- name: ListFeaturedReviews :many
+SELECT * FROM reviews
+WHERE is_featured = 1
+ORDER BY created_at DESC
+LIMIT ?;
+
+-- name: CreateReview :one
+INSERT INTO reviews (author, rating, body, source, is_featured)
+VALUES (?, ?, ?, ?, ?)
+RETURNING *;
+
+-- name: DeleteReview :exec
+DELETE FROM reviews WHERE id = ?;
+
+-- name: CountReviews :one
+SELECT COUNT(*) FROM reviews;
+
+-- Booking queries
+
+-- name: ListBookings :many
+SELECT * FROM bookings
+ORDER BY requested_start DESC
+LIMIT ? OFFSET ?;
+
+-- name: ListBookingsByStatus :many
+SELECT * FROM bookings
+WHERE status = ?
+ORDER BY requested_start ASC
+LIMIT ? OFFSET ?;
+
+-- name: ListUpcomingBookings :many
+SELECT * FROM bookings
+WHERE requested_start >= datetime('now')
+  AND status IN ('pending', 'confirmed')
+ORDER BY requested_start ASC
+LIMIT ?;
+
+-- name: GetBookingByID :one
+SELECT * FROM bookings
+WHERE id = ? LIMIT 1;
+
+-- name: CreateBooking :one
+INSERT INTO bookings (
+    customer_name,
+    email,
+    phone,
+    vehicle_details,
+    service_interest,
+    notes,
+    requested_start,
+    requested_end,
+    status,
+    source,
+    clerk_user_id
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+RETURNING *;
+
+-- name: UpdateBookingStatus :one
+UPDATE bookings
+SET status = ?, internal_notes = ?, updated_at = CURRENT_TIMESTAMP
+WHERE id = ?
+RETURNING *;
+
+-- name: CountBookings :one
+SELECT COUNT(*) FROM bookings;
+
+-- name: CountBookingsByStatus :one
+SELECT COUNT(*) FROM bookings
+WHERE status = ?;
+
+-- name: ListBlockedSlots :many
+SELECT requested_start, requested_end, status
+FROM bookings
+WHERE requested_start >= ?
+  AND requested_start < ?
+  AND status IN ('pending', 'confirmed')
+ORDER BY requested_start;
+
+-- name: CountBlockedSlotsAt :one
+SELECT COUNT(*)
+FROM bookings
+WHERE requested_start = ?
+  AND status IN ('pending', 'confirmed');
+
+-- name: ListBookingsForCalendar :many
+SELECT id, customer_name, email, phone, vehicle_details, service_interest, requested_start, requested_end, status
+FROM bookings
+WHERE requested_start >= ?
+  AND requested_start < ?
+ORDER BY requested_start ASC;
