@@ -27,6 +27,8 @@ templ Header() {
 					</div>
 					<!-- Clerk User Button - shown when user is signed in -->
 					<div id="clerk-user-button" class="hidden"></div>
+					<!-- Admin link - shown when user is signed in -->
+					<a id="admin-link" href="/admin" class="hidden nav-link text-sm lg:text-base font-medium hover:text-brand-accent-bright">Admin</a>
 					<a href="/booking" class="btn-primary text-sm">Book Now</a>
 				</div>
 
@@ -82,6 +84,14 @@ templ Header() {
 					</div>
 					<!-- Mobile Clerk User Button - shown when signed in -->
 					<div id="clerk-user-button-mobile" class="hidden px-3 py-2"></div>
+					<!-- Mobile Admin link - shown when signed in -->
+					<a id="admin-link-mobile" href="/admin" class="hidden flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-brand-bg/70 transition active:scale-[0.98]">
+						<svg class="w-5 h-5 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+						</svg>
+						<span class="font-medium">Admin</span>
+					</a>
 					<div class="border-t border-border my-2"></div>
 					<a href="/booking" class="flex items-center justify-center gap-2 mx-2 py-3 rounded-lg bg-gradient-to-r from-brand-primary to-brand-accent text-white font-bold transition active:scale-[0.98]">
 						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -101,15 +111,21 @@ templ Header() {
 				// Desktop elements
 				const authLinksEl = document.getElementById('clerk-auth-links');
 				const userButtonEl = document.getElementById('clerk-user-button');
+				const adminLinkEl = document.getElementById('admin-link');
 
 				// Mobile elements
 				const authLinksMobileEl = document.getElementById('clerk-auth-links-mobile');
 				const userButtonMobileEl = document.getElementById('clerk-user-button-mobile');
+				const adminLinkMobileEl = document.getElementById('admin-link-mobile');
 
 				if (window.Clerk.user) {
-					// User is signed in - hide auth links, show user button
+					// User is signed in - hide auth links, show user button and admin link
 					if (authLinksEl) authLinksEl.classList.add('hidden');
 					if (authLinksMobileEl) authLinksMobileEl.classList.add('hidden');
+
+					// Show admin link for signed-in users
+					if (adminLinkEl) adminLinkEl.classList.remove('hidden');
+					if (adminLinkMobileEl) adminLinkMobileEl.classList.remove('hidden');
 
 					if (userButtonEl) {
 						userButtonEl.classList.remove('hidden');
@@ -126,11 +142,13 @@ templ Header() {
 						});
 					}
 				} else {
-					// User is not signed in - show auth links (already visible by default)
+					// User is not signed in - show auth links, hide admin link
 					if (authLinksEl) authLinksEl.classList.remove('hidden');
 					if (authLinksMobileEl) authLinksMobileEl.classList.remove('hidden');
 					if (userButtonEl) userButtonEl.classList.add('hidden');
 					if (userButtonMobileEl) userButtonMobileEl.classList.add('hidden');
+					if (adminLinkEl) adminLinkEl.classList.add('hidden');
+					if (adminLinkMobileEl) adminLinkMobileEl.classList.add('hidden');
 				}
 			}
 		});
