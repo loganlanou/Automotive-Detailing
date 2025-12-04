@@ -71,15 +71,23 @@
     @apply shadow-lg shadow-black/20;
   }
 
-  /* Mobile menu animation */
+  /* Mobile menu animation - improved for better UX */
   #mobile-menu {
-    @apply transition-all duration-300 ease-in-out;
+    @apply transition-all duration-300;
     max-height: 0;
     overflow: hidden;
+    opacity: 0;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   #mobile-menu.show {
-    max-height: 500px;
+    max-height: 600px;
+    opacity: 1;
+  }
+
+  /* Ensure links are visually distinct when focused for accessibility */
+  #mobile-menu a:focus-visible {
+    @apply outline-none ring-2 ring-brand-accent ring-offset-2 ring-offset-brand-secondary;
   }
 
   /* Buttons - Squared, decisive style */
@@ -200,16 +208,26 @@
     @apply text-5xl font-heading font-bold text-brand-accent;
   }
 
-  /* Mobile Sticky Bottom Bar */
+  /* Mobile Sticky Bottom Bar - Optimized for modern devices with safe area */
   .mobile-sticky-bar {
     @apply fixed bottom-0 left-0 right-0 z-50;
-    @apply bg-brand-secondary border-t-2 border-border;
-    @apply px-4 py-3 shadow-xl;
+    @apply bg-brand-secondary/95 backdrop-blur-md border-t-2 border-border;
+    @apply px-4 shadow-xl;
     @apply md:hidden; /* Only show on mobile */
+    /* Safe area padding for devices with home indicators */
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+    padding-top: 12px;
   }
 
   .mobile-sticky-bar .btn-group {
     @apply grid grid-cols-2 gap-3;
+  }
+
+  /* Ensure footer has space for the sticky bar on mobile */
+  @media (max-width: 767px) {
+    footer {
+      margin-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    }
   }
 
   /* Floating CTA Button */

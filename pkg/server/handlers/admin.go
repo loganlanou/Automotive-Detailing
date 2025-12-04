@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"context"
 	"database/sql"
 	"fmt"
 	"net/http"
@@ -41,7 +40,7 @@ func (h *Handler) AdminDashboard(c echo.Context) error {
 }
 
 func (h *Handler) AdminPackages(c echo.Context) error {
-	ctx := context.Background()
+	ctx := c.Request().Context()
 	queries := db.New(h.db)
 
 	// Get all packages
@@ -79,7 +78,7 @@ func (h *Handler) AdminPackages(c echo.Context) error {
 }
 
 func (h *Handler) CreatePackage(c echo.Context) error {
-	ctx := context.Background()
+	ctx := c.Request().Context()
 	queries := db.New(h.db)
 
 	// Parse form data
@@ -129,7 +128,7 @@ func (h *Handler) CreatePackage(c echo.Context) error {
 }
 
 func (h *Handler) UpdatePackage(c echo.Context) error {
-	ctx := context.Background()
+	ctx := c.Request().Context()
 	queries := db.New(h.db)
 
 	// Get package ID from URL
@@ -187,7 +186,7 @@ func (h *Handler) UpdatePackage(c echo.Context) error {
 }
 
 func (h *Handler) DeletePackage(c echo.Context) error {
-	ctx := context.Background()
+	ctx := c.Request().Context()
 	queries := db.New(h.db)
 
 	// Get package ID from URL

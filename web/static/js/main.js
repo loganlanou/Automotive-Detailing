@@ -127,9 +127,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const formData = new FormData(contactForm);
       const data = Object.fromEntries(formData.entries());
 
-      // Check honeypot
+      // Check honeypot (spam protection)
       if (data.website) {
-        console.log('Spam detected');
         return;
       }
 

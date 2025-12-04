@@ -60,6 +60,37 @@ class BookingApp {
 				slot_id: this.state.selectedSlotId,
 			};
 
+			// Validate required fields
+			if (!payload.name) {
+				this.showFeedback('Please enter your full name.', true);
+				this.form.querySelector('input[name="name"]')?.focus();
+				return;
+			}
+
+			if (!payload.email) {
+				this.showFeedback('Please enter your email address.', true);
+				this.form.querySelector('input[name="email"]')?.focus();
+				return;
+			}
+
+			// Basic email format validation
+			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			if (!emailRegex.test(payload.email)) {
+				this.showFeedback('Please enter a valid email address.', true);
+				this.form.querySelector('input[name="email"]')?.focus();
+				return;
+			}
+
+			// Phone validation (optional but if provided, check format)
+			if (payload.phone) {
+				const phoneDigits = payload.phone.replace(/\D/g, '');
+				if (phoneDigits.length < 10) {
+					this.showFeedback('Please enter a valid phone number with at least 10 digits.', true);
+					this.form.querySelector('input[name="phone"]')?.focus();
+					return;
+				}
+			}
+
 			this.setSubmitting(true);
 			try {
 				const response = await fetch(this.submitEndpoint, {
@@ -144,7 +175,7 @@ class BookingApp {
 				const disabled = day.is_closed || !day.has_availability;
 				const highlight = day.is_today ? 'text-brand-accent' : 'text-muted';
 
-				// Mobile-optimized compact classes
+				// Mobile-optimized compact classes with 48px minimum touch target
 				const baseClasses = [
 					'rounded-lg',
 					'sm:rounded-xl',
@@ -152,6 +183,8 @@ class BookingApp {
 					'border-border',
 					'p-2',
 					'sm:p-3',
+					'min-h-[48px]',
+					'sm:min-h-0',
 					'text-center',
 					'sm:text-left',
 					'transition',
@@ -232,6 +265,7 @@ class BookingApp {
 					'border',
 					'border-border',
 					'p-4',
+					'min-h-[60px]',
 					'text-left',
 					'transition',
 					'flex',

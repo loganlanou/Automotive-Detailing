@@ -159,14 +159,31 @@ func isHTMLRequest(r *http.Request) bool {
 	return strings.Contains(accept, "text/html") || accept == "" || accept == "*/*"
 }
 
-// AdminEmails is a list of email addresses that are authorized to access admin pages
-var AdminEmails = []string{
-	"logan@lanou.com",
+// GetAdminEmails returns the list of authorized admin email addresses
+// Reads from ADMIN_EMAILS environment variable (comma-separated), with fallback to default
+func GetAdminEmails() []string {
+	envEmails := os.Getenv("ADMIN_EMAILS")
+	if envEmails != "" {
+		emails := strings.Split(envEmails, ",")
+		// Trim whitespace from each email
+		result := make([]string, 0, len(emails))
+		for _, email := range emails {
+			trimmed := strings.TrimSpace(email)
+			if trimmed != "" {
+				result = append(result, trimmed)
+			}
+		}
+		if len(result) > 0 {
+			return result
+		}
+	}
+	// Default fallback
+	return []string{"logan@lanou.com"}
 }
 
 // IsAdminEmail checks if an email is in the authorized admin list
 func IsAdminEmail(email string) bool {
-	for _, adminEmail := range AdminEmails {
+	for _, adminEmail := range GetAdminEmails() {
 		if strings.EqualFold(adminEmail, email) {
 			return true
 		}

@@ -10,7 +10,7 @@ templ SignUp(redirectUrl string) {
 					<h1 class="text-3xl font-heading font-bold text-brand-fg mb-2">Create Account</h1>
 					<p class="text-muted">Join C Auto Detailing Studio</p>
 				</div>
-				<div id="clerk-sign-up" class="flex justify-center"></div>
+				<div id="clerk-sign-up" class="flex justify-center" data-redirect-url={ redirectUrl }></div>
 			</div>
 		</section>
 		<script>
@@ -19,10 +19,10 @@ templ SignUp(redirectUrl string) {
 					await window.Clerk.load();
 					const signUpEl = document.getElementById('clerk-sign-up');
 					if (signUpEl) {
-						const redirectUrl = { templ.JSONString(redirectUrl) };
+						const redirectUrl = signUpEl.dataset.redirectUrl || '/';
 						window.Clerk.mountSignUp(signUpEl, {
-							afterSignInUrl: redirectUrl || '/',
-							afterSignUpUrl: redirectUrl || '/',
+							afterSignInUrl: redirectUrl,
+							afterSignUpUrl: redirectUrl,
 							signInUrl: '/sign-in',
 						});
 					}

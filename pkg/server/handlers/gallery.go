@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"context"
 	"database/sql"
 	"fmt"
 	"net/http"
@@ -45,13 +44,17 @@ func (h *Handler) Gallery(c echo.Context) error {
 		Offset: 0,
 	})
 	if err != nil {
+		c.Logger().Errorf("Failed to fetch gallery groups: %v", err)
 		groups = []db.GalleryGroup{}
 	}
 
 	// Build gallery items with images
 	var items []pages.GalleryItem
 	for _, g := range groups {
-		media, _ := queries.GetMediaForGalleryGroup(ctx, sql.NullInt64{Int64: g.ID, Valid: true})
+		media, mediaErr := queries.GetMediaForGalleryGroup(ctx, sql.NullInt64{Int64: g.ID, Valid: true})
+		if mediaErr != nil {
+			c.Logger().Warnf("Failed to fetch media for gallery group %d: %v", g.ID, mediaErr)
+		}
 
 		var images []pages.GalleryImage
 		heroImage := "/static/images/placeholder.jpg"
@@ -94,7 +97,7 @@ func (h *Handler) Gallery(c echo.Context) error {
 // Admin Gallery handlers
 
 func (h *Handler) AdminGallery(c echo.Context) error {
-	ctx := context.Background()
+	ctx := c.Request().Context()
 	queries := db.New(h.db)
 
 	groups, err := queries.ListGalleryGroups(ctx, db.ListGalleryGroupsParams{
@@ -133,7 +136,7 @@ func (h *Handler) AdminGallery(c echo.Context) error {
 }
 
 func (h *Handler) CreateGalleryGroup(c echo.Context) error {
-	ctx := context.Background()
+	ctx := c.Request().Context()
 	queries := db.New(h.db)
 
 	title := c.FormValue("title")
@@ -169,7 +172,7 @@ func (h *Handler) CreateGalleryGroup(c echo.Context) error {
 }
 
 func (h *Handler) UpdateGalleryGroup(c echo.Context) error {
-	ctx := context.Background()
+	ctx := c.Request().Context()
 	queries := db.New(h.db)
 
 	idStr := c.Param("id")
@@ -209,7 +212,7 @@ func (h *Handler) UpdateGalleryGroup(c echo.Context) error {
 }
 
 func (h *Handler) DeleteGalleryGroup(c echo.Context) error {
-	ctx := context.Background()
+	ctx := c.Request().Context()
 	queries := db.New(h.db)
 
 	idStr := c.Param("id")

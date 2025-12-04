@@ -43,7 +43,20 @@ func SignIn(redirectUrl string) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section class=\"min-h-[80vh] flex items-center justify-center py-20 px-4\"><div class=\"w-full max-w-md\"><div class=\"text-center mb-8\"><h1 class=\"text-3xl font-heading font-bold text-brand-fg mb-2\">Welcome Back</h1><p class=\"text-muted\">Sign in to manage your bookings</p></div><div id=\"clerk-sign-in\" class=\"flex justify-center\"></div></div></section><script>\n\t\t\twindow.addEventListener('load', async () => {\n\t\t\t\tif (window.Clerk) {\n\t\t\t\t\tawait window.Clerk.load();\n\t\t\t\t\tconst signInEl = document.getElementById('clerk-sign-in');\n\t\t\t\t\tif (signInEl) {\n\t\t\t\t\t\tconst redirectUrl = { templ.JSONString(redirectUrl) };\n\t\t\t\t\t\twindow.Clerk.mountSignIn(signInEl, {\n\t\t\t\t\t\t\tafterSignInUrl: redirectUrl || '/',\n\t\t\t\t\t\t\tafterSignUpUrl: redirectUrl || '/',\n\t\t\t\t\t\t\tsignUpUrl: '/sign-up',\n\t\t\t\t\t\t});\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t});\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section class=\"min-h-[80vh] flex items-center justify-center py-20 px-4\"><div class=\"w-full max-w-md\"><div class=\"text-center mb-8\"><h1 class=\"text-3xl font-heading font-bold text-brand-fg mb-2\">Welcome Back</h1><p class=\"text-muted\">Sign in to manage your bookings</p></div><div id=\"clerk-sign-in\" class=\"flex justify-center\" data-redirect-url=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var3 string
+			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(redirectUrl)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/sign_in.templ`, Line: 13, Col: 87}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"></div></div></section><script>\n\t\t\twindow.addEventListener('load', async () => {\n\t\t\t\tif (window.Clerk) {\n\t\t\t\t\tawait window.Clerk.load();\n\t\t\t\t\tconst signInEl = document.getElementById('clerk-sign-in');\n\t\t\t\t\tif (signInEl) {\n\t\t\t\t\t\tconst redirectUrl = signInEl.dataset.redirectUrl || '/';\n\t\t\t\t\t\twindow.Clerk.mountSignIn(signInEl, {\n\t\t\t\t\t\t\tafterSignInUrl: redirectUrl,\n\t\t\t\t\t\t\tafterSignUpUrl: redirectUrl,\n\t\t\t\t\t\t\tsignUpUrl: '/sign-up',\n\t\t\t\t\t\t});\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t});\n\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
