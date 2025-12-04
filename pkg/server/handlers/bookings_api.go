@@ -52,9 +52,8 @@ var (
 		},
 	}
 	slotLookup = buildSlotLookup(bookingSlotDefinitions)
-	closedDays = map[time.Weekday]bool{
-		time.Sunday: true,
-	}
+	// All days are available for booking
+	closedDays = map[time.Weekday]bool{}
 )
 
 type slotDefinition struct {
