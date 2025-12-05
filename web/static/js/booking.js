@@ -161,8 +161,20 @@ class BookingApp {
 		const today = this.today();
 		const isMobile = window.innerWidth < 640;
 
-		this.daysContainer.innerHTML = this.state.days
-			.map((day) => {
+		// Calculate empty cells needed to align with weekday columns (desktop only)
+		const firstDay = this.state.days[0];
+		const firstDate = new Date(`${firstDay.date}T12:00:00`);
+		const firstDayOfWeek = firstDate.getDay(); // 0 = Sunday, 6 = Saturday
+
+		// Generate empty placeholder cells for desktop alignment
+		const emptySlots = [];
+		if (!isMobile) {
+			for (let i = 0; i < firstDayOfWeek; i++) {
+				emptySlots.push('<div class="hidden sm:block"></div>');
+			}
+		}
+
+		const dayCells = this.state.days.map((day) => {
 				const dateNumber = parseInt(day.date.split('-')[2], 10);
 				const topLabel = day.label.split(',')[0] || '';
 				const openSlots = day.slots ? day.slots.filter((slot) => slot.available).length : 0;
@@ -216,25 +228,27 @@ class BookingApp {
 					? '<span class="hidden sm:inline text-[9px] sm:text-[10px] uppercase tracking-wide text-rose-400 font-semibold">Full</span>'
 					: '';
 
-				return `
-					<button
-						type="button"
-						class="${baseClasses.join(' ')} relative"
-						data-date="${day.date}"
-						${disabled ? 'disabled' : ''}
-					>
-						${todayBadge.includes('absolute') ? todayBadge.split('<span class="hidden')[0] : ''}
-						<div class="hidden sm:flex items-center justify-between mb-1">
-							<span class="text-[10px] sm:text-xs uppercase tracking-wide ${highlight}">${topLabel}</span>
-							${todayBadge.includes('hidden sm:inline') ? todayBadge.split('</span>')[1] + '</span>' : ''}${fullBadge}
-						</div>
-						<div class="sm:hidden text-[10px] uppercase tracking-wide ${highlight} mb-0.5">${topLabel}</div>
-						<p class="text-xl sm:text-2xl font-heading font-bold ${day.is_today ? 'text-brand-accent' : ''}">${dateNumber}</p>
-						<p class="text-[10px] sm:text-xs ${statusColor} mt-0.5 sm:mt-1 font-medium">${statusText}</p>
-					</button>
-				`;
-			})
-			.join('');
+			return `
+				<button
+					type="button"
+					class="${baseClasses.join(' ')} relative"
+					data-date="${day.date}"
+					${disabled ? 'disabled' : ''}
+				>
+					${todayBadge.includes('absolute') ? todayBadge.split('<span class="hidden')[0] : ''}
+					<div class="hidden sm:flex items-center justify-between mb-1">
+						<span class="text-[10px] sm:text-xs uppercase tracking-wide ${highlight}">${topLabel}</span>
+						${todayBadge.includes('hidden sm:inline') ? todayBadge.split('</span>')[1] + '</span>' : ''}${fullBadge}
+					</div>
+					<div class="sm:hidden text-[10px] uppercase tracking-wide ${highlight} mb-0.5">${topLabel}</div>
+					<p class="text-xl sm:text-2xl font-heading font-bold ${day.is_today ? 'text-brand-accent' : ''}">${dateNumber}</p>
+					<p class="text-[10px] sm:text-xs ${statusColor} mt-0.5 sm:mt-1 font-medium">${statusText}</p>
+				</button>
+			`;
+		});
+
+		// Combine empty slots (for weekday alignment) with day cells
+		this.daysContainer.innerHTML = emptySlots.join('') + dayCells.join('');
 
 		this.daysContainer.querySelectorAll('button[data-date]').forEach((btn) => {
 			btn.addEventListener('click', () => {
